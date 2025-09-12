@@ -130,17 +130,15 @@
       @include flex-center(column, center, flex-start);
       width: 100%;
       gap: 20px;
-
       .input-box {
         width: 100%;
-
         p {
           color: var(--text-black);
           font-weight: 700;
           font-size: 15px;
           margin-bottom: 12px;
         }
-
+        
         input {
           width: 100%;
           padding: 7px 10px;
@@ -148,6 +146,8 @@
           color: var(--blue);
           font-size: 15px;
           border-radius: 7px;
+          direction: rtl;
+          flex-direction: row-reverse;
         }
 
         input::placeholder {

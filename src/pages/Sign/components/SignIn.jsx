@@ -2,31 +2,31 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from "../../../assets/logos/ChatNestLogoWithText.webp";
 
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
+// import { FcGoogle } from "react-icons/fc";
+// import { FaFacebook } from "react-icons/fa";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 import PreLoader from "../../../shared/components/PreLoader/PreLoader.jsx";
 import { ErrorAlert, SuccessAlert } from '../../../helpers/customAlert';
 
-import { signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider, facebookProvider } from '../../../services/firebaseConfig.js';
-import { useSignInWithEmailMutation, useSignInGoogleMutation, useSignInFacebookMutation } from '../../../store/Slices/auth/authApi.js';
+// import { signInWithPopup } from 'firebase/auth';
+// import { auth, googleProvider, facebookProvider } from '../../../services/firebaseConfig.js';
+import { useSignInWithEmailMutation } from '../../../store/Slices/auth/authApi.js';
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from '../../../schemas/SignSchemas.js';
 import { opacityEffect } from '../../../shared/animations/animations.js';
 import { motion } from "framer-motion";
-import { getFirebaseAuthErrorMessage } from '../../../helpers/getFirebaseAuthErrorMessage .js';
+// import { getFirebaseAuthErrorMessage } from '../../../helpers/getFirebaseAuthErrorMessage .js';
 
 function SignIn() {
 
   const [SignInWithEmail, { isLoading: isEmailLoading }] = useSignInWithEmailMutation();
-  const [SignInGoogle, { isLoading: isGoogleLoading }] = useSignInGoogleMutation();
-  const [SignInFacebook, { isLoading: isFacebookLoading }] = useSignInFacebookMutation();
+  // const [SignInGoogle, { isLoading: isGoogleLoading }] = useSignInGoogleMutation();
+  // const [SignInFacebook, { isLoading: isFacebookLoading }] = useSignInFacebookMutation();
 
-  const isLoading = isEmailLoading || isGoogleLoading || isFacebookLoading;
+  const isLoading = isEmailLoading ;// || isGoogleLoading || isFacebookLoading;
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,25 +48,25 @@ function SignIn() {
     }
   };
 
-  const handleSignInWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      await SignInGoogle(result.user).unwrap();
-      SuccessAlert("وارد شدید");
-    } catch (error) {
-      ErrorAlert(getFirebaseAuthErrorMessage(error));
-    }
-  };
+  // const handleSignInWithGoogle = async () => {
+  //   try {
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     await SignInGoogle(result.user).unwrap();
+  //     SuccessAlert("وارد شدید");
+  //   } catch (error) {
+  //     ErrorAlert(getFirebaseAuthErrorMessage(error));
+  //   }
+  // };
 
-  const handleSignInWithFacebook = async () => {
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      await SignInFacebook(result.user).unwrap();
-      SuccessAlert("وارد شدید");
-    } catch (error) {
-      ErrorAlert(getFirebaseAuthErrorMessage(error));
-    }
-  };
+  // const handleSignInWithFacebook = async () => {
+  //   try {
+  //     const result = await signInWithPopup(auth, facebookProvider);
+  //     await SignInFacebook(result.user).unwrap();
+  //     SuccessAlert("وارد شدید");
+  //   } catch (error) {
+  //     ErrorAlert(getFirebaseAuthErrorMessage(error));
+  //   }
+  // };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -83,8 +83,8 @@ function SignIn() {
       </div>
 
       <div className='method-buttons'>
-        <button onClick={handleSignInWithGoogle}><FcGoogle className='icon' /><span>Google</span></button>
-        <button onClick={handleSignInWithFacebook}><FaFacebook className='icon' /><span>Facebook</span></button>
+        {/* <button onClick={handleSignInWithGoogle}><FcGoogle className='icon' /><span>Google</span></button> */}
+        {/* <button onClick={handleSignInWithFacebook}><FaFacebook className='icon' /><span>Facebook</span></button> */}
       </div>
 
       <div className='divider-container'>
