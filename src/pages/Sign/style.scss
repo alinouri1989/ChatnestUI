@@ -584,11 +584,7 @@ form {
     transform: scale(0.8);
   }
 }
-/* Custom styles for Jalali date picker */
-.rmdp-container {
-  direction: rtl;
-}
-
+/* Custom styles for better Jalali date picker integration */
 .rmdp-input {
   border: none !important;
   outline: none !important;
@@ -596,11 +592,18 @@ form {
   font-size: 16px !important;
   color: #333 !important;
   font-family: inherit !important;
+  padding: 0 !important;
+  margin: 0 !important;
   text-align: left;
 }
 
 .rmdp-input::placeholder {
-  color: #828A96 !important;
+  color: #828a96 !important;
+}
+
+.rmdp-container {
+  direction: rtl;
+  width: 100%;
 }
 
 .rmdp-calendar {
@@ -608,15 +611,7 @@ form {
   font-family: inherit !important;
 }
 
-.rmdp-header-values {
-  font-family: inherit !important;
-}
-
-.rmdp-day {
-  font-family: inherit !important;
-}
-
-/* Hide the calendar icon if you don't want it */
+/* Hide the default arrow icon if you prefer your calendar icon */
 .rmdp-arrow-container {
   display: none;
 }

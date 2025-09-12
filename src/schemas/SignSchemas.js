@@ -16,13 +16,16 @@ export const signUpSchema = z.object({
     Email: z.string()
         .email({ message: "لطفاً آدرس ایمیل معتبری وارد کنید." })
         .max(30, { message: "آدرس ایمیل شما باید حداکثر ۳۰ کاراکتر باشد." }),
+    
     Password: z.string()
         .min(8, { message: "رمز عبور شما باید حداقل ۸ کاراکتر باشد." })
         .max(16, { message: "رمز عبور شما باید حداکثر ۱۶ کاراکتر باشد." })
-        .regex(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]*$/, {
+        .regex(/^(?=.*[A-Z])(?=.*\d).*$/, {
             message: "رمز عبور شما باید حداقل یک حرف بزرگ و یک عدد داشته باشد.",
         }),
+    
     PasswordAgain: z.string(),
+    
     BirthDate: z.date({
         invalid_type_error: "لطفاً تاریخ معتبری وارد کنید.",
     }).refine(date => date <= new Date(), {

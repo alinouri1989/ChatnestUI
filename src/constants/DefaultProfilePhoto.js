@@ -1,2 +1,2 @@
-export const defaultProfilePhoto = "https://res.cloudinary.com/ChatNest-realtime-messaging-app/image/upload/v1734185072/DefaultUserProfilePhoto.png"
-export const defaultGroupPhoto = "https://res.cloudinary.com/ChatNest-realtime-messaging-app/image/upload/v1734185322/DefaultGroupProfileImage.png"
+export const defaultProfilePhoto = "../../../../assets/svg/DefaultUserProfilePhoto.svg"
+export const defaultGroupPhoto = "../../../../assets/svg/DefaultUserProfilePhoto.svg"

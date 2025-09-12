@@ -1,0 +1,29 @@
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Default group profile"
+>
+  <defs>
+    <linearGradient id="bgGroup" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eaf6f3"/>
+      <stop offset="100%" stop-color="#cdebe3"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="128" fill="url(#bgGroup)"/>
+  <!-- Group silhouettes -->
+  <g fill="#2d6a6a">
+    <!-- Center person -->
+    <circle cx="128" cy="98" r="28"/>
+    <path d="M84 176c0-26.51 19.849-44 44-44s44 17.49 44 44v12H84v-12z"/>
+    <!-- Left person -->
+    <circle cx="84" cy="108" r="22" opacity="0.9"/>
+    <path d="M44 176c0-20.99 16.297-36 36-36 6.534 0 12.68 1.62 17.8 4.53-9.61 7.72-14.8 19.12-14.8 31.47v12H44v-12z" opacity="0.9"/>
+    <!-- Right person -->
+    <circle cx="172" cy="108" r="22" opacity="0.9"/>
+    <path d="M212 176c0-20.99-16.297-36-36-36-6.534 0-12.68 1.62-17.8 4.53 9.61 7.72 14.8 19.12 14.8 31.47v12H212v-12z" opacity="0.9"/>
+  </g>
+</svg>

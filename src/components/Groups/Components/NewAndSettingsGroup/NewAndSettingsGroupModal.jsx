@@ -28,13 +28,11 @@ import { useCreateGroupMutation, useEditGroupMutation, useLeaveGroupMutation } f
 import PreLoader from "../../../../shared/components/PreLoader/PreLoader.jsx";
 import "./style.scss";
 import { useSignalR } from "../../../../contexts/SignalRContext.jsx";
-import { useNavigate } from "react-router-dom";
 import { addNewGroupChat } from "../../../../store/Slices/chats/chatSlice.js";
 import useScreenWidth from "../../../../hooks/useScreenWidth.js";
 
 function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, groupId, userId }) {
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { chatConnection } = useSignalR();

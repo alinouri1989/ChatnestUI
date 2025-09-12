@@ -18,6 +18,10 @@ import "react-multi-date-picker/styles/layouts/mobile.css";
 
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
+import { FaUser } from "react-icons/fa";
+import { MdOutlineMail } from "react-icons/md";
+import { PiLockKeyFill } from "react-icons/pi";
+import { LuCalendarDays } from "react-icons/lu";
 
 import { ErrorAlert, SuccessAlert } from "../../../helpers/customAlert.js";
 import MembershipModal from "./MembershipModal";
@@ -25,11 +29,6 @@ import PreLoader from "../../../shared/components/PreLoader/PreLoader.jsx";
 
 import { opacityEffect } from '../../../shared/animations/animations.js';
 import { motion } from "framer-motion";
-import { FaUser } from "react-icons/fa";
-import { MdOutlineMail } from "react-icons/md";
-import { PiLockKeyFill } from "react-icons/pi";
-import { LuCalendarDays } from "react-icons/lu";
-
 
 function SignUp() {
 
@@ -52,7 +51,7 @@ function SignUp() {
 
   const handleKeyPressForBirthDate = (e) => {
     const allowedKeys = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-',
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '/',
       'Backspace', 'Delete',
       'ArrowLeft', 'ArrowRight'
     ];
@@ -76,7 +75,13 @@ function SignUp() {
   const onSubmit = async (data) => {
     if (isFormValid) {
       try {
-        await registerUser(data).unwrap();
+        // Convert date for backend submission
+        const submitData = {
+          ...data,
+          BirthDate: data.BirthDate ? data.BirthDate.toISOString() : null
+        };
+        
+        await registerUser(submitData).unwrap();
         SuccessAlert("حساب ایجاد شد");
         navigate('/giris-yap');
 
@@ -117,7 +122,6 @@ function SignUp() {
 
           <div className='input-box'>
             <MdOutlineMail size="28" color="#828A96"/>
-
             <input
               {...register("Email")}
               type="email"
@@ -128,7 +132,6 @@ function SignUp() {
           <div className='input-box password'>
             <div>
               <PiLockKeyFill size="28" color="#828A96"/>
-
               <input
                 {...register("Password")}
                 type={showPassword ? "text" : "password"}
@@ -158,18 +161,23 @@ function SignUp() {
           {errors.PasswordAgain && <span className="error-message">{errors.PasswordAgain.message}</span>}
 
           <div className='input-box'>
-              <LuCalendarDays size="28" color="#828A96"/>
-
-              <Controller
+            <LuCalendarDays size="28" color="#828A96"/>
+            <Controller
               name="BirthDate"
               control={control}
               rules={{ required: "تاریخ تولد الزامی است" }}
               render={({ field }) => (
                 <DatePicker
-                  {...field}
-                  selected={field.value ? new Date(field.value) : null}
                   value={field.value}
-                  onChange={(date) => field.onChange(date)}
+                  onChange={(dateObject) => {
+                    // Convert DateObject to JavaScript Date
+                    if (dateObject) {
+                      const jsDate = dateObject.toDate();
+                      field.onChange(jsDate);
+                    } else {
+                      field.onChange(null);
+                    }
+                  }}
                   calendar={persian}
                   locale={persian_fa}
                   calendarPosition="bottom-right"
