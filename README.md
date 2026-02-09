@@ -415,8 +415,6 @@ We also monitored the application to catch any unforeseen issues or bugs that mi
 
 This phase is crucial because it ensures the application keeps evolving to meet user expectations and remains reliable in the long term. By implementing user feedback and regularly improving the app, we maintained high levels of user satisfaction and ensured continuous progress in the development process.
 
-![VersionAndDeveloper](https://github.com/user-attachments/assets/3f21a437-7059-467b-8f39-9d9c5715965a)
-
 - **Release Date**: 25.03.2025  
 
 - **Last Updated**: 29.03.2025 🕟 12:00  
@@ -432,8 +430,8 @@ This phase is crucial because it ensures the application keeps evolving to meet 
   Access the project by clicking [Here](https://ChatNestweb.netlify.app/).  
 
 - **Developers**:  
-  The **frontend** of the project was developed by **Hamza Doğan**. For more information about the developer, please visit the [LinkedIn Profile](https://www.linkedin.com/in/hamzadogann/).  
-  The **backend** of the project was developed by **Nazmi Koçak**. For more details, you can visit the [backend repository](https://github.com/nazmikocak/ChatNest).  
+  The **frontend** of the project was developed by **Hamza Doğan**. For more information about the developer, please visit the [LinkedIn Profile](https://www.linkedin.com/in/alinouri1989/).  
+  The **backend** of the project was developed by **Nazmi Koçak**. For more details, you can visit the [backend repository](https://github.com/alinouri1989/ChatNestUI).  
 
 - **Feedback and Support**:  
   If you have any feedback or need support, feel free to contact me at [hamzaalidogantr@gmail.com].  
