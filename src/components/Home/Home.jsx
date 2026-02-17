@@ -31,7 +31,7 @@ function Home() {
           با ChatNest فوری متصل شوید؛ گفت‌وگو کنید و به گروه‌ها بپیوندید
           و فاصله‌ها را با تماس صوتی از بین ببرید!
         </p>
-        <button>Microsoft Store’dan indir</button>
+        <button>دانلود از فروشگاه مایکروسافت</button>
       </motion.div>
 
       <motion.div
