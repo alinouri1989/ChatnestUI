@@ -78,7 +78,7 @@ function GroupChats() {
   return (
     <div className="chat-section">
       <div className='group-general-box'>
-        {!id && <WelcomeScreen text={"Grup sohbetleriniz uçtan uca şifrelidir"} />}
+        {!id && <WelcomeScreen text={"گفت‌وگوهای گروهی شما سرتاسر رمزگذاری شده‌اند"} />}
         {id && (
           <>
             <GroupTopBar

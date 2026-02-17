@@ -19,7 +19,7 @@ export const lastMessageDateHelper = (dateString) => {
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
   if (yesterday.toDateString() === date.toDateString()) {
-    return "Dün";
+    return "دیروز";
   }
 
   const day = date.getDate().toString().padStart(2, '0');
@@ -30,7 +30,7 @@ export const lastMessageDateHelper = (dateString) => {
 
 export const formatDateForLastConnectionDate = (dateString) => {
   if (dateString === null) {
-    return "Çevrimiçi";
+    return "آنلاین";
   }
   const now = new Date();
   const date = new Date(dateString);
@@ -38,7 +38,7 @@ export const formatDateForLastConnectionDate = (dateString) => {
   if (now.toDateString() === date.toDateString()) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `Bugün ${hours}:${minutes}`;
+    return `امروز ${hours}:${minutes}`;
   }
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
@@ -46,7 +46,7 @@ export const formatDateForLastConnectionDate = (dateString) => {
   if (yesterday.toDateString() === date.toDateString()) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `Dün ${hours}:${minutes}`;
+    return `دیروز ${hours}:${minutes}`;
   }
 
   const day = date.getDate().toString().padStart(2, '0');

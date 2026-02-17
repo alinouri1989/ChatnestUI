@@ -51,9 +51,9 @@ function CallsList() {
 
   return (
     <div className="call-list-box">
-      {isSmallScreen && <h2 className="mobil-menu-title">Aramalar</h2>}
+      {isSmallScreen && <h2 className="mobil-menu-title">تماس‌ها</h2>}
       <SearchInput
-        placeholder={"Aratın veya yeni arama başlatın"}
+        placeholder={"جستجو کنید یا تماس جدید شروع کنید"}
         value={searchTerm}
         onChange={setSearchTerm}
       />
@@ -84,7 +84,7 @@ function CallsList() {
               </motion.div>
             ))
           ) : (
-            isInitialCallsReady ? <NoActiveData text={searchTerm ? "Eşleşen arama bulunamadı" : "Arama geçmişiniz bulunmamaktadır."} />
+            isInitialCallsReady ? <NoActiveData text={searchTerm ? "تماس مطابقی پیدا نشد" : "سابقهٔ تماسی ندارید."} />
               : <PreLoader />
           )}
         </motion.div>

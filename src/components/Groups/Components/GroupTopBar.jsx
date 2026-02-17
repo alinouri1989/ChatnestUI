@@ -22,7 +22,7 @@ function GroupTopBar({ isSidebarOpen, toggleSidebar, groupProfile }) {
                 </div>
                 <div className="name-and-status-box">
                     <p className="group-name">{groupProfile?.name}</p>
-                    <span>{participantCount} kullanıcı bulunuyor</span>
+                    <span>{participantCount} کاربر وجود دارد</span>
                 </div>
             </div>
 

@@ -145,7 +145,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
             const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
             if (!validImageTypes.includes(fileType)) {
-                ErrorAlert("Bir resim dosyası seçiniz.");
+                ErrorAlert("لطفا یک فایل تصویری انتخاب کنید.");
                 return;
             }
 
@@ -177,23 +177,23 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
         const userToRemove = participantKeys.find((key) => key === userId);
 
         if (userToRemove) {
-            // formData'dan kullanıcıyı çıkarma işlemi için yeni bir kopya oluşturuyoruz
+            // برای حذف کاربر از formData یک کپی جدید می‌سازیم
             const updatedParticipants = { ...formData.participants };
 
-            // Kullanıcının rolünü 2 yapıyoruz (gruptan çıkarma)
+            // نقش کاربر را روی 2 تنظیم می‌کنیم (حذف از گروه)
             const updatedUser = { ...updatedParticipants[userToRemove], role: 2 };
 
-            // Kullanıcının rolünü güncelledik, şimdi objenin kopyasını güncelliyoruz
+            // نقش کاربر به‌روزرسانی شد، حالا کپی آبجکت را به‌روزرسانی می‌کنیم
             updatedParticipants[userToRemove] = updatedUser;
 
-            // State'i güncelliyoruz
+            // State را به‌روزرسانی می‌کنیم
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 participants: updatedParticipants
             }));
 
             const removedUserName = formData.participants[userToRemove].displayName;
-            SuccessAlert(`${removedUserName} gruptan çıkarıldı.`, 1500);
+            SuccessAlert(`${removedUserName} از گروه حذف شد.`, 1500);
         }
     };
 
@@ -211,7 +211,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
             participants: updatedParticipants,
         }));
 
-        SuccessAlert(`Rol Değiştirildi`);
+        SuccessAlert(`نقش تغییر کرد`);
     };
 
     // ----------------------------SUBMITS----------------------------------
@@ -241,7 +241,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                         return;
                     }
 
-                    SuccessAlert("Grup Oluşturuldu");
+                    SuccessAlert("گروه ایجاد شد");
                     closeModal();
                 };
             } else {
@@ -249,11 +249,11 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                 if (response?.error) {
                     return;
                 }
-                SuccessAlert("Grup Oluşturuldu");
+                SuccessAlert("گروه ایجاد شد");
                 closeModal();
             }
         } catch (error) {
-            const errorMessage = error?.data?.message || "Bir hata oluştu, lütfen tekrar deneyin.";
+            const errorMessage = error?.data?.message || "خطایی رخ داد، لطفا دوباره تلاش کنید.";
             ErrorAlert(errorMessage);
         }
     };
@@ -274,21 +274,21 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                     formDataCopy.photoUrl = base64String;
 
                     editGroup({ groupId, formData: formDataCopy }).unwrap();
-                    SuccessAlert("Değişiklikler kayıt edildi");
+                    SuccessAlert("تغییرات ذخیره شد");
                     closeModal();
                 };
 
                 reader.readAsDataURL(formDataCopy.photoUrl);
             } else {
                 await editGroup({ groupId, formData: formDataCopy }).unwrap();
-                SuccessAlert("Değişiklikler kayıt edildi");
+                SuccessAlert("تغییرات ذخیره شد");
                 closeModal();
             }
         } catch (error) {
-            if (error.data && error.data.message.includes("Grup kurucusu yöneticilikten")) {
+            if (error?.data?.message) {
                 ErrorAlert(error.data.message);
             } else {
-                ErrorAlert("Bir hata meydana geldi");
+                ErrorAlert("خطایی رخ داد");
             }
         }
     };
@@ -296,7 +296,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
     const handleLeaveGroup = async () => {
         try {
             await leaveGroup(groupId).unwrap();
-            SuccessAlert("Gruptan Çıktın")
+            SuccessAlert("از گروه خارج شدید")
             closeModal();
         } catch (error) {
             ErrorAlert("Bir hata meydana geldi", error);
@@ -312,18 +312,18 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                 {isGroupSettings ? (
                     <>
                         <IoMdSettings className="setting-icon" />
-                        <p>Grup Ayarları</p>
+                        <p>تنظیمات گروه</p>
                     </>
                 ) : (
                     <>
                         <img src={star} alt="" />
-                        <p>Yeni bir grup oluştur</p>
+                        <p>یک گروه جدید بسازید</p>
                     </>
                 )}
             </div>
             <div className="contents">
                 <div className="choose-group-image">
-                    <p>Grup Resmi</p>
+                    <p>تصویر گروه</p>
                     <div className="group-image-box">
                         {isGroupSettings
                             ? <img src={getPhotoURL(formData.photoUrl)} alt="Group" />
@@ -380,7 +380,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                         <ImageSearchRoundedIcon />
                                     </ListItemIcon>
                                     <ListItemText
-                                        primary="Görüntüle"
+                                        primary="مشاهده"
                                         primaryTypographyProps={{
                                             fontFamily: "Montserrat",
                                             fontWeight: "700",
@@ -397,7 +397,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                         <AddPhotoAlternateRoundedIcon />
                                     </ListItemIcon>
                                     <ListItemText
-                                        primary="Değiştir"
+                                        primary="تغییر"
                                         primaryTypographyProps={{
                                             fontFamily: "Montserrat",
                                             fontWeight: "700",
@@ -414,7 +414,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                         <DeleteOutlineRoundedIcon />
                                     </ListItemIcon>
                                     <ListItemText
-                                        primary="Kaldır"
+                                        primary="حذف"
                                         primaryTypographyProps={{
                                             fontFamily: "Montserrat",
                                             fontWeight: "700",
@@ -443,20 +443,20 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                 </div>
                 <div className="input-boxs">
                     <div className="input-box">
-                        <p>Grup Adı</p>
+                        <p>نام گروه</p>
                         <input
                             type="text"
-                            placeholder="Bir grup adı belirle..."
+                            placeholder="یک نام گروه تعیین کنید..."
                             value={formData.name}
                             onChange={handleGroupNameChange}
                             maxLength={40}
                         />
                     </div>
                     <div className="input-box">
-                        <p>Grup Açıklaması</p>
+                        <p>توضیحات گروه</p>
                         <input
                             type="text"
-                            placeholder="Grup açıklaması belirle..."
+                            placeholder="توضیحات گروه را تعیین کنید..."
                             value={formData.description}
                             onChange={handleGroupDescriptionChange}
                             maxLength={50}
@@ -465,14 +465,14 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                 </div>
 
                 <div className="group-members-box">
-                    <h2>Grup Üyeleri</h2>
+                    <h2>اعضای گروه</h2>
 
                     {!isGroupSettings &&
                         <div className="group-admin">
                             <img src={user.profilePhoto} alt="Admin Profile Image" />
                             <div className="admin-info">
                                 <p className="user-display-name">{user.displayName}</p>
-                                <span>Yönetici</span>
+                                <span>مدیر</span>
                             </div>
                         </div>
                     }
@@ -484,15 +484,15 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                     const userA = formData.participants[a];
                                     const userB = formData.participants[b];
 
-                                    // Öncelikle isCurrentUser olan kullanıcıyı en üste taşır
+                                    // ابتدا کاربری که isCurrentUser است به بالاترین جایگاه منتقل می‌شود
                                     if (a === userId) return -1;
                                     if (b === userId) return 1;
 
-                                    // Sonrasında role değeri 0 olanları önce sıralar (Yönetici)
+                                    // سپس آیتم‌هایی که role آن‌ها 0 است در اولویت قرار می‌گیرند (مدیر)
                                     if (userA.role === 0 && userB.role !== 0) return -1;
                                     if (userA.role !== 0 && userB.role === 0) return 1;
 
-                                    // Diğerleri için sıralama yapmaz
+                                    // برای بقیه مرتب‌سازی انجام نمی‌شود
                                     return 0;
                                 })
                                 .filter((participantId) => formData.participants[participantId].role !== 2)
@@ -509,14 +509,14 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                                 <div className="username-and-role-box">
                                                     <p className="user-display-name">{user.displayName}</p>
                                                     {isCurrentUser ? (
-                                                        <p style={{ color: "#585CE1", fontSize: "14px" }}>Yönetici</p>
+                                                        <p style={{ color: "#585CE1", fontSize: "14px" }}>مدیر</p>
                                                     ) : (
                                                         <select
                                                             defaultValue={user.role}
                                                             onChange={(e) => handleroleChange(participantId, e.target.value)}
                                                         >
-                                                            <option value={1}>Üye</option>
-                                                            <option value={0}>Yönetici</option>
+                                                            <option value={1}>عضو</option>
+                                                            <option value={0}>مدیر</option>
                                                         </select>
                                                     )}
                                                 </div>
@@ -532,8 +532,8 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                                 <MdPersonRemoveAlt1 className="icon" />
                                                 <span>
                                                     {isSmallScreen
-                                                        ? (isCurrentUser ? "Ayrıl" : "Çıkar")
-                                                        : (isCurrentUser ? "Gruptan Ayrıl" : "Gruptan Çıkar")}
+                                                        ? (isCurrentUser ? "ترک" : "خارج کن")
+                                                        : (isCurrentUser ? "ترک گروه" : "حذف از گروه")}
                                                 </span>
                                             </button>
                                         </div>
@@ -544,7 +544,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                     <div className="option-buttons">
                         <button onClick={() => setAddUserModal(true)}>
                             <HiUserAdd className="icon" />
-                            Üye Ekle
+                            افزودن عضو
                         </button>
                         {isGroupSettings ? (
                             <button
@@ -552,14 +552,14 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                 disabled={isSaveDisabled}
                                 className={isSaveDisabled ? "disabled" : ""}
                             >
-                                Kaydet
+                                ذخیره
                             </button>
                         ) : (
                             <button
                                 onClick={handleSubmit}
                                 disabled={!isSubmitReady}
                                 style={{ opacity: isSubmitReady ? 1 : 0.8 }}>
-                                Grubu Oluştur
+                                ایجاد گروه
                             </button>
                         )}
                     </div>

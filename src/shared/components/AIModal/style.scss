@@ -34,15 +34,15 @@
 
       @keyframes scaleRotateAnimation {
         0% {
-          transform: scale(1.2) rotate(0deg); // Başlangıçta 1.2 ve 0 derece dönüş
+          transform: scale(1.2) rotate(0deg); // در ابتدا مقیاس 1.2 و چرخش 0 درجه
         }
 
         50% {
-          transform: scale(0.9) rotate(180deg); // Yarıda 0.9 ve 180 derece dönüş
+          transform: scale(0.9) rotate(180deg); // در میانه مقیاس 0.9 و چرخش 180 درجه
         }
 
         100% {
-          transform: scale(1.1) rotate(360deg); // Sonda 1.1 ve 360 derece dönüş
+          transform: scale(1.1) rotate(360deg); // در انتها مقیاس 1.1 و چرخش 360 درجه
         }
       }
     }

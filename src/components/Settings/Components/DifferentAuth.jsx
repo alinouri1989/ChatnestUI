@@ -5,11 +5,11 @@ import { FaFacebook } from "react-icons/fa";
 function DifferentAuth({ providerId }) {
     return (
         <div className="different-auth">
-            <h3>Şifreni Değiştir</h3>
+            <h3>تغییر گذرواژه</h3>
             <div className="different-auth-box">
                 {providerId === "google.com" ? <FcGoogle /> : <FaFacebook className="fb" />}
-                <p>{providerId === "google.com" ? "Google" : "Facebook"} ile giriş yaptınız</p>
-                <span>Şifrenizi hesabınızdan değiştirebilirsiniz.</span>
+                <p>با {providerId === "google.com" ? "Google" : "Facebook"} وارد شده‌اید</p>
+                <span>می‌توانید گذرواژه را از حساب خود تغییر دهید.</span>
             </div>
         </div>
     )

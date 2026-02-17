@@ -37,9 +37,9 @@ const Theme = () => {
         applyTheme("Dark");
       }
 
-      SuccessAlert("Tema değiştirildi");
+      SuccessAlert("تم تغییر کرد");
     } catch {
-      ErrorAlert("Tema değiştirilemedi");
+      ErrorAlert("تغییر تم انجام نشد");
     }
   };
 
@@ -49,9 +49,9 @@ const Theme = () => {
         return;
       }
       await changeChatBackground(colorId);
-      SuccessAlert("Duvar kağıdı değiştirildi");
+      SuccessAlert("تصویر پس‌زمینه تغییر کرد");
     } catch {
-      ErrorAlert("Duvar kağıdı değiştirilemedi")
+      ErrorAlert("تغییر تصویر پس‌زمینه انجام نشد")
     }
   };
 
@@ -65,19 +65,19 @@ const Theme = () => {
   return (
     <div className="theme-box">
       <div className="theme-select">
-        <h3>Tema</h3>
+        <h3>تم</h3>
         <select
           value={user?.userSettings?.theme || "DefaultSystemMode"}
           onChange={(e) => handleThemeChange(e.target.value)}
         >
-          <option value="DefaultSystemMode">Varsayılan Sistem Modu</option>
-          <option value="Light">Açık</option>
+          <option value="DefaultSystemMode">حالت پیش‌فرض سیستم</option>
+          <option value="Light">روشن</option>
           <option value="Dark">Koyu</option>
         </select>
       </div>
 
       <div className="wallpaper">
-        <h4>Sohbet Duvar Kağıdı</h4>
+        <h4>تصویر پس‌زمینه گفت‌وگو</h4>
         <div className="grid">
           {user?.userSettings?.theme === "Dark" ? (
             <div

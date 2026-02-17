@@ -30,10 +30,10 @@ function SettingsModal({ closeModal }) {
   const { chatConnection, notificationConnection, callConnection } = useSignalR();
 
   const menuItems = [
-    { id: "account", icon: <FaUserCog />, text: "Hesap", component: <Account /> },
-    { id: "theme", icon: <PiPaintBrushFill />, text: "Tema", component: <Theme /> },
-    { id: "security", icon: <MdSecurity />, text: "Güvenlik", component: <Security /> },
-    { id: "help", icon: <RiInformation2Fill />, text: "Yardım", component: <Help /> },
+    { id: "account", icon: <FaUserCog />, text: "حساب کاربری", component: <Account /> },
+    { id: "theme", icon: <PiPaintBrushFill />, text: "تم", component: <Theme /> },
+    { id: "security", icon: <MdSecurity />, text: "امنیت", component: <Security /> },
+    { id: "help", icon: <RiInformation2Fill />, text: "راهنما", component: <Help /> },
   ];
 
   const [activeMenu, setActiveMenu] = useState("account");
@@ -50,10 +50,10 @@ function SettingsModal({ closeModal }) {
       await logoutUser();
       dispatch({ type: 'RESET_STORE' });
       applyTheme("Light");
-      SuccessAlert('Çıkış Yapıldı');
+      SuccessAlert('خروج انجام شد');
       closeModal();
     } catch {
-      ErrorAlert('Çıkış Yapılamıyor');
+      ErrorAlert('خروج انجام نمی‌شود');
     }
   };
 
@@ -76,7 +76,7 @@ function SettingsModal({ closeModal }) {
       <CloseButton closeModal={closeModal} />
       <div className="title-box">
         <IoMdSettings />
-        <p>Ayarlar</p>
+        <p>تنظیمات</p>
       </div>
       <div className="contents-box">
         <div className="sidebar">
@@ -104,7 +104,7 @@ function SettingsModal({ closeModal }) {
             onKeyDown={handleLogoutKeyDown}
           >
             <LuLogOut className="icon" />
-            <p>Çıkış</p>
+            <p>خروج</p>
           </div>
         </div>
 

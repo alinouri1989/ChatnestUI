@@ -74,11 +74,11 @@ function UserDetailsBar({
             {status == "online" ? (
               <div className="status">
                 <p className="circle"></p>
-                <p>Çevrimiçi</p>
+                <p>آنلاین</p>
               </div>
             ) : (
               <div className="status-2">
-                <p>Son Görülme</p>
+                <p>آخرین بازدید</p>
                 <span>
                   {formatDateForLastConnectionDate(lastConnectionDate)}
                 </span>
@@ -99,7 +99,7 @@ function UserDetailsBar({
                 >
                   <PiPhoneFill />{" "}
                 </button>
-                <p>Sesli Ara</p>
+                <p>تماس صوتی</p>
               </div>
               <div className="button-box">
                 <button
@@ -109,7 +109,7 @@ function UserDetailsBar({
                 >
                   <HiMiniVideoCamera />
                 </button>
-                <p>Görüntülü Ara</p>
+                <p>تماس تصویری</p>
               </div>
             </div>
           </div>

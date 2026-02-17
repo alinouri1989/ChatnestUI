@@ -65,7 +65,7 @@ function GroupMessageBar({ groupId }) {
                     >
                         <img src={FirstChatBanner} alt="No messages yet" />
                         <motion.p {...opacityAndTransformEffect(0.5, 30, 0.5)}>
-                            İlk mesajınızı göndererek sohbeti başlatın
+                            با ارسال اولین پیام، گفت‌وگو را شروع کنید
                         </motion.p>
                     </motion.div>
                 ) : (

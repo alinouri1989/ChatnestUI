@@ -22,7 +22,7 @@ function ChangePassword() {
     const onSubmit = async (formData) => {
         try {
             await changePassword(formData).unwrap();
-            SuccessAlert("Şifre başarıyla değiştirildi!");
+            SuccessAlert("گذرواژه با موفقیت تغییر کرد!");
 
             reset({
                 currentPassword: "",
@@ -36,11 +36,11 @@ function ChangePassword() {
 
     return (
         <div className="change-password-box">
-            <h3>Şifreni Değiştir</h3>
+            <h3>تغییر گذرواژه</h3>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="inputs-box">
                     <div className="input-box">
-                        <p>Mevcut Şifreniz</p>
+                        <p>گذرواژه فعلی</p>
                         <input
                             type="password"
                             {...register("currentPassword")}
@@ -50,7 +50,7 @@ function ChangePassword() {
                     </div>
 
                     <div className="input-box">
-                        <p>Yeni Şifre</p>
+                        <p>گذرواژه جدید</p>
                         <input
                             type="password"
                             {...register("newPassword")}
@@ -60,7 +60,7 @@ function ChangePassword() {
                     </div>
 
                     <div className="input-box">
-                        <p>Yeni Şifre Tekrar</p>
+                        <p>تکرار گذرواژه جدید</p>
                         <input
                             type="password"
                             {...register("newPasswordAgain")}
@@ -72,7 +72,7 @@ function ChangePassword() {
 
                 <div className="option-buttons">
                     <button type="submit" className="savePassword">
-                        Kaydet
+                        ذخیره
                     </button>
                 </div>
             </form>

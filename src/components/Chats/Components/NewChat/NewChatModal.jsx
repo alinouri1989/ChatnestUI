@@ -53,7 +53,7 @@ function NewChatModal() {
       }));
 
       if (formattedUsers.length === 0) {
-        setError("Böyle bir kullanıcı bulunamadı.");
+        setError("چنین کاربری پیدا نشد.");
       }
 
       setUsers(formattedUsers);
@@ -128,13 +128,13 @@ function NewChatModal() {
       <div className="title-and-input-bar">
         <div className="title-box">
           <img src={star} alt="" />
-          <p>Yeni bir sohbet başlat</p>
+          <p>یک گفت‌وگوی جدید شروع کنید</p>
         </div>
         <div className="search-user-input-box">
           <BiSearchAlt className="icon" />
           <input
             type="text"
-            placeholder="Kullanıcı adı veya email ile aratın..."
+            placeholder="با نام کاربری یا ایمیل جستجو کنید..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -158,7 +158,7 @@ function NewChatModal() {
         <div className="user-list-box active">
           <div className="result-number-box">
             <TiThList className="icon" />
-            <p>{users.length} kullanıcı listeleniyor</p>
+            <p>{users.length} کاربر نمایش داده می‌شود</p>
           </div>
 
           <div className="users-box">

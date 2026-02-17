@@ -105,8 +105,8 @@ function ArchivesList() {
 
     return (
         <div className="archive-list-box">
-            {isSmallScreen && <h2 className="mobil-menu-title">Arşivler</h2>}
-            <SearchInput value={searchUser} onChange={setSearchUser} placeholder={"Arşivlenmiş sohbetlerde ara"} />
+            {isSmallScreen && <h2 className="mobil-menu-title">بایگانی‌ها</h2>}
+            <SearchInput value={searchUser} onChange={setSearchUser} placeholder={"در گفت‌وگوهای بایگانی‌شده جستجو کنید"} />
             <div className="list-flex">
                 <motion.div
                     className="user-list"
@@ -137,7 +137,7 @@ function ArchivesList() {
                         ))
                     ) : (
                         isChatsInitialized
-                            ? <NoActiveData text={searchUser ? "Eşleşen kullanıcı bulunamadı" : "Arşivlenmiş sohbetiniz bulunmamaktadır."} />
+                            ? <NoActiveData text={searchUser ? "کاربر مطابقی پیدا نشد" : "گفت‌وگوی بایگانی‌شده‌ای ندارید."} />
                             : <PreLoader />
                     )}
                 </motion.div>

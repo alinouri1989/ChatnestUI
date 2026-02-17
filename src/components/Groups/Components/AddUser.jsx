@@ -43,7 +43,7 @@ function AddUser({ closeUserModal, setFormData, formData }) {
             }));
 
             if (formattedUsers.length === 0) {
-                setError("Böyle bir kullanıcı bulunamadı.");
+                setError("چنین کاربری پیدا نشد.");
             }
 
             setUsers(formattedUsers);
@@ -81,7 +81,7 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                     }
                 }
             }));
-            SuccessAlert("Kullanıcı Eklendi", 1000);
+            SuccessAlert("کاربر اضافه شد", 1000);
         } else {
             const currentRole = formData.participants[userId].role;
             if (currentRole === 2) {
@@ -91,9 +91,9 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                     ...prevState,
                     participants: updatedParticipants
                 }));
-                SuccessAlert("Kullanıcı eklendi.", 1000);
+                SuccessAlert("کاربر اضافه شد.", 1000);
             } else if (currentRole === 1 || currentRole === 0) {
-                ErrorAlert("Bu kullanıcı zaten eklendi.", 1500);
+                ErrorAlert("این کاربر قبلا اضافه شده است.", 1500);
             }
         }
     };
@@ -106,13 +106,13 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                     <div className="title-and-input-bar">
                         <div className="title-box">
                             <img src={star} alt="Star icon" />
-                            <p>Üye Ekle</p>
+                            <p>افزودن عضو</p>
                         </div>
                         <div className="search-user-input-box">
                             <BiSearchAlt className="icon" />
                             <input
                                 type="text"
-                                placeholder="Kullanıcı adı veya email ile aratın..."
+                                placeholder="با نام کاربری یا ایمیل جستجو کنید..."
                                 value={inputValue}
                                 onChange={handleInputChange}
                             />
@@ -137,7 +137,7 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                             className="user-list-box active">
                             <div className="result-number-box">
                                 <TiThList className="icon" />
-                                <p>{users.length} kullanıcı listeleniyor</p>
+                                <p>{users.length} کاربر نمایش داده می‌شود</p>
                             </div>
                             <div className="users-box">
                                 {users.map(user => {

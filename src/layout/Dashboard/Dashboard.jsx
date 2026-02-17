@@ -30,7 +30,7 @@ function Dashboard() {
             case path.includes("/gruplar"):
                 return <GroupsList />;
             default:
-                return <p>Sonuç yok</p>;
+                return <p>نتیجه‌ای یافت نشد</p>;
         }
     };
 

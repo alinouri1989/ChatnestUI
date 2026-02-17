@@ -10,7 +10,7 @@ function Archives() {
   return (
     <>
       <div className='archive-general-box'>
-        {!id && <WelcomeScreen text={"Kişisel arşivleriniz uçtan uca şifrelidir"} />}
+        {!id && <WelcomeScreen text={"بایگانی‌های شخصی شما سرتاسر رمزگذاری شده‌اند"} />}
       </div>
     </>
 

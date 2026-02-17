@@ -71,7 +71,7 @@ function Chats() {
     <div className="chat-section">
       <div className="chat-general-box">
         {!id && (
-          <WelcomeScreen text={"Kişisel sohbetleriniz uçtan uca şifrelidir"} />
+          <WelcomeScreen text={"گفت‌وگوهای شخصی شما سرتاسر رمزگذاری شده‌اند"} />
         )}
         {id && (
           <>

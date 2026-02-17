@@ -5,23 +5,23 @@ import { MdEmail } from "react-icons/md";
 function Help() {
   return (
     <div className="help-box">
-      <h3>Yardım</h3>
+      <h3>راهنما</h3>
       <div className="version-info">
-        <p>Web için ChatNest</p>
-        <span>Sürüm 1.000.0.0</span>
+        <p>ChatNest برای وب</p>
+        <span>نسخه 1.000.0.0</span>
       </div>
       <div className="contact-us">
-        <p>Bize Ulaşın</p>
-        <span>Bu uygulama hakkındaki görüşlerinizi bizimle paylaşın</span>
+        <p>تماس با ما</p>
+        <span>دیدگاهتان دربارهٔ این برنامه را با ما به اشتراک بگذارید</span>
         <div className="rate-box">
-          <a href="mailto:ChatNest.destek@gmail.com" target="_blank">Bize ulaşın</a>
+          <a href="mailto:ChatNest.destek@gmail.com" target="_blank">تماس با ما</a>
           <a>Uygulamaya puan ver</a>
         </div>
-        <a>Yardım merkezi</a>
+        <a>مرکز راهنما</a>
         <a>Lisanslar</a>
-        <a>Koşullar ve Gizlilik İlkesi</a>
+        <a>شرایط و سیاست حفظ حریم خصوصی</a>
       </div>
-      <p className="developer-team-title">Geliştirici Ekip</p>
+      <p className="developer-team-title">تیم توسعه</p>
       <div className="developers-box">
         <div className="developer-box">
           <div className="developer-image-and-info">

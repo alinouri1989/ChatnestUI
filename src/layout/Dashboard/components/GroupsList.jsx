@@ -43,21 +43,21 @@ function GroupsList() {
 
   return (
     <div className="group-list-box">
-      {isSmallScreen && <h2 className="mobil-menu-title">Gruplar</h2>}
+      {isSmallScreen && <h2 className="mobil-menu-title">گروه‌ها</h2>}
       <SearchInput
-        placeholder={"Gruplarda aratın"}
+        placeholder={"در گروه‌ها جستجو کنید"}
         value={searchGroup}
         onChange={setSearchGroup}
       />
 
       <button onClick={handleNewGroup} className="create-buttons">
-        {isSmallScreen ? <TbMessagePlus /> : "Yeni Grup Oluştur"}
+        {isSmallScreen ? <TbMessagePlus /> : "ایجاد گروه جدید"}
       </button>
 
       <div className="list-flex">
         <motion.div
           className="user-list"
-          variants={opacityEffect(0.8)} // Opacity animasyonunu container için uyguladık
+          variants={opacityEffect(0.8)} // انیمیشن Opacity را برای کانتینر اعمال کردیم
           initial="initial"
           animate="animate"
         >
@@ -145,8 +145,8 @@ function GroupsList() {
             <NoActiveData
               text={
                 searchGroup
-                  ? "Eşleşen grup bulunamadı"
-                  : "Aktif grup bulunmamaktadır."
+                  ? "گروه مطابقی پیدا نشد"
+                  : "گروه فعالی وجود ندارد."
               }
             />
           ) : (

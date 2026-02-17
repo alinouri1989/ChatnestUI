@@ -118,15 +118,15 @@ function ChatsList() {
 
     return (
         <div className="chat-list-box">
-            {isSmallScreen && <h2 className="mobil-menu-title">Sohbetler</h2>}
+            {isSmallScreen && <h2 className="mobil-menu-title">گفت‌وگوها</h2>}
             <SearchInput
                 value={searchUser}
                 onChange={setSearchUser}
-                placeholder={"Sohbetlerinizde aratın..."}
+                placeholder={"در گفت‌وگوهایتان جستجو کنید..."}
             />
 
             <button onClick={handleNewChat} className="create-buttons">
-                {isSmallScreen ? <TbMessagePlus /> : "Yeni Sohbet"}
+                {isSmallScreen ? <TbMessagePlus /> : "گفت‌وگوی جدید"}
             </button>
 
             <div className="list-flex">
@@ -159,7 +159,7 @@ function ChatsList() {
                         ))
                     ) : (
                         isChatsInitialized
-                            ? <NoActiveData text={searchUser ? "Eşleşen kullanıcı bulunamadı" : "Aktif sohbet bulunamadı"} />
+                            ? <NoActiveData text={searchUser ? "کاربر مطابقی پیدا نشد" : "گفت‌وگوی فعالی پیدا نشد"} />
                             : <PreLoader />
                     )}
                 </motion.div>

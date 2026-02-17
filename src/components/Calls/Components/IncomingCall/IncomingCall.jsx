@@ -70,7 +70,7 @@ function IncomingCall({ callType, callerProfile, callId }) {
                 />
                 <div className='user-info-and-call-status'>
                     <p>{callerProfile.displayName}</p>
-                    <span>Seni Arıyor...</span>
+                    <span>در حال تماس با شما...</span>
                 </div>
                 <div className='call-option-buttons'>
                     <button onClick={() => handleAcceptCall()}>

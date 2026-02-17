@@ -63,7 +63,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                     <p className="user-name">{recipientProfile.displayName}</p>
 
                     {status === "online" ?
-                        <span>Çevrimiçi</span>
+                        <span>آنلاین</span>
                         :
                         <span>{formatDateForLastConnectionDate(lastConnectionDate)}</span>
                     }

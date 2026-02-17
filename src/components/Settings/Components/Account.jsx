@@ -89,9 +89,9 @@ function Account() {
     if (user.displayName !== data.displayName) {
       try {
         await updateDisplayName(data.displayName);
-        SuccessAlert("Ad Soyad Değiştirildi");
+        SuccessAlert("نام و نام خانوادگی تغییر کرد");
       } catch {
-        ErrorAlert("İsim Değiştirilemedi");
+        ErrorAlert("تغییر نام انجام نشد");
       }
     }
   };
@@ -102,9 +102,9 @@ function Account() {
     if (user.phoneNumber !== data.phoneNumber) {
       try {
         await updatePhoneNumber(data.phoneNumber);
-        SuccessAlert("Telefon Numarası Güncellendi")
+        SuccessAlert("شماره تلفن به‌روزرسانی شد")
       } catch {
-        ErrorAlert("Telefon Numarası Güncellenemedi");
+        ErrorAlert("به‌روزرسانی شماره تلفن انجام نشد");
       }
     }
   };
@@ -115,9 +115,9 @@ function Account() {
     if (user.biography !== data.bio) {
       try {
         await updateBiography(data.bio);
-        SuccessAlert("Biyografi Güncellendi")
+        SuccessAlert("بیوگرافی به‌روزرسانی شد")
       } catch {
-        ErrorAlert("Biyografi Güncellenemedi");
+        ErrorAlert("به‌روزرسانی بیوگرافی انجام نشد");
       }
     }
   };
@@ -136,10 +136,10 @@ function Account() {
     handleClose();
     try {
       await removeProfilePhoto();
-      SuccessAlert("Fotoğraf Kaldırıldı")
+      SuccessAlert("عکس حذف شد")
       setSelectedImage(defaultProfilePhoto)
     } catch {
-      ErrorAlert("Kaldırılamadı")
+      ErrorAlert("حذف انجام نشد")
     }
   };
 
@@ -150,21 +150,21 @@ function Account() {
     const validExtensions = ["image/png", "image/jpeg", "image/jpg"];
 
     if (!validExtensions.includes(file.type)) {
-      return ErrorAlert("Bir resim dosyası seçiniz");
+      return ErrorAlert("لطفا یک فایل تصویری انتخاب کنید");
     }
 
     try {
       const base64String = await convertFileToBase64(file);
       await updateProfilePhoto(base64String);
-      SuccessAlert("Fotoğraf Güncellendi");
+      SuccessAlert("عکس به‌روزرسانی شد");
     } catch {
-      ErrorAlert("Fotoğraf Güncellenemedi");
+      ErrorAlert("به‌روزرسانی عکس انجام نشد");
     }
   };
 
   return (
     <div className="account-box">
-      <h3>Hesap</h3>
+      <h3>حساب کاربری</h3>
       <div className="image-box">
         <img
           className="profile-image"
@@ -217,7 +217,7 @@ function Account() {
               <ImageSearchRoundedIcon />
             </ListItemIcon>
             <ListItemText
-              primary="Görüntüle"
+              primary="مشاهده"
               primaryTypographyProps={{
                 fontFamily: "Montserrat",
                 fontWeight: "700",
@@ -234,7 +234,7 @@ function Account() {
               <AddPhotoAlternateRoundedIcon />
             </ListItemIcon>
             <ListItemText
-              primary="Değiştir"
+              primary="تغییر"
               primaryTypographyProps={{
                 fontFamily: "Montserrat",
                 fontWeight: "700",
@@ -252,7 +252,7 @@ function Account() {
                 <DeleteOutlineRoundedIcon />
               </ListItemIcon>
               <ListItemText
-                primary="Kaldır"
+                primary="حذف"
                 primaryTypographyProps={{
                   fontFamily: "Montserrat",
                   fontWeight: "700",
@@ -324,13 +324,13 @@ function Account() {
           </div>
 
           <div className="phone-box">
-            <p>Telefon</p>
+            <p>تلفن</p>
             <div className="phone-edit-box">
               {isEditingPhone ? (
                 <input
                   {...registerPhone("phoneNumber")}
                   type="text"
-                  placeholder="Telefon numarası giriniz..."
+                  placeholder="شماره تلفن را وارد کنید..."
                   autoFocus
                 />
               ) : (

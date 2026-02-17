@@ -50,12 +50,12 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   const handleAddArchive = async () => {
     try {
       await chatConnection.invoke("ArchiveChat", chatId);
-      SuccessAlert("Arşive Eklendi");
+      SuccessAlert("به بایگانی اضافه شد");
       if (location.pathname.includes(chatId)) {
         navigate("/sohbetler");
       }
     } catch {
-      ErrorAlert("Arşive Eklenemedi");
+      ErrorAlert("افزودن به بایگانی انجام نشد");
     }
     handleClose();
   };
@@ -63,12 +63,12 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   const handleRemoveFromArchive = async () => {
     try {
       await chatConnection.invoke("UnarchiveChat", chatId);
-      SuccessAlert("Arşivden Çıkarıldı");
+      SuccessAlert("از بایگانی خارج شد");
       if (location.pathname.includes(chatId)) {
         navigate("/arsivler");
       }
     } catch {
-      ErrorAlert("Arşivden Çıkarılamadı");
+      ErrorAlert("خروج از بایگانی انجام نشد");
     }
     handleClose();
   };
@@ -76,7 +76,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   const handleClearChat = async () => {
     try {
       await chatConnection.invoke("ClearChat", "Individual", chatId);
-      SuccessAlert("Sohbet Silindi");
+      SuccessAlert("گفت‌وگو حذف شد");
 
       const currentPath = location.pathname;
 
@@ -88,7 +88,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
         }
       }
     } catch {
-      ErrorAlert("Sohbet Silinemedi");
+      ErrorAlert("حذف گفت‌وگو انجام نشد");
     }
     handleClose();
   };
@@ -177,7 +177,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
                 <DeleteIcon fontSize="medium" sx={{ color: "#EB6262" }} />
               </ListItemIcon>
               <ListItemText
-                primary="Sil"
+                primary="حذف"
                 primaryTypographyProps={{
                   fontFamily: "Montserrat",
                   fontWeight: "700",
@@ -197,7 +197,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
                   <UnarchiveIcon fontSize="medium" sx={{ color: "#585CE1" }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Çıkar"
+                  primary="خارج کن"
                   primaryTypographyProps={{
                     fontFamily: "Montserrat",
                     fontWeight: "700",
@@ -217,7 +217,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
                   <ArchiveIcon fontSize="medium" sx={{ color: "#585CE1" }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Arşivle"
+                  primary="بایگانی کن"
                   primaryTypographyProps={{
                     fontFamily: "Montserrat",
                     fontWeight: "700",

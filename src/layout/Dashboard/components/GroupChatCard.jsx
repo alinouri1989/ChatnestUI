@@ -42,7 +42,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
     const handleLeaveGroup = async () => {
         try {
             await leaveGroup(groupListId).unwrap();
-            SuccessAlert("Gruptan Çıktın");
+            SuccessAlert("از گروه خارج شدید");
             handleClose();
         } catch {
             ErrorAlert("Bir hata meydana geldi");
@@ -134,7 +134,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
                                 <GroupRemoveIcon fontSize="medium" sx={{ color: "#EB6262" }} />
                             </ListItemIcon>
                             <ListItemText
-                                primary="Gruptan Çık"
+                                primary="خروج از گروه"
                                 primaryTypographyProps={{
                                     fontFamily: "Montserrat",
                                     fontWeight: "700",

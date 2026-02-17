@@ -42,9 +42,9 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
     handleClose();
     try {
       await callConnection.invoke("DeleteCall", callId);
-      SuccessAlert("Arama Kaydı Silindi");
+      SuccessAlert("سابقه تماس حذف شد");
     } catch {
-      ErrorAlert("Arama Kaydı Silinemedi");
+      ErrorAlert("حذف سابقه تماس انجام نشد");
     }
   };
 
@@ -132,7 +132,7 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
                 <DeleteIcon fontSize="medium" sx={{ color: "#EB6262" }} />
               </ListItemIcon>
               <ListItemText
-                primary="Sil"
+                primary="حذف"
                 primaryTypographyProps={{
                   fontFamily: "Montserrat",
                   fontWeight: "700",

@@ -70,22 +70,22 @@ function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }
                                 </div>
 
                                 <div className='date-box'>
-                                    <p>{formatDateToTR(groupProfile.createdDate)} tarihinde oluşturuldu</p>
+                                    <p>{formatDateToTR(groupProfile.createdDate)} ایجاد شد</p>
                                 </div>
 
                                 <div className='description'>
-                                    <strong>Grup Açıklaması</strong>
+                                    <strong>توضیحات گروه</strong>
                                     <div className='line'></div>
-                                    <p>{groupProfile.description || "Açıklama bulunmuyor."}</p>
+                                    <p>{groupProfile.description || "توضیحی وجود ندارد."}</p>
                                 </div>
 
                                 <div className="group-members-box">
                                     <h2>
-                                        Grup Üyeleri - {Object.values(groupProfile.participants).filter(member => member.role !== 2).length}
+                                        اعضای گروه - {Object.values(groupProfile.participants).filter(member => member.role !== 2).length}
                                     </h2>
                                     <div className="members-list">
                                         {Object.entries(groupProfile.participants)
-                                            .sort(([, memberA], [, memberB]) => memberA.role - memberB.role) // Role değerine göre sıralama
+                                            .sort(([, memberA], [, memberB]) => memberA.role - memberB.role) // مرتب‌سازی براساس مقدار نقش
                                             .map(([id, member]) => {
                                                 if (member.role === 2) return null;
 
@@ -104,7 +104,7 @@ function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }
                                                         <div className="user-info">
                                                             <p className="user-display-name">{member.displayName}</p>
                                                             <span className={member.role === 0 ? "admin" : ""}>
-                                                                {member.role === 0 ? "Yönetici" : "Üye"}
+                                                                {member.role === 0 ? "مدیر" : "عضو"}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -114,7 +114,7 @@ function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }
                                 </div>
                             </>
                         ) : (
-                            <p>Grup bilgileri yükleniyor...</p>
+                            <p>اطلاعات گروه در حال بارگذاری است...</p>
                         )}
                     </div>
                 </>

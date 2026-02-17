@@ -37,22 +37,22 @@ function Sidebar() {
   const navItems = [
     {
       icon: <IoChatbubbleEllipses className="icon" />,
-      label: "Sohbetler",
+      label: "گفت‌وگوها",
       path: "/sohbetler",
     },
     {
       icon: <PiPhoneFill className="icon" />,
-      label: "Aramalar",
+      label: "تماس‌ها",
       path: "/aramalar",
     },
     {
       icon: <HiArchiveBox className="icon" />,
-      label: "Arşivler",
+      label: "بایگانی‌ها",
       path: "/arsivler",
     },
     {
       icon: <HiUserGroup className="icon" />,
-      label: "Gruplar",
+      label: "گروه‌ها",
       path: "/gruplar",
     },
   ];
@@ -126,7 +126,7 @@ function Sidebar() {
           onClick={handleSettings}
         >
           <IoMdSettings className="icon" />
-          {isOpen && <span>Ayarlar</span>}
+          {isOpen && <span>تنظیمات</span>}
         </button>
       </div>
     </div>

@@ -53,7 +53,7 @@ function Calls() {
 
   if (!currentCall) {
     return <>{!id ? <div className="calls-general-box">
-      <WelcomeScreen text="Kişisel aramalarınız uçtan uca şifrelidir" />
+      <WelcomeScreen text="تماس‌های شخصی شما سرتاسر رمزگذاری شده‌اند" />
     </div> : null}</>;
   }
 
@@ -95,7 +95,7 @@ function Calls() {
         <div className="call-info-bar-box">
           <div className='title-and-back-box'>
             <BackToMenuButton path={"aramalar"} />
-            <h2>Arama Bilgisi</h2>
+            <h2>اطلاعات تماس</h2>
           </div>
           <div className="details-box">
             <div className="user-and-call-box">
@@ -106,7 +106,7 @@ function Calls() {
                 <p>{displayName}</p>
               </div>
               <div className="call-options">
-                <button onClick={handleGoIndividualChat}><IoChatbubbleEllipses />{isSmallScreen && <span>Mesaj</span>}</button>
+                <button onClick={handleGoIndividualChat}><IoChatbubbleEllipses />{isSmallScreen && <span>پیام</span>}</button>
                 <button
                   disabled={isRingingIncoming}
                   style={{ opacity: isRingingIncoming ? "0.6" : "1" }}
@@ -116,7 +116,7 @@ function Calls() {
                 <button
                   disabled={isRingingIncoming}
                   style={{ opacity: isRingingIncoming ? "0.6" : "1" }}
-                  onClick={handleVideoCall}><HiMiniVideoCamera />{isSmallScreen && <span>Görüntülü</span>}
+                  onClick={handleVideoCall}><HiMiniVideoCamera />{isSmallScreen && <span>تصویری</span>}
                 </button>
               </div>
             </div>
