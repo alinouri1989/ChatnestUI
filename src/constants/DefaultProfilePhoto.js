@@ -1,2 +1,2 @@
-export const defaultProfilePhoto = "../../../../assets/svg/DefaultUserProfilePhoto.svg"
-export const defaultGroupPhoto = "../../../../assets/svg/DefaultUserProfilePhoto.svg"
+export const defaultProfilePhoto = "/src/assets/svg/DefaultUserProfilePhoto.svg"
+export const defaultGroupPhoto = "/src/assets/svg/DefaultUserProfilePhoto.svg"

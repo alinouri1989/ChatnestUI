@@ -14,47 +14,47 @@ function Help() {
         <p>تماس با ما</p>
         <span>دیدگاهتان دربارهٔ این برنامه را با ما به اشتراک بگذارید</span>
         <div className="rate-box">
-          <a href="mailto:ChatNest.destek@gmail.com" target="_blank">تماس با ما</a>
-          <a>Uygulamaya puan ver</a>
+          <a href="mailto:alinouri1989@gmail.com" target="_blank">تماس با ما</a>
+          <a>به برنامه امتیاز دهید</a>
         </div>
         <a>مرکز راهنما</a>
-        <a>Lisanslar</a>
+        <a>مجوزها</a>
         <a>شرایط و سیاست حفظ حریم خصوصی</a>
       </div>
       <p className="developer-team-title">تیم توسعه</p>
       <div className="developers-box">
         <div className="developer-box">
           <div className="developer-image-and-info">
-            <img src="https://media.licdn.com/dms/image/v2/D4D03AQFtUmvID7fG8w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711049966022?e=1747872000&v=beta&t=11Uockt7nWDYNuATjq9AnuV3I30XxTgy-TW0gAl7xk8" alt="Hamza" />
+            <img src="/src/assets/svg/DefaultUserProfilePhoto.svg" alt="ali nouri" />
             <div className="developer-info">
-              <span>Hamza Doğan</span>
+              <span>علی نوری</span>
               <p>Frontend Developer</p>
             </div>
           </div>
           <div className="contact-informations-box">
-            <a href="https://www.linkedin.com/in/hamzadogann/" target="_blank"><BsLinkedin /></a>
-            <a href="https://github.com/HamzaDogann" target="_blank"><BsGithub /></a>
-            <a href="mailto:hamzaalidogantr@gmail.com" target="_blank"><MdEmail /></a>
+            <a href="https://www.linkedin.com/alinouri1989/" target="_blank"><BsLinkedin /></a>
+            <a href="https://github.com/alinouri1989" target="_blank"><BsGithub /></a>
+            <a href="mailto:alinouri1989@gmail.com" target="_blank"><MdEmail /></a>
           </div>
         </div>
         <div className="developer-box">
           <div className="developer-image-and-info">
-            <img src="https://media.licdn.com/dms/image/v2/D4D03AQFKMmOugHW2hA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697381628491?e=1747872000&v=beta&t=PMwcLtdzb0w5AGziCGKZWyZdntlwcZfFrLQNqmtlImc" alt="Nazmi" />
+            <img src="/src/assets/svg/DefaultUserProfilePhoto.svg" alt="ali nouri" />
             <div className="developer-info">
-              <span>Nazmi Koçak</span>
+              <span>علی نوری</span>
               <p>Backend Developer</p>
             </div>
           </div>
           <div className="contact-informations-box">
-            <a href="https://www.linkedin.com/in/nazmikocak/" target="_blank"><BsLinkedin /></a>
-            <a href="https://github.com/nazmikocak" target="_blank"><BsGithub /></a>
-            <a href="mailto:nazmikocak.dev@hotmail.com" target="_blank"><MdEmail /></a>
+            <a href="https://www.linkedin.com/alinouri1989/" target="_blank"><BsLinkedin /></a>
+            <a href="https://github.com/alinouri1989" target="_blank"><BsGithub /></a>
+            <a href="mailto:alinouri1989@gmail.com" target="_blank"><MdEmail /></a>
           </div>
         </div>
         <div className="developer-box"></div>
       </div>
       <div className="copyright-box">
-        <p>2025 © ChatNest</p>
+        <p>2026 © ChatNest</p>
       </div>
     </div>
   )

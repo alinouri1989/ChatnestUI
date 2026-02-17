@@ -86,7 +86,7 @@ function UserDetailsBar({
             )}
 
             <div className="biography">
-              <strong>Biyografi</strong>
+              <strong>بیوگرافی</strong>
               <div className="line"></div>
               <p>{recipientProfile.biography}</p>
             </div>

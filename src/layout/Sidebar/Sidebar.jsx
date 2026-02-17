@@ -60,7 +60,7 @@ function Sidebar() {
   if (!isSmallScreen) {
     navItems.push({
       icon: <AiFillHome className="icon home" />,
-      label: "Anasayfa",
+      label: "صفحه اصلی",
       path: "/anasayfa",
     });
   }

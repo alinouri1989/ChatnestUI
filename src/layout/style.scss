@@ -20,7 +20,7 @@
     }
 
     .outlet-content {
-      margin-left: 65px;
+      margin: 0 65px;
       @include flex-center(row, flex-start, flex-start);
       height: 100%;
       width: 100%;

@@ -64,7 +64,7 @@ function Account() {
 
   const { register: registerPhone, handleSubmit: handlePhoneSubmit, formState: { errors: phoneNumberErrors } } = useForm({
     resolver: zodResolver(phoneNumberSchema),
-    defaultValues: { phoneNumber: user?.phoneNumber || "Belirtilmedi" },
+    defaultValues: { phoneNumber: user?.phoneNumber || "مشخص نشده" },
   });
 
   const { register: registerBio, handleSubmit: handleBioSubmit, formState: { errors: bioErrors } } = useForm({
@@ -334,7 +334,7 @@ function Account() {
                   autoFocus
                 />
               ) : (
-                <p>{user?.phoneNumber || "Belirtilmedi"}</p>
+                <p>{user?.phoneNumber || "مشخص نشده"}</p>
               )}
 
               {!isEditingPhone && (
@@ -364,7 +364,7 @@ function Account() {
 
           <div className="biography-box">
             <div className="biograpy-edit-box">
-              <p>Biyografi</p>
+              <p>بیوگرافی</p>
 
               {!isEditingBiography && (
                 <button
@@ -393,7 +393,7 @@ function Account() {
               <textarea
                 {...registerBio("bio")}
                 type="text"
-                placeholder="Biyografi giriniz..."
+                placeholder="بیوگرافی خود را وارد کنید..."
                 autoFocus
               />
             )}
