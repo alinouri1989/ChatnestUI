@@ -51,7 +51,7 @@ const DataLoader = ({ children }) => {
           );
         } catch {
           // If you want to inspect errors, replace with: `catch (error) { console.error(error); ... }`
-          ErrorAlert("Bir hata meydana geldi");
+          ErrorAlert("خطایی رخ داده است.");
         }
       }
 

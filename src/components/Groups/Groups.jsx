@@ -50,15 +50,15 @@ function GroupChats() {
               lastMessage: matchedGroup.messages?.[matchedGroup.messages.length - 1]?.content || "",
             });
           } else {
-            ErrorAlert("Bir hata meydana geldi");
+            ErrorAlert("خطایی رخ داده است.");
             setGroupProfile(null);
           }
         } else {
-          ErrorAlert("Bir hata meydana geldi");
+          ErrorAlert("خطایی رخ داده است.");
           setGroupProfile(null);
         }
       } else {
-        ErrorAlert("Bir hata meydana geldi");
+        ErrorAlert("خطایی رخ داده است.");
         setGroupProfile(null);
       }
     } else {

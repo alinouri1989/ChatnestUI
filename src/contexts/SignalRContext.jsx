@@ -51,6 +51,7 @@ import {
 import { servers } from "../constants/StunTurnServers.js";
 import { getUserIdFromToken } from "../helpers/getUserIdFromToken.js";
 import { decryptMessage } from "../helpers/messageCryptoHelper.js";
+import { SafeJsonHubProtocol } from "../helpers/safeJsonHubProtocol.js";
 
 import store from "../store/index.js";
 import { ErrorAlert } from "../helpers/customAlert.js";
@@ -210,18 +211,21 @@ export const SignalRProvider = ({ children }) => {
 
     const chatConnection = new HubConnectionBuilder()
       .withUrl(`${BASE_URL}hub/Chat?access_token=${token}`) // Use query parameter
+      .withHubProtocol(new SafeJsonHubProtocol("chat"))
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();
 
     const notificationConnection = new HubConnectionBuilder()
       .withUrl(`${BASE_URL}hub/Notification?access_token=${token}`) // Use query parameter
+      .withHubProtocol(new SafeJsonHubProtocol("notification"))
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();
 
     const callConnection = new HubConnectionBuilder()
       .withUrl(`${BASE_URL}hub/Call?access_token=${token}`) // Use query parameter
+      .withHubProtocol(new SafeJsonHubProtocol("call"))
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect()
       .build();

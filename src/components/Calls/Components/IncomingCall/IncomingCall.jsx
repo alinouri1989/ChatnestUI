@@ -46,7 +46,7 @@ function IncomingCall({ callType, callerProfile, callId }) {
             await callConnection.invoke("EndCall", callId, 2, null);
             dispatch(setIsRingingIncoming(false));
         } catch {
-            ErrorAlert("Bir hata meydana geldi");
+            ErrorAlert("خطایی رخ داده است.");
         }
     };
 

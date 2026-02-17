@@ -45,7 +45,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
             SuccessAlert("از گروه خارج شدید");
             handleClose();
         } catch {
-            ErrorAlert("Bir hata meydana geldi");
+            ErrorAlert("خطایی رخ داده است.");
         }
     };
 

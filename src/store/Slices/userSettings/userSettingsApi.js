@@ -174,7 +174,7 @@ export const userSettingsApi = createApi({
             })
           );
         } catch {
-          ErrorAlert("Bir hata meydana geldi");
+          ErrorAlert("خطایی رخ داده است.");
         }
       },
     }),

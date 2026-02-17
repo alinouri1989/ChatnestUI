@@ -24,6 +24,6 @@ export const startCall = async (callConnection, recipientId, isCameraCall, dispa
             openModalCallback();
         }
     } catch {
-        ErrorAlert("Bir hata meydana geldi");
+        ErrorAlert("خطایی رخ داده است.");
     }
 };

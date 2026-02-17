@@ -299,7 +299,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
             SuccessAlert("از گروه خارج شدید")
             closeModal();
         } catch (error) {
-            ErrorAlert("Bir hata meydana geldi", error);
+            ErrorAlert("خطایی رخ داده است.", error);
         }
     }
 

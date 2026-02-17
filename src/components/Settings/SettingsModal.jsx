@@ -42,9 +42,9 @@ function SettingsModal({ closeModal }) {
   const handleLogout = async () => {
     try {
       await Promise.all([
-        chatConnection.stop().catch(() => ErrorAlert("Bir hata meydana geldi")),
-        notificationConnection.stop().catch(() => ErrorAlert("Bir hata meydana geldi")),
-        callConnection.stop().catch(() => ErrorAlert("Bir hata meydana geldi"))
+        chatConnection.stop().catch(() => ErrorAlert("خطایی رخ داده است.")),
+        notificationConnection.stop().catch(() => ErrorAlert("خطایی رخ داده است.")),
+        callConnection.stop().catch(() => ErrorAlert("خطایی رخ داده است."))
       ]);
 
       await logoutUser();

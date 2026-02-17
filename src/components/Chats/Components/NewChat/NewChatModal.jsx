@@ -91,10 +91,10 @@ function NewChatModal() {
           navigate(destination);
           closeModal();
         } else {
-          ErrorAlert("Bir hata meydana geldi");
+          ErrorAlert("خطایی رخ داده است.");
         }
       } else {
-        ErrorAlert("Bir hata meydana geldi");
+        ErrorAlert("خطایی رخ داده است.");
       }
     };
 
@@ -111,14 +111,14 @@ function NewChatModal() {
   
   const handleGoToChat = async (userId) => {
     if (connectionStatus !== "connected") {
-      ErrorAlert("Bir hata meydana geldi");
+      ErrorAlert("خطایی رخ داده است.");
       return;
     }
     try {
       setIsCreater(true);
       await chatConnection.invoke("CreateChat", "Individual", userId);
     } catch {
-      ErrorAlert("Bir hata meydana geldi");
+      ErrorAlert("خطایی رخ داده است.");
     }
   };
 
