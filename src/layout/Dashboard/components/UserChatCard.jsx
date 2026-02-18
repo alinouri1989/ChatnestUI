@@ -104,7 +104,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
     <div className={`user-dashboard-card-box ${isActiveChat ? "active-chat" : ""}`} onClick={() => handleGoChat()}>
       <div className="card-info-box">
         <div className="image-box">
-          <img src={image}
+          <img src={image ?? defaultProfilePhoto}
             onError={(e) => e.currentTarget.src = defaultProfilePhoto}
             alt={`${name} profile`}
           />

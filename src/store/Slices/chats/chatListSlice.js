@@ -31,11 +31,19 @@ const chatListSlice = createSlice({
             const chatId = Object.keys(action.payload)[0];
             const updates = action.payload[chatId];
 
-            if (state.chatList[chatId]) {
-                Object.entries(updates).forEach(([key, value]) => {
-                    state.chatList[chatId][key] = value;
-                });
+            if (!state.chatList[chatId]) {
+                state.chatList[chatId] = {
+                    displayName: "ChatNest",
+                    email: "",
+                    biography: "",
+                    profilePhoto: defaultProfilePhoto,
+                    lastConnectionDate: null,
+                };
             }
+
+            Object.entries(updates || {}).forEach(([key, value]) => {
+                state.chatList[chatId][key] = value;
+            });
         },
     },
 });

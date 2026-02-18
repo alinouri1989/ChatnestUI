@@ -7,6 +7,22 @@ const initialState = {
   isChatsInitialized: false,
 };
 
+const mapParticipants = (chatData) => {
+  if (Array.isArray(chatData?.participants)) {
+    return chatData.participants;
+  }
+
+  if (Array.isArray(chatData?.chatParticipants)) {
+    return chatData.chatParticipants
+      .map((participant) =>
+        typeof participant === "string" ? participant : participant?.userId
+      )
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -32,7 +48,7 @@ const chatSlice = createSlice({
       }
       const newChat = {
         id: chatId,
-        participants: chatData.participants,
+        participants: mapParticipants(chatData),
         archivedFor: chatData.archivedFor || {},
         createdDate: chatData.createdDate,
         messages: Object.entries(chatData.messages || {}).map(
@@ -47,8 +63,9 @@ const chatSlice = createSlice({
     },
     addNewGroupChat: (state, action) => {
       const { chatId, chatData } = action.payload;
+      const participants = mapParticipants(chatData);
 
-      if (!chatData || !chatData.participants) {
+      if (!chatData || participants.length === 0) {
         return;
       }
 
@@ -61,7 +78,7 @@ const chatSlice = createSlice({
 
       const newGroupChat = {
         id: chatId,
-        participants: chatData.participants,
+        participants,
         archivedFor: chatData.archivedFor || {},
         createdDate: chatData.createdDate,
         messages: Object.entries(chatData.messages || {}).map(
@@ -101,20 +118,11 @@ const chatSlice = createSlice({
         }
       } else {
         const newChat = {
-          id: Object.keys(action.payload.Individual)[0],
+          id: chatId,
           participants: [],
           archivedFor: {},
           createdDate: new Date().toISOString(),
-          messages: Object.entries(action.payload.Individual)
-            .map(([messages]) => {
-              return Object.entries(messages).map(
-                ([messageId, messageData]) => ({
-                  id: messageId,
-                  ...messageData,
-                })
-              );
-            })
-            .flat(),
+          messages: [{ id: messageId, ...messageData }],
         };
 
         state.Individual.push(newChat);
@@ -148,20 +156,11 @@ const chatSlice = createSlice({
         }
       } else {
         const newChat = {
-          id: Object.keys(action.payload.Group)[0],
+          id: chatId,
           participants: [],
           archivedFor: {},
           createdDate: new Date().toISOString(),
-          messages: Object.entries(action.payload.Group)
-            .map(([messages]) => {
-              return Object.entries(messages).map(
-                ([messageId, messageData]) => ({
-                  id: messageId,
-                  ...messageData,
-                })
-              );
-            })
-            .flat(),
+          messages: [{ id: messageId, ...messageData }],
         };
 
         state.Group.push(newChat);
@@ -236,6 +235,7 @@ const chatSlice = createSlice({
 export const getChatId = (state, authId, receiveId) => {
   const chat = state.Individual.find(
     (chat) =>
+      Array.isArray(chat?.participants) &&
       chat.participants.includes(authId) &&
       chat.participants.includes(receiveId)
   );
@@ -275,7 +275,7 @@ const transformChats = (chats) => {
 
     return {
       id: chatId,
-      participants: chatData.participants || [],
+      participants: mapParticipants(chatData),
       archivedFor: chatData.archivedFor || {},
       createdDate: chatData.createdDate || new Date().toISOString(),
       messages: Object.entries(chatData.messages || {}).map(

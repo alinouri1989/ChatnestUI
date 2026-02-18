@@ -124,7 +124,7 @@ export const SignalRProvider = ({ children }) => {
   const callIdRef = useRef(callId);
   const peerConnection = useRef(null);
 
-  const [pendingRequests, setPendingRequests] = useState(new Set());
+  const pendingRequestsRef = useRef(new Set());
 
   const initializePeerConnection = async (callType) => {
     try {
@@ -176,7 +176,7 @@ export const SignalRProvider = ({ children }) => {
       dispatch(setIsCallStarted(true));
       dispatch(setIsCallStarting(false));
 
-      callConnection.invoke("AcceptCall", callId);
+      callConnection.invoke("AcceptCall", callIdRef.current);
 
       const currentDate = new Date().toISOString();
       dispatch(setCallStartedDate(currentDate));
@@ -243,8 +243,6 @@ export const SignalRProvider = ({ children }) => {
 
         //! ===========  CHAT CONNECTION ===========
 
-        chatConnection.invoke("Initial");
-
         chatConnection.off("ReceiveInitialChats");
         chatConnection.on("ReceiveInitialChats", (data) => {
           console.log("ReceiveInitialChats received:", data);
@@ -278,6 +276,10 @@ export const SignalRProvider = ({ children }) => {
           if (data.Individual) {
             Object.entries(data.Individual).forEach(([chatId, messages]) => {
               Object.entries(messages).forEach(([messageId, messageData]) => {
+                if (messageData?.senderId && messageData.senderId !== userId) {
+                  dispatch(addNewUserToChatList({ [messageData.senderId]: {} }));
+                }
+
                 let decryptedContent = messageData.content;
                 if (
                   messageData.type === 0 &&
@@ -345,6 +347,26 @@ export const SignalRProvider = ({ children }) => {
             if (chatId) {
               const chatData = individualData[chatId];
               dispatch(addNewIndividualChat({ chatId, chatData }));
+
+              const participants = Array.isArray(chatData?.participants)
+                ? chatData.participants
+                : Array.isArray(chatData?.chatParticipants)
+                  ? chatData.chatParticipants
+                      .map((participant) =>
+                        typeof participant === "string"
+                          ? participant
+                          : participant?.userId
+                      )
+                      .filter(Boolean)
+                  : [];
+
+              const receiverId = participants.find(
+                (participantId) => participantId !== userId
+              );
+
+              if (receiverId) {
+                dispatch(addNewUserToChatList({ [receiverId]: {} }));
+              }
             }
           } else if (data.Group) {
             const groupData = data.Group;
@@ -420,9 +442,9 @@ export const SignalRProvider = ({ children }) => {
           ErrorAlert(data.message);
         });
 
-        //! =========== NOTIFICATION CONNECTION ===========
+        chatConnection.invoke("Initial");
 
-        notificationConnection.invoke("Initial");
+        //! =========== NOTIFICATION CONNECTION ===========
 
         notificationConnection.off("ReceiveRecipientProfiles");
         notificationConnection.on("ReceiveRecipientProfiles", (data) => {
@@ -439,15 +461,6 @@ export const SignalRProvider = ({ children }) => {
           if (groupId) {
             if (chatConnection.state === "Connected") {
               chatConnection.invoke("CreateChat", "Group", groupId);
-            } else {
-              chatConnection.onclose(() => {
-                chatConnection
-                  .start()
-                  .then(() => {
-                    chatConnection.invoke("CreateChat", "Group", groupId);
-                  })
-                  .catch(() => {});
-              });
             }
           }
         });
@@ -471,7 +484,9 @@ export const SignalRProvider = ({ children }) => {
             dispatch(updateGroupInformations(data));
           } else {
             dispatch(updateGroupInformations(data));
-            chatConnection.invoke("CreateChat", "Group", groupId);
+            if (chatConnection.state === "Connected") {
+              chatConnection.invoke("CreateChat", "Group", groupId);
+            }
           }
         });
         // Add missing notification handlers
@@ -504,9 +519,9 @@ export const SignalRProvider = ({ children }) => {
           ErrorAlert(data.message);
         });
 
-        //! ===========  CALL CONNECTION ===========
+        notificationConnection.invoke("Initial");
 
-        callConnection.invoke("Initial");
+        //! ===========  CALL CONNECTION ===========
 
         callConnection.off("ReceiveInitialCalls");
         callConnection.on("ReceiveInitialCalls", async (data) => {
@@ -626,6 +641,8 @@ export const SignalRProvider = ({ children }) => {
           ErrorAlert(data.message);
         });
 
+        callConnection.invoke("Initial");
+
         //! ==== CONNECTION ERRORS =====
 
         chatConnection.on("Error", (data) => {
@@ -636,7 +653,6 @@ export const SignalRProvider = ({ children }) => {
           ErrorAlert(data.message);
         });
 
-        callConnection.on("ValidationError", () => {});
       })
       .catch((err) => {
         setConnectionStatus("failed");
@@ -665,10 +681,14 @@ export const SignalRProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (chatConnection && (Individual?.length > 0 || Group?.length > 0)) {
+    if (
+      userId &&
+      chatConnection?.state === "Connected" &&
+      (Individual?.length > 0 || Group?.length > 0)
+    ) {
       deliverMessages();
     }
-  }, [chatConnection, Individual, Group, location, pendingRequests]);
+  }, [chatConnection, Individual, Group, location.pathname, userId]);
 
   //! ====== METHODS ======
 
@@ -682,15 +702,11 @@ export const SignalRProvider = ({ children }) => {
   };
 
   const addPendingRequest = (messageId) => {
-    setPendingRequests((prev) => new Set(prev).add(messageId));
+    pendingRequestsRef.current.add(messageId);
   };
 
   const removePendingRequest = (messageId) => {
-    setPendingRequests((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(messageId);
-      return newSet;
-    });
+    pendingRequestsRef.current.delete(messageId);
   };
 
   const deliverMessages = async () => {
@@ -714,7 +730,11 @@ export const SignalRProvider = ({ children }) => {
               message.status.delivered &&
               Object.keys(message.status.delivered).includes(userId);
 
-            return !isSent && !isDelivered && !pendingRequests.has(message.id);
+            return (
+              !isSent &&
+              !isDelivered &&
+              !pendingRequestsRef.current.has(message.id)
+            );
           })
           .map(async (message) => {
             addPendingRequest(message.id);
@@ -746,21 +766,24 @@ export const SignalRProvider = ({ children }) => {
                     message.status.sent &&
                     Object.keys(message.status.sent).includes(userId);
 
-                  return isDelivered && !isRead && !isSentByUser;
+                  return (
+                    isDelivered &&
+                    !isRead &&
+                    !isSentByUser &&
+                    !pendingRequestsRef.current.has(message.id)
+                  );
                 })
                 .map(async (message) => {
-                  if (!pendingRequests.has(message.id)) {
-                    addPendingRequest(message.id);
-                    try {
-                      await chatConnection.invoke(
-                        "ReadMessage",
-                        "Individual",
-                        chat.id,
-                        message.id
-                      );
-                    } finally {
-                      removePendingRequest(message.id);
-                    }
+                  addPendingRequest(message.id);
+                  try {
+                    await chatConnection.invoke(
+                      "ReadMessage",
+                      "Individual",
+                      chat.id,
+                      message.id
+                    );
+                  } finally {
+                    removePendingRequest(message.id);
                   }
                 });
             }
@@ -777,7 +800,10 @@ export const SignalRProvider = ({ children }) => {
             const isDelivered =
               message.status.delivered &&
               Object.keys(message.status.delivered).includes(userId);
-            return !(isSent || isDelivered) && !pendingRequests.has(message.id);
+            return (
+              !(isSent || isDelivered) &&
+              !pendingRequestsRef.current.has(message.id)
+            );
           })
           .map(async (message) => {
             addPendingRequest(message.id);
@@ -806,7 +832,9 @@ export const SignalRProvider = ({ children }) => {
                     message.status.sent &&
                     Object.keys(message.status.sent).includes(userId);
                   return (
-                    !isRead && !isSentByUser && !pendingRequests.has(message.id)
+                    !isRead &&
+                    !isSentByUser &&
+                    !pendingRequestsRef.current.has(message.id)
                   );
                 })
                 .map(async (message) => {

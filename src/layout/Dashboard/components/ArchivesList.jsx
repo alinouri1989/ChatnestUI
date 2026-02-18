@@ -35,11 +35,15 @@ function ArchivesList() {
     useEffect(() => {
         const updatedChatList = Object.entries(chatList)
             .map(([receiverId, user]) => {
-                const chatData = Individual.find(
-                    (chat) =>
+                const chatData = Individual.find((chat) => {
+                    if (!Array.isArray(chat?.participants)) {
+                        return false;
+                    }
+                    return (
                         chat.participants.includes(receiverId) &&
                         chat.participants.includes(UserId)
-                );
+                    );
+                });
 
                 const chatId = getChatId(chatState, UserId, receiverId);
 

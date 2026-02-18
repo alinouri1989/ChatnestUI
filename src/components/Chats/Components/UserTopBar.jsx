@@ -53,7 +53,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                 )}
                 <div onClick={toggleSidebar} className="image-box">
                     <img 
-                        src={recipientProfile.profilePhoto}
+                        src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
                         onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                         alt="Profile"
                     />

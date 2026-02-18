@@ -17,7 +17,7 @@ import { TbEdit } from "react-icons/tb";
 import { IoMdSettings } from "react-icons/io";
 
 import star from "../../../../assets/svg/star.svg";
-import { defaultGroupPhoto, defaultProfilePhoto } from "../../../../constants/DefaultProfilePhoto.js";
+import { defaultGroupPhoto, defaultProfilePhoto, defaultProfileAdminPhoto } from "../../../../constants/DefaultProfilePhoto.js";
 import AddUser from "../AddUser.jsx";
 import CloseModalButton from "../../../../contexts/components/CloseModalButton.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,7 +70,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
         const isSameData = JSON.stringify(formData) === JSON.stringify(currentInitialData);
         const isNameTooShort = formData.name.length < 2;
         setSaveDisabled(isSameData || isNameTooShort);
-        
+
         const { name, participants } = formData;
         const isNameTooShortForSubmit = name.length < 2;
         const filteredParticipants = participants && Object.values(participants).filter(participant => participant.role !== 2);
@@ -469,7 +469,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
 
                     {!isGroupSettings &&
                         <div className="group-admin">
-                            <img src={user.profilePhoto} alt="Admin Profile Image" />
+                            <img src={user.profilePhoto ?? defaultProfileAdminPhoto} alt="Admin Profile Image" />
                             <div className="admin-info">
                                 <p className="user-display-name">{user.displayName}</p>
                                 <span>مدیر</span>

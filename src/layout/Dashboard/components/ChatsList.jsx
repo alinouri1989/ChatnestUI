@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useModal } from "../../../contexts/ModalContext";
@@ -30,22 +30,24 @@ function ChatsList() {
     const UserId = getUserIdFromToken(token);
 
     const [searchUser, setSearchUser] = useState("");
-    const [enhancedChatList, setEnhancedChatList] = useState([]);
 
-    const chatState = useSelector(state => state.chat);
     const isSmallScreen = useScreenWidth(900);
 
     const location = useLocation();
-    useEffect(() => {
-        const updatedChatList = Object.entries(chatList)
+    const enhancedChatList = useMemo(() => {
+        return Object.entries(chatList)
             .map(([receiverId, user]) => {
-                const chatData = Individual.find(
-                    (chat) =>
+                const chatData = Individual.find((chat) => {
+                    if (!Array.isArray(chat?.participants)) {
+                        return false;
+                    }
+                    return (
                         chat.participants.includes(receiverId) &&
                         chat.participants.includes(UserId)
-                );
+                    );
+                });
 
-                const chatId = getChatId(chatState, UserId, receiverId);
+                const chatId = chatData?.id ?? getChatId({ Individual }, UserId, receiverId);
 
                 if (!chatData || !chatData.messages || chatData.messages.length === 0) {
                     return null;
@@ -103,9 +105,7 @@ function ChatsList() {
             })
             .filter((chat) => chat !== null)
             .sort((a, b) => b.lastMessageDateForSort - a.lastMessageDateForSort);
-
-        setEnhancedChatList(updatedChatList);
-    }, [chatList, Individual, UserId, chatState, location.pathname]);
+    }, [chatList, Individual, UserId, location.pathname]);
 
     const handleNewChat = () => {
         showModal(<NewChatModal closeModal={closeModal} />);
