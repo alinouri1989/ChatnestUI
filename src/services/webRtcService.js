@@ -31,6 +31,14 @@ export const createAndSendOffer = async (
   callConnection,
   peerConnection
 ) => {
+  if (!peerConnection?.current) {
+    throw new Error("Peer connection is not initialized");
+  }
+
+  if (!callConnection) {
+    throw new Error("Call connection is not available");
+  }
+
   const offer = await peerConnection.current.createOffer();
   const prioritizedOffer = prioritizeOpusCodec(offer);
   await peerConnection.current.setLocalDescription(prioritizedOffer);

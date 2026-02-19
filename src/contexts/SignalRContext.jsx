@@ -113,7 +113,7 @@ export const SignalRProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { callId } = useSelector((state) => state.call);
+  const { callId, callType } = useSelector((state) => state.call);
   const { Individual, Group } = useSelector((state) => state.chat);
   const { token, user } = useSelector((state) => state.auth);
   const userId = getUserIdFromToken(token);
@@ -716,11 +716,28 @@ export const SignalRProvider = ({ children }) => {
   //! ====== METHODS ======
 
   const handleAcceptCall = async () => {
+    if (!callConnection || callConnection.state !== "Connected" || !callIdRef.current) {
+      ErrorAlert("برقراری تماس امکان‌پذیر نیست. دوباره تلاش کنید.");
+      return;
+    }
+
     try {
-      if (peerConnection) dispatch(setIsCallAcceptWaiting(true));
-      createAndSendOffer(callIdRef.current, callConnection, peerConnection);
+      dispatch(setIsCallAcceptWaiting(true));
+
+      if (!peerConnection.current) {
+        await initializePeerConnection(callType);
+      }
+
+      if (!peerConnection.current) {
+        dispatch(setIsCallAcceptWaiting(false));
+        ErrorAlert("دسترسی به میکروفون/دوربین یا اتصال تماس برقرار نشد.");
+        return;
+      }
+
+      await createAndSendOffer(callIdRef.current, callConnection, peerConnection);
     } catch {
-      /* empty */
+      dispatch(setIsCallAcceptWaiting(false));
+      ErrorAlert("پذیرش تماس انجام نشد.");
     }
   };
 

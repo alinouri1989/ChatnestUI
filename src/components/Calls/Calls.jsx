@@ -77,8 +77,16 @@ function Calls() {
 
   const handleGoIndividualChat = () => {
     const chatId = getChatId(state, userId, recipientId);
+    if (!chatId) {
+      navigate("/sohbetler");
+      return;
+    }
+
     const chatData = Object.values(state.Individual).find(chat => chat.id === chatId);
-    const isArchived = chatData.archivedFor && Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
+    const isArchived =
+      chatData?.archivedFor &&
+      Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
+
     const destination = isArchived ? `/arsivler/${chatId}` : `/sohbetler/${chatId}`;
     navigate(destination);
   };

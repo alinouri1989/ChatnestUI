@@ -16,6 +16,30 @@ const initialState = {
     isCallAcceptWaiting: false,
 };
 
+const mapCallParticipants = (callData) => {
+    if (Array.isArray(callData?.participants)) {
+        return callData.participants;
+    }
+
+    if (Array.isArray(callData?.callParticipants)) {
+        return callData.callParticipants
+            .map((participant) =>
+                typeof participant === "string" ? participant : participant?.userId
+            )
+            .filter(Boolean);
+    }
+
+    return [];
+};
+
+const normalizeCall = (callId, callData = {}) => {
+    return {
+        ...callData,
+        id: callId,
+        participants: mapCallParticipants(callData),
+    };
+};
+
 const callSlice = createSlice({
     name: 'call',
     initialState,
@@ -64,12 +88,18 @@ const callSlice = createSlice({
             state.isCallAcceptClicked = false;
         },
         setInitialCalls: (state, action) => {
-            const initialCallsData = action.payload?.Call;
-            if (initialCallsData && Object.keys(initialCallsData).length > 0) {
-                const newCalls = Object.entries(initialCallsData).map(([callId, callData]) => ({
-                    id: callId,
-                    ...callData
-                }));
+            const initialCallsData =
+                action.payload?.Call ||
+                action.payload?.Calls ||
+                action.payload?.call ||
+                action.payload?.calls ||
+                {};
+
+            if (Object.keys(initialCallsData).length > 0) {
+                const newCalls = Object.entries(initialCallsData).map(([callId, callData]) =>
+                    normalizeCall(callId, callData)
+                );
+
                 state.calls = [
                     ...state.calls,
                     ...newCalls.filter(newCall =>
@@ -81,19 +111,35 @@ const callSlice = createSlice({
         },
 
         setCallResult: (state, action) => {
-            const callResult = action.payload;
+            const callResult = action.payload || {};
             const callId = Object.keys(callResult)[0];
-            const callData = callResult[callId];
+            if (!callId) {
+                return;
+            }
+
+            const callData = normalizeCall(callId, callResult[callId]);
 
             if (state.callId === callId) {
                 state.isRingingOutgoing = false;
                 state.isCallStarted = false;
             }
 
-            const isCallIdExists = state.calls.some(call => call.id === callId);
+            const existingCallIndex = state.calls.findIndex(call => call.id === callId);
 
-            if (!isCallIdExists) {
-                state.calls.push({ id: callId, ...callData });
+            if (existingCallIndex !== -1) {
+                const existingParticipants = Array.isArray(state.calls[existingCallIndex].participants)
+                    ? state.calls[existingCallIndex].participants
+                    : [];
+
+                state.calls[existingCallIndex] = {
+                    ...state.calls[existingCallIndex],
+                    ...callData,
+                    participants: callData.participants.length > 0
+                        ? callData.participants
+                        : existingParticipants,
+                };
+            } else {
+                state.calls.push(callData);
             }
         },
         setCallRecipientList: (state, action) => {

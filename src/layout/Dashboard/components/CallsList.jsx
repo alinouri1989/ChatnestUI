@@ -22,14 +22,26 @@ function CallsList() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  if (!calls) {
+  if (!Array.isArray(calls)) {
     return null;
   }
 
   const processedCalls = calls.map(call => {
-    const otherParticipantId = call.participants.find(participant => participant !== userId);
-    const recipientInfo = callRecipientList.find(recipient => recipient.id === otherParticipantId);
-    const isOutgoingCall = call.participants[0] === userId;
+    const participants = Array.isArray(call?.participants)
+      ? call.participants
+      : Array.isArray(call?.callParticipants)
+        ? call.callParticipants
+            .map((participant) =>
+              typeof participant === "string" ? participant : participant?.userId
+            )
+            .filter(Boolean)
+        : [];
+
+    const otherParticipantId = participants.find(participant => participant !== userId);
+    const recipientInfo = Array.isArray(callRecipientList)
+      ? callRecipientList.find(recipient => recipient.id === otherParticipantId)
+      : null;
+    const isOutgoingCall = participants[0] === userId;
 
     return {
       id: call.id,
