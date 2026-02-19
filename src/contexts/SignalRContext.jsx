@@ -278,6 +278,29 @@ export const SignalRProvider = ({ children }) => {
               Object.entries(messages).forEach(([messageId, messageData]) => {
                 if (messageData?.senderId && messageData.senderId !== userId) {
                   dispatch(addNewUserToChatList({ [messageData.senderId]: {} }));
+
+                  const currentIndividualChats =
+                    store.getState().chat?.Individual || [];
+                  const currentChat = currentIndividualChats.find(
+                    (chat) => chat.id === chatId
+                  );
+                  const isArchivedForCurrentUser =
+                    currentChat?.archivedFor &&
+                    Object.prototype.hasOwnProperty.call(
+                      currentChat.archivedFor,
+                      userId
+                    );
+
+                  if (isArchivedForCurrentUser) {
+                    // Make incoming messages immediately visible in the main chat list.
+                    dispatch(removeArchive({ Individual: { [chatId]: {} } }));
+
+                    if (chatConnection?.state === "Connected") {
+                      chatConnection.invoke("UnarchiveChat", chatId).catch(() => {
+                        // Keep UI responsive even if persistence fails; hub event will retry on next state sync.
+                      });
+                    }
+                  }
                 }
 
                 let decryptedContent = messageData.content;
