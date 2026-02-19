@@ -95,7 +95,7 @@ function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }
                                                     <div key={id} className="member-box">
                                                         <div className="image-box">
                                                             <img
-                                                                src={member.profilePhoto}
+                                                                src={member.profilePhoto ?? defaultProfilePhoto}
                                                                 onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                                                                 alt={member.displayName}
                                                             />

@@ -263,7 +263,7 @@ function CallModal({ closeModal, isCameraCall }) {
       {(!isCallStarted || (isCallStarted && !isCameraCall)) && (
         <div className={`user-and-call-time-box ${isCameraCall ? "cameraCall" : ""}`}>
           <img
-            src={callerProfile?.profilePhoto}
+            src={callerProfile?.profilePhoto ?? defaultProfilePhoto}
             onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
             alt="Profile Image"
           />
@@ -277,7 +277,7 @@ function CallModal({ closeModal, isCameraCall }) {
             <div className="other-camera-box">
               <video ref={remoteVideoRef} autoPlay></video>
               <div className="user-info">
-                <img src={callerProfile?.profilePhoto} alt="" />
+                <img src={callerProfile?.profilePhoto ?? defaultProfilePhoto} alt="" />
                 <p>{callerProfile?.displayName}</p>
               </div>
             </div>

@@ -41,9 +41,9 @@ function MessageInfo({ closeModal, chatId, messageId }) {
                             return user ? (
                                 <div key={userId} className="user-info">
                                     <div className="image-and-name-box">
-                                        <img 
-                                            src={user.profilePhoto} 
-                                            alt={`پروفایل ${user.displayName}`} 
+                                        <img
+                                            src={user.profilePhoto ?? defaultProfilePhoto}
+                                            alt={`پروفایل ${user.displayName}`}
                                             className="profile-photo"
                                             onError={(e) => {
                                                 e.currentTarget.src = defaultProfilePhoto;
@@ -71,9 +71,9 @@ function MessageInfo({ closeModal, chatId, messageId }) {
                             return user ? (
                                 <div key={userId} className="user-info">
                                     <div className="image-and-name-box">
-                                        <img 
-                                            src={user.profilePhoto} 
-                                            alt={`پروفایل ${user.displayName}`} 
+                                        <img
+                                            src={user.profilePhoto ?? defaultProfilePhoto}
+                                            alt={`پروفایل ${user.displayName}`}
                                             className="profile-photo"
                                             onError={(e) => {
                                                 e.currentTarget.src = defaultProfilePhoto;

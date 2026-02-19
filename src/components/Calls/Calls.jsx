@@ -100,7 +100,7 @@ function Calls() {
           <div className="details-box">
             <div className="user-and-call-box">
               <div className="user-info">
-                <img src={profilePhoto}
+                <img src={profilePhoto ?? defaultProfilePhoto}
                   onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                 />
                 <p>{displayName}</p>

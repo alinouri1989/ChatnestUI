@@ -59,8 +59,8 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
         <div key={groupId} onClick={handleGoGroupChat} className={`group-dashboard-card-box ${isActiveChat ? "active-chat" : ""}`}>
             <div className="card-info-box">
                 <div className="image-box">
-                    <img 
-                        src={groupPhotoUrl}
+                    <img
+                        src={groupPhotoUrl ?? defaultGroupPhoto}
                         alt={`${groupName} profile`}
                         onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                     />

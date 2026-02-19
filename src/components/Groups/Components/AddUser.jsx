@@ -146,7 +146,7 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                                     return (
                                         <div key={user.userId} className="user-box" onClick={() => handleAddSelectedUser(user.userId)}>
                                             <div className='image-box'>
-                                                <img src={user.profilePhoto}
+                                                <img src={user.profilePhoto ?? defaultProfilePhoto}
                                                     onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                                                     alt={user.displayName} />
                                             </div>

@@ -64,7 +64,7 @@ function IncomingCall({ callType, callerProfile, callId }) {
     return (
         <div className='incoming-call-box'>
             <div className='user-and-options'>
-                <img src={callerProfile.profilePhoto}
+                <img src={callerProfile.profilePhoto ?? defaultProfilePhoto}
                     onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                     alt="Profile Image"
                 />

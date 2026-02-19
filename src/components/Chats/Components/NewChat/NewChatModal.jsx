@@ -172,7 +172,7 @@ function NewChatModal() {
                 initial="initial"
                 animate="animate"
               >
-                <img src={user.profilePhoto}
+                <img src={user.profilePhoto ?? defaultProfilePhoto}
                   onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                   alt={user.displayName}
                 />

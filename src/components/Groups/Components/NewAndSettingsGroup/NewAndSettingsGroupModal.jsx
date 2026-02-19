@@ -503,7 +503,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                     return (
                                         <div className="user-box" key={participantId}>
                                             <div className="user-info">
-                                                <img src={user.profilePhoto}
+                                                <img src={user.profilePhoto ?? defaultProfilePhoto}
                                                     onError={(e) => e.currentTarget.src = defaultProfilePhoto}
                                                     alt={user.displayName} />
                                                 <div className="username-and-role-box">

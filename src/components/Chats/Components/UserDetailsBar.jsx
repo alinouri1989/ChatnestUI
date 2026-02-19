@@ -65,7 +65,7 @@ function UserDetailsBar({
           <div className="sidebar-content-box">
             <div className="user-info-box">
               <img
-                src={recipientProfile.profilePhoto}
+                src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
                 onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
               />
               <p>{recipientProfile.displayName}</p>
