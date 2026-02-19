@@ -46,7 +46,7 @@ function CallsList() {
     return {
       id: call.id,
       name: recipientInfo?.displayName || "Unknown",
-      image: recipientInfo?.profilePhoto || "",
+      image: recipientInfo?.profilePhoto || defaultProfilePhoto,
       status: recipientInfo?.lastConnectionDate || "offline",
       callStatus: call.status,
       callType: call.type,

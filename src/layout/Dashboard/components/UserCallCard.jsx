@@ -61,7 +61,7 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
       <div className="card-info-box">
 
         <div className="image-box">
-          <img src={image}
+          <img src={image || defaultProfilePhoto}
             onError={(e) => e.currentTarget.src = defaultProfilePhoto}
             alt={`${name} profile`} />
           <p className={`status ${userStatus}`}></p>
