@@ -24,7 +24,7 @@ const Layout = () => {
   }, []);
 
   useEffect(() => {
-    const activeRoutes = ["/sohbetler", "/arsivler", "/aramalar", "/gruplar"];
+    const activeRoutes = ["/chats", "/archives", "/calls", "/groups"];
     const isMatchingRoute = activeRoutes.some((route) => {
       return (
         location.pathname.startsWith(route) &&

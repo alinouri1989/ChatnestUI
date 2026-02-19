@@ -15,7 +15,7 @@ function GroupTopBar({ isSidebarOpen, toggleSidebar, groupProfile }) {
         <div onClick={toggleSidebar} className={`group-top-bar ${isSidebarOpen ? 'close' : ''}`}>
             <div className="group-info">
                 {isSmallScreen &&
-                    <BackToMenuButton path={"gruplar"} />
+                    <BackToMenuButton path={"groups"} />
                 }
                 <div className="image-box">
                     <img src={groupProfile?.photoUrl} alt="Group" />

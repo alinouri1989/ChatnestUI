@@ -31,7 +31,7 @@ function Chats() {
     if (isChatsInitialized && id) {
       const chatExists = Individual.some((chat) => chat.id === id);
       if (!chatExists) {
-        navigate("/anasayfa", { replace: true });
+        navigate("/home", { replace: true });
       }
     }
   }, [isChatsInitialized, Individual, id, navigate]);

@@ -50,7 +50,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
     };
 
     const handleGoGroupChat = () => {
-        navigate(`/gruplar/${groupId}`);
+        navigate(`/groups/${groupId}`);
     };
 
     const isActiveChat = location.pathname.includes(groupId);

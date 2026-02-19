@@ -83,7 +83,7 @@ function SignUp() {
         
         await registerUser(submitData).unwrap();
         SuccessAlert("حساب ایجاد شد");
-        navigate('/giris-yap');
+        navigate('/sign-in');
 
       } catch (error) {
         ErrorAlert(error?.data?.message || "خطایی رخ داده است");
@@ -227,7 +227,7 @@ function SignUp() {
 
         <p className='change-sign-method-text'>
           قبلاً حساب دارید؟
-          <Link to="/giris-yap">وارد شوید</Link>
+          <Link to="/sign-in">وارد شوید</Link>
         </p>
 
       </form>

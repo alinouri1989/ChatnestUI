@@ -107,7 +107,7 @@ function MessageBubble({
     let statusIcon;
     let statusColor;
 
-    const groupIdFromLocation = window.location.pathname.includes("gruplar")
+    const groupIdFromLocation = window.location.pathname.includes("groups")
         ? window.location.pathname.split('/')[2]
         : null;
 

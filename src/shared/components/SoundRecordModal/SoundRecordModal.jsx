@@ -121,7 +121,7 @@ function SoundRecordModal({ closeModal, chatId }) {
     };
 
     const handleSendAudio = async () => {
-        const chatType = location.pathname.includes('sohbetler') || location.pathname.includes('arsivler')
+        const chatType = location.pathname.includes('chats') || location.pathname.includes('archives')
             ? 'Individual'
             : 'Group';
 

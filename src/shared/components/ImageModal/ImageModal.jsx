@@ -18,9 +18,9 @@ function ImageModal({ image, closeModal, chatId }) {
 
     const handleSendImage = async () => {
         let chatType = '';
-        if (location.pathname.includes('sohbetler') || location.pathname.includes('arsivler')) {
+        if (location.pathname.includes('chats') || location.pathname.includes('archives')) {
             chatType = 'Individual';
-        } else if (location.pathname.includes('gruplar')) {
+        } else if (location.pathname.includes('groups')) {
             chatType = 'Group';
         }
 

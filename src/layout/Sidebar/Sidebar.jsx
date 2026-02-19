@@ -24,7 +24,7 @@ function Sidebar() {
   const isSmallScreen = useScreenWidth(900);
   const sidebarRef = useRef(null);
 
-  const restrictedPaths = ["sohbetler/", "aramalar/", "arsivler/", "gruplar/"];
+  const restrictedPaths = ["chats/", "calls/", "archives/", "groups/"];
 
   const shouldHideSidebar =
     isSmallScreen &&
@@ -38,22 +38,22 @@ function Sidebar() {
     {
       icon: <IoChatbubbleEllipses className="icon" />,
       label: "گفت‌وگوها",
-      path: "/sohbetler",
+      path: "/chats",
     },
     {
       icon: <PiPhoneFill className="icon" />,
       label: "تماس‌ها",
-      path: "/aramalar",
+      path: "/calls",
     },
     {
       icon: <HiArchiveBox className="icon" />,
       label: "بایگانی‌ها",
-      path: "/arsivler",
+      path: "/archives",
     },
     {
       icon: <HiUserGroup className="icon" />,
       label: "گروه‌ها",
-      path: "/gruplar",
+      path: "/groups",
     },
   ];
 
@@ -61,7 +61,7 @@ function Sidebar() {
     navItems.push({
       icon: <AiFillHome className="icon home" />,
       label: "صفحه اصلی",
-      path: "/anasayfa",
+      path: "/home",
     });
   }
 

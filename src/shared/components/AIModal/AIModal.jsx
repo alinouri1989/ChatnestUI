@@ -194,8 +194,8 @@ export const AIModal = ({ chatId, isOpen, onClose, buttonRef }) => {
     const extractBase64 = (dataUrl) => dataUrl.split(",")[1] || "";
 
     const getChatType = (pathname) => {
-        if (pathname.includes('sohbetler') || pathname.includes('arsivler')) return 'Individual';
-        if (pathname.includes('gruplar')) return 'Group';
+        if (pathname.includes('chats') || pathname.includes('archives')) return 'Individual';
+        if (pathname.includes('groups')) return 'Group';
         return '';
     };
 

@@ -498,7 +498,7 @@ export const SignalRProvider = ({ children }) => {
           if (userParticipant && userParticipant.role === 2) {
             dispatch(removeGroupChat(groupId));
             dispatch(removeGroupList(groupId));
-            navigate("/gruplar");
+            navigate("/groups");
             return;
           }
 
@@ -752,11 +752,11 @@ export const SignalRProvider = ({ children }) => {
   const deliverMessages = async () => {
     try {
       const chatIdFromLocation =
-        window.location.pathname.includes("sohbetler") ||
-        window.location.pathname.includes("arsivler")
+        window.location.pathname.includes("chats") ||
+        window.location.pathname.includes("archives")
           ? window.location.pathname.split("/")[2]
           : null;
-      const groupIdFromLocation = window.location.pathname.includes("gruplar")
+      const groupIdFromLocation = window.location.pathname.includes("groups")
         ? window.location.pathname.split("/")[2]
         : null;
 

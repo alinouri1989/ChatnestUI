@@ -136,13 +136,13 @@ function SignIn() {
               </label>
             </div>
           </div>
-          <Link to="/sifre-yenile">رمز عبور خود را فراموش کردم</Link>
+          <Link to="/reset-password">رمز عبور خود را فراموش کردم</Link>
         </div>
 
         <button type='submit' className='sign-buttons'>ورود</button>
         <p className='change-sign-method-text'>
           حساب کاربری ندارید؟
-          <Link to="/uye-ol">ایجاد حساب</Link>
+          <Link to="/sign-up">ایجاد حساب</Link>
         </p>
       </form >
       {isLoading && <PreLoader />}

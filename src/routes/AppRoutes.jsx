@@ -17,36 +17,36 @@ function AppRoutes() {
         <Routes>
             {!user && (
                 <>
-                    <Route path="/giris-yap" element={<Sign />} />
-                    <Route path="/uye-ol" element={<Sign />} />
-                    <Route path="/sifre-yenile" element={<Sign />} />
-                    <Route path="*" element={<Navigate to="/giris-yap" replace />} />
+                    <Route path="/sign-in" element={<Sign />} />
+                    <Route path="/sign-up" element={<Sign />} />
+                    <Route path="/reset-password" element={<Sign />} />
+                    <Route path="*" element={<Navigate to="/sign-in" replace />} />
                 </>
             )}
 
             {user && (
                 <>
-                    <Route path="/" element={<Navigate to="/anasayfa" replace />} />
+                    <Route path="/" element={<Navigate to="/home" replace />} />
 
                     <Route path="/" element={<Layout />}>
-                        <Route path="anasayfa" element={<Home />} />
-                        <Route path="sohbetler" element={<Chats />} />
-                        <Route path="sohbetler/:id" element={<Chats />} />
-                        <Route path="arsivler" element={<Archives />} />
-                        <Route path="arsivler/:id" element={<Chats />} />
-                        <Route path="gruplar" element={<Groups />} />
-                        <Route path="gruplar/:id" element={<Groups />} />
-                        <Route path="aramalar" element={<Calls />} />
-                        <Route path="aramalar/:id" element={<Calls />} />
+                        <Route path="home" element={<Home />} />
+                        <Route path="chats" element={<Chats />} />
+                        <Route path="chats/:id" element={<Chats />} />
+                        <Route path="archives" element={<Archives />} />
+                        <Route path="archives/:id" element={<Chats />} />
+                        <Route path="groups" element={<Groups />} />
+                        <Route path="groups/:id" element={<Groups />} />
+                        <Route path="calls" element={<Calls />} />
+                        <Route path="calls/:id" element={<Calls />} />
                     </Route>
 
-                    <Route path="/giris-yap" element={<Navigate to="/anasayfa" replace />} />
-                    <Route path="/uye-ol" element={<Navigate to="/anasayfa" replace />} />
-                    <Route path="/sifre-yenile" element={<Navigate to="/anasayfa" replace />} />
+                    <Route path="/sign-in" element={<Navigate to="/home" replace />} />
+                    <Route path="/sign-up" element={<Navigate to="/home" replace />} />
+                    <Route path="/reset-password" element={<Navigate to="/home" replace />} />
                 </>
             )}
 
-            <Route path="*" element={<Navigate to={user ? "/anasayfa" : "/giris-yap"} replace />} />
+            <Route path="*" element={<Navigate to={user ? "/home" : "/sign-in"} replace />} />
         </Routes>
     );
 }

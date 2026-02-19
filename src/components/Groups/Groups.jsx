@@ -27,7 +27,7 @@ function GroupChats() {
     if (isChatsInitialized && id) {
       const groupExists = Group.some((group) => group.id === id);
       if (!groupExists) {
-        navigate("/anasayfa", { replace: true });
+        navigate("/home", { replace: true });
       }
     }
   }, [isChatsInitialized, Group, id, navigate]);

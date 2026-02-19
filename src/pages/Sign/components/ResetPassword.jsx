@@ -23,13 +23,13 @@ function ResetPassword() {
   });
 
   const handleCancel = () => {
-    navigate('/giris-yap', { replace: true });
+    navigate('/sign-in', { replace: true });
   };
 
   const onSubmit = async (data) => {
     try {
       await resetPassword(data.Email).unwrap();
-      navigate('/giris-yap');
+      navigate('/sign-in');
       SuccessAlert("لینک بازنشانی رمز عبور ارسال شد.");
     } catch (error) {
       ErrorAlert(error?.data?.message || "خطایی رخ داده است");

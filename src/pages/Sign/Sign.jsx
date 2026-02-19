@@ -14,9 +14,9 @@ function Sign() {
     const location = useLocation();
 
     const renderComponent = () => {
-        if (location.pathname === "/sifre-yenile") {
+        if (location.pathname === "/reset-password") {
             return <ResetPassword />;
-        } else if (location.pathname === "/uye-ol") {
+        } else if (location.pathname === "/sign-up") {
             return <SignUp />;
         } else {
             return <SignIn />;

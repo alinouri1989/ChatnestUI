@@ -87,7 +87,7 @@ function NewChatModal() {
           const chatData = individualData[chatId];
           const isArchived = chatData.archivedFor && Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
 
-          const destination = isArchived ? `/arsivler/${chatId}` : `/sohbetler/${chatId}`;
+          const destination = isArchived ? `/archives/${chatId}` : `/chats/${chatId}`;
           navigate(destination);
           closeModal();
         } else {

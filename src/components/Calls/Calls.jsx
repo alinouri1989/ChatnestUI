@@ -47,7 +47,7 @@ function Calls() {
 
   useEffect(() => {
     if (isInitialCallsReady && !currentCall) {
-      navigate("/aramalar");
+      navigate("/calls");
     }
   }, [isInitialCallsReady, currentCall, navigate]);
 
@@ -78,7 +78,7 @@ function Calls() {
   const handleGoIndividualChat = () => {
     const chatId = getChatId(state, userId, recipientId);
     if (!chatId) {
-      navigate("/sohbetler");
+      navigate("/chats");
       return;
     }
 
@@ -87,7 +87,7 @@ function Calls() {
       chatData?.archivedFor &&
       Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
 
-    const destination = isArchived ? `/arsivler/${chatId}` : `/sohbetler/${chatId}`;
+    const destination = isArchived ? `/archives/${chatId}` : `/chats/${chatId}`;
     navigate(destination);
   };
 
@@ -102,7 +102,7 @@ function Calls() {
       {id &&
         <div className="call-info-bar-box">
           <div className='title-and-back-box'>
-            <BackToMenuButton path={"aramalar"} />
+            <BackToMenuButton path={"calls"} />
             <h2>اطلاعات تماس</h2>
           </div>
           <div className="details-box">

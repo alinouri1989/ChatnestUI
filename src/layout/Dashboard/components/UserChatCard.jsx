@@ -52,7 +52,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
       await chatConnection.invoke("ArchiveChat", chatId);
       SuccessAlert("به بایگانی اضافه شد");
       if (location.pathname.includes(chatId)) {
-        navigate("/sohbetler");
+        navigate("/chats");
       }
     } catch {
       ErrorAlert("افزودن به بایگانی انجام نشد");
@@ -65,7 +65,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
       await chatConnection.invoke("UnarchiveChat", chatId);
       SuccessAlert("از بایگانی خارج شد");
       if (location.pathname.includes(chatId)) {
-        navigate("/arsivler");
+        navigate("/archives");
       }
     } catch {
       ErrorAlert("خروج از بایگانی انجام نشد");
@@ -81,10 +81,10 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
       const currentPath = location.pathname;
 
       if (currentPath.includes(chatId)) {
-        if (currentPath.includes("sohbetler")) {
-          navigate("/sohbetler");
-        } else if (currentPath.includes("arsivler")) {
-          navigate("/arsivler");
+        if (currentPath.includes("chats")) {
+          navigate("/chats");
+        } else if (currentPath.includes("archives")) {
+          navigate("/archives");
         }
       }
     } catch {
@@ -94,7 +94,7 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   };
 
   const handleGoChat = () => {
-    isArchive ? navigate(`/arsivler/${chatId}`) : navigate(`/sohbetler/${chatId}`);
+    isArchive ? navigate(`/archives/${chatId}`) : navigate(`/chats/${chatId}`);
     dispatch(toggleActiveContent());
   };
 

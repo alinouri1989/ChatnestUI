@@ -48,7 +48,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
             <div className="user-info">
                 {isSmallScreen && (
                     <BackToMenuButton
-                        path={location.pathname.includes("arsivler") ? "arsivler" : "sohbetler"}
+                        path={location.pathname.includes("archives") ? "archives" : "chats"}
                     />
                 )}
                 <div onClick={toggleSidebar} className="image-box">

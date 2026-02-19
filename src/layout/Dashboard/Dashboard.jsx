@@ -20,14 +20,14 @@ function Dashboard() {
         const path = location.pathname;
 
         switch (true) {
-            case path.includes("/sohbetler"):
-            case path.includes("/anasayfa"):
+            case path.includes("/chats"):
+            case path.includes("/home"):
                 return <ChatsList />;
-            case path.includes("/aramalar"):
+            case path.includes("/calls"):
                 return <CallsList />;
-            case path.includes("/arsivler"):
+            case path.includes("/archives"):
                 return <ArchivesList />;
-            case path.includes("/gruplar"):
+            case path.includes("/groups"):
                 return <GroupsList />;
             default:
                 return <p>نتیجه‌ای یافت نشد</p>;

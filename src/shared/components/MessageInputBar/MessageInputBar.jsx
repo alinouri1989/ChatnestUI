@@ -78,9 +78,9 @@ function MessageInputBar({ chatId }) {
   }, []);
 
   const getActiveChatType = useCallback(() => {
-    if (location.pathname.includes("sohbetler") || location.pathname.includes("arsivler")) {
+    if (location.pathname.includes("chats") || location.pathname.includes("archives")) {
       return "Individual";
-    } else if (location.pathname.includes("gruplar")) {
+    } else if (location.pathname.includes("groups")) {
       return "Group";
     }
     return "";

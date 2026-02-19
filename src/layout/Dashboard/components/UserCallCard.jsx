@@ -51,7 +51,7 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
   const userStatus = status === "0001-01-01T00:00:00" ? 'online' : 'offline';
 
   const handleGoToCall = () => {
-    navigate(`/aramalar/${callId}`);
+    navigate(`/calls/${callId}`);
   };
 
   const isActiveCall = location.pathname.includes(callId);
