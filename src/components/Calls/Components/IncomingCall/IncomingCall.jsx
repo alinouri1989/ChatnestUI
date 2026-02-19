@@ -27,9 +27,23 @@ function IncomingCall({ callType, callerProfile, callId }) {
     useEffect(() => {
         const audio = new Audio(IncomingCallSound);
         audio.loop = true;
-        audio.play();
+
+        const safePlay = () => {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(() => {
+                    // Autoplay can be blocked by the browser until user interaction.
+                });
+            }
+        };
+
+        safePlay();
+        window.addEventListener("pointerdown", safePlay, { once: true });
+        window.addEventListener("keydown", safePlay, { once: true });
 
         return () => {
+            window.removeEventListener("pointerdown", safePlay);
+            window.removeEventListener("keydown", safePlay);
             audio.pause();
             audio.currentTime = 0;
         };

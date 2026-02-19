@@ -3,7 +3,13 @@ import { createContext, useContext, useState } from "react";
 import IncomingCall from "../components/Calls/Components/IncomingCall/IncomingCall";
 import PropTypes from 'prop-types';
 
-const ModalContext = createContext();
+const defaultModalContextValue = {
+  modalContent: null,
+  showModal: () => { },
+  closeModal: () => { },
+};
+
+const ModalContext = createContext(defaultModalContextValue);
 
 export const ModalProvider = ({ children }) => {
   const [modalContent, setModalContent] = useState(null);
