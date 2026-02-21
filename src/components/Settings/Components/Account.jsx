@@ -135,7 +135,7 @@ function Account() {
   const handleDeleteProfileImage = async () => {
     handleClose();
     try {
-      await removeProfilePhoto();
+      await removeProfilePhoto().unwrap();
       SuccessAlert("عکس حذف شد")
       setSelectedImage(defaultProfilePhoto)
     } catch {
@@ -147,15 +147,21 @@ function Account() {
     const file = event.target.files[0];
     if (!file) return;
 
-    const validExtensions = ["image/png", "image/jpeg", "image/jpg"];
+    const validExtensions = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    const maxFileSize = 2 * 1024 * 1024;
 
     if (!validExtensions.includes(file.type)) {
       return ErrorAlert("لطفا یک فایل تصویری انتخاب کنید");
     }
 
+    if (file.size > maxFileSize) {
+      return ErrorAlert("حجم عکس باید حداکثر 2 مگابایت باشد");
+    }
+
     try {
       const base64String = await convertFileToBase64(file);
-      await updateProfilePhoto(base64String);
+      await updateProfilePhoto(base64String).unwrap();
+      setSelectedImage(base64String);
       SuccessAlert("عکس به‌روزرسانی شد");
     } catch {
       ErrorAlert("به‌روزرسانی عکس انجام نشد");

@@ -21,14 +21,14 @@ const Theme = () => {
     };
 
     try {
-      await changeTheme(themeReverseMapping[newTheme]);
+      await changeTheme(themeReverseMapping[newTheme]).unwrap();
 
       if (newTheme === "Dark") {
-        await changeChatBackground("color9");
+        await changeChatBackground("color9").unwrap();
       }
 
       if (newTheme === "Light" || newTheme === "DefaultSystemMode") {
-        await changeChatBackground("color1");
+        await changeChatBackground("color1").unwrap();
       }
 
       if (newTheme === "DefaultSystemMode" || newTheme === "Light") {
@@ -48,7 +48,7 @@ const Theme = () => {
       if (user.userSettings.chatBackground === colorId) {
         return;
       }
-      await changeChatBackground(colorId);
+      await changeChatBackground(colorId).unwrap();
       SuccessAlert("تصویر پس‌زمینه تغییر کرد");
     } catch {
       ErrorAlert("تغییر تصویر پس‌زمینه انجام نشد")
