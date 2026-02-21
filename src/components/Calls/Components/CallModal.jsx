@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useSignalR } from "../../../contexts/SignalRContext";
 
-import ChatNestLogo from "../../../assets/logos/ChatNestLogoWithText.webp";
+import ChatNestLogo from "../../../assets/logos/ChatNestLogoWithText.svg";
 import CallSound from "../../../assets/sound/ChatNestCallSound.mp3";
 import BusySound from "../../../assets/sound/ChatNestCallBusySound.mp3";
 

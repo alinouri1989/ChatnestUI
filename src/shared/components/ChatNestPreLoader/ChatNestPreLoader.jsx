@@ -1,4 +1,4 @@
-import ChatNestLogo from "../../../assets/logos/ChatNestLogoWithText.webp";
+import ChatNestLogo from "../../../assets/logos/ChatNestLogoWithText.svg";
 import { motion } from "framer-motion";
 import "./style.scss";
 

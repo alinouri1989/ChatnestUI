@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../../assets/logos/ChatNestLogoWithText.webp";
+import Logo from "../../../assets/logos/ChatNestLogoWithText.svg";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

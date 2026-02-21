@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import { LuCheckCheck } from "react-icons/lu";
 import PropTypes from 'prop-types';
 import { formatDateForMessageInfo } from "../../../helpers/dateHelper";
 import CloseModalButton from "../../../contexts/components/CloseModalButton";
 import "./style.scss";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
+import { NestDoubleCheckIcon } from "../BrandIcons/BrandIcons.jsx";
 
 function MessageInfo({ closeModal, chatId, messageId }) {
 
@@ -32,7 +32,7 @@ function MessageInfo({ closeModal, chatId, messageId }) {
             {readUsers.length > 0 && (
                 <div className="message-info-section">
                     <div className="title-box">
-                        <LuCheckCheck className="read" />
+                        <NestDoubleCheckIcon className="read" />
                         <p className="read">خوانندگان</p>
                     </div>
                     <div className={`user-list ${deliveredUsers.length > 0 ? "first" : ""}`}>
@@ -62,7 +62,7 @@ function MessageInfo({ closeModal, chatId, messageId }) {
             {deliveredUsers.length > 0 ? (
                 <div className="message-info-section">
                     <div className="title-box">
-                        <LuCheckCheck />
+                        <NestDoubleCheckIcon />
                         <p>تحویل شده‌ها</p>
                     </div>
                     <div className="user-list">

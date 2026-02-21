@@ -1,29 +1,21 @@
-<svg
-  width="256"
-  height="256"
-  viewBox="0 0 256 256"
-  xmlns="http://www.w3.org/2000/svg"
-  role="img"
-  aria-label="Default group profile"
->
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Default group profile">
   <defs>
-    <linearGradient id="bgGroup" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#eaf6f3"/>
-      <stop offset="100%" stop-color="#cdebe3"/>
+    <linearGradient id="avatar_group_bg" x1="20" y1="18" x2="238" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E0FCF6"/>
+      <stop offset="0.52" stop-color="#CFEEF7"/>
+      <stop offset="1" stop-color="#D3E2FF"/>
+    </linearGradient>
+    <linearGradient id="avatar_group_people" x1="70" y1="78" x2="191" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#14A79E"/>
+      <stop offset="1" stop-color="#2A72DD"/>
     </linearGradient>
   </defs>
-  <!-- Background circle -->
-  <circle cx="128" cy="128" r="128" fill="url(#bgGroup)"/>
-  <!-- Group silhouettes -->
-  <g fill="#2d6a6a">
-    <!-- Center person -->
-    <circle cx="128" cy="98" r="28"/>
-    <path d="M84 176c0-26.51 19.849-44 44-44s44 17.49 44 44v12H84v-12z"/>
-    <!-- Left person -->
-    <circle cx="84" cy="108" r="22" opacity="0.9"/>
-    <path d="M44 176c0-20.99 16.297-36 36-36 6.534 0 12.68 1.62 17.8 4.53-9.61 7.72-14.8 19.12-14.8 31.47v12H44v-12z" opacity="0.9"/>
-    <!-- Right person -->
-    <circle cx="172" cy="108" r="22" opacity="0.9"/>
-    <path d="M212 176c0-20.99-16.297-36-36-36-6.534 0-12.68 1.62-17.8 4.53 9.61 7.72 14.8 19.12 14.8 31.47v12H212v-12z" opacity="0.9"/>
-  </g>
+  <circle cx="128" cy="128" r="124" fill="url(#avatar_group_bg)"/>
+  <circle cx="128" cy="128" r="100" stroke="rgba(255,255,255,0.85)" stroke-width="10"/>
+  <circle cx="128" cy="95" r="27" fill="url(#avatar_group_people)"/>
+  <circle cx="88" cy="112" r="21" fill="url(#avatar_group_people)" fill-opacity="0.92"/>
+  <circle cx="168" cy="112" r="21" fill="url(#avatar_group_people)" fill-opacity="0.92"/>
+  <path d="M82 206C82 180.594 102.594 160 128 160C153.406 160 174 180.594 174 206V214H82V206Z" fill="url(#avatar_group_people)"/>
+  <path d="M42 206C42 186.118 58.1177 170 78 170C83.7306 170 89.1483 171.339 93.9548 173.721C85.8178 182.097 80.6667 193.524 80.6667 206V214H42V206Z" fill="url(#avatar_group_people)" fill-opacity="0.9"/>
+  <path d="M214 206C214 186.118 197.882 170 178 170C172.269 170 166.852 171.339 162.045 173.721C170.182 182.097 175.333 193.524 175.333 206V214H214V206Z" fill="url(#avatar_group_people)" fill-opacity="0.9"/>
 </svg>

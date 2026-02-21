@@ -1,0 +1,19 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chatnest_bg" x1="24" y1="20" x2="232" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#55D6BE"/>
+      <stop offset="0.52" stop-color="#22B9D0"/>
+      <stop offset="1" stop-color="#2B7DE9"/>
+    </linearGradient>
+    <linearGradient id="chatnest_core" x1="96" y1="72" x2="184" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DDF7FF"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="72" fill="url(#chatnest_bg)"/>
+  <circle cx="128" cy="126" r="76" stroke="rgba(255,255,255,0.35)" stroke-width="6"/>
+  <circle cx="128" cy="126" r="56" stroke="rgba(255,255,255,0.5)" stroke-width="6"/>
+  <path d="M88 96C88 84.9543 96.9543 76 108 76H166C177.046 76 186 84.9543 186 96V136C186 147.046 177.046 156 166 156H132L102 184V156H108C96.9543 156 88 147.046 88 136V96Z" fill="url(#chatnest_core)"/>
+  <path d="M108 106H166M108 122H166M108 138H148" stroke="#2A7EE8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M72 186C84 168 105 156 128 156C151 156 172 168 184 186" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="10" stroke-linecap="round"/>
+</svg>

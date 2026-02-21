@@ -1,7 +1,7 @@
 import { LuImage } from 'react-icons/lu';
 import { BiSolidMicrophone } from 'react-icons/bi';
 import { LuFileVideo } from "react-icons/lu";
-import { FaFileAlt } from "react-icons/fa";
+import { NestFileIcon } from "../BrandIcons/BrandIcons.jsx";
 import PropTypes from 'prop-types';
 
 const LastMessage = ({ lastMessageType, content }) => {
@@ -33,7 +33,7 @@ const LastMessage = ({ lastMessageType, content }) => {
             case 4:
                 return (
                     <div className="last-message-file">
-                        <FaFileAlt />
+                        <NestFileIcon />
                         <span>فایل</span>
                     </div>
                 );

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { marked } from "marked";
 
-import ChatNestAI from "../../../assets/logos/ChatNestAI.webp";
+import ChatNestAI from "../../../assets/logos/ChatNestAI.svg";
 import ImageGeneratorBanner from "../../../assets/images/AIModal/ImageGeneratorBanner.webp";
 import TextGeneratorBanner from "../../../assets/images/AIModal/TextGeneratorBanner.webp";
 

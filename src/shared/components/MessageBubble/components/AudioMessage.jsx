@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { IoPlay } from "react-icons/io5";
-import { IoPause } from "react-icons/io5";
-import { FiDownload } from "react-icons/fi";
 import { Slider, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 import useScreenWidth from "../../../../hooks/useScreenWidth";
+import { NestDownloadIcon, NestPauseIcon, NestPlayIcon } from "../../BrandIcons/BrandIcons.jsx";
 
 export function AudioMessage({ content }) {
 
@@ -90,7 +88,7 @@ export function AudioMessage({ content }) {
             />
             <div className="audio-controls">
                 <button onClick={togglePlayPause} className="play-pause-btn" type="button">
-                    {isPlaying ? <IoPause /> : <IoPlay />}
+                    {isPlaying ? <NestPauseIcon /> : <NestPlayIcon />}
                 </button>
                 <div className="progress-container">
                     <div className="time">
@@ -113,7 +111,7 @@ export function AudioMessage({ content }) {
                     </div>
                 </div>
                 <button onClick={handleDownload} className="download-btn" type="button">
-                    <FiDownload />
+                    <NestDownloadIcon />
                 </button>
             </div>
         </div>

@@ -4,12 +4,14 @@ import { useSelector } from 'react-redux';
 import { useModal } from '../../../contexts/ModalContext';
 import PropTypes from 'prop-types';
 
-import { FaFileAlt } from "react-icons/fa";
-import { FiDownload } from "react-icons/fi";
-import { MdClose } from 'react-icons/md';
-import { LuCheck } from "react-icons/lu";
-import { LuCheckCheck } from "react-icons/lu";
-import { FaEarthAfrica } from "react-icons/fa6";
+import {
+    NestCloseIcon,
+    NestDoubleCheckIcon,
+    NestDownloadIcon,
+    NestFileIcon,
+    NestPendingIcon,
+    NestSingleCheckIcon
+} from "../BrandIcons/BrandIcons.jsx";
 
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -113,16 +115,16 @@ function MessageBubble({
 
     if (!isGroupMessageBubble) {
         if (status.read && Object.keys(status.read).length > 0) {
-            statusIcon = <LuCheckCheck />;
+            statusIcon = <NestDoubleCheckIcon />;
             statusColor = "#585CE1";
         } else if (status.delivered && Object.keys(status.delivered).length > 0) {
-            statusIcon = <LuCheckCheck />;
+            statusIcon = <NestDoubleCheckIcon />;
             statusColor = "#828A96";
         } else if (status.sent && status.sent[userId]) {
-            statusIcon = <LuCheck />;
+            statusIcon = <NestSingleCheckIcon />;
             statusColor = "#828A96";
         } else {
-            statusIcon = <FaEarthAfrica />;
+            statusIcon = <NestPendingIcon />;
             statusColor = "#828A96";
         }
     } else {
@@ -142,20 +144,20 @@ function MessageBubble({
             ).length;
 
             if (readCount === totalParticipants - 1) {
-                statusIcon = <LuCheckCheck />;
+                statusIcon = <NestDoubleCheckIcon />;
                 statusColor = "#585CE1";
             } else if (deliverCount === totalParticipants - 1) {
-                statusIcon = <LuCheckCheck />;
+                statusIcon = <NestDoubleCheckIcon />;
                 statusColor = "#828A96";
             } else if (status.sent && status.sent[userId]) {
-                statusIcon = <LuCheck />;
+                statusIcon = <NestSingleCheckIcon />;
                 statusColor = "#828A96";
             } else {
-                statusIcon = <FaEarthAfrica />;
+                statusIcon = <NestPendingIcon />;
                 statusColor = "#828A96";
             }
         } else {
-            statusIcon = <FaEarthAfrica />;
+            statusIcon = <NestPendingIcon />;
             statusColor = "#828A96";
         }
     }
@@ -184,7 +186,7 @@ function MessageBubble({
         return (
             <div className="file-message-container">
                 <div className='file-info-box'>
-                    <FaFileAlt />
+                    <NestFileIcon />
                     <div className='file-info'>
                         <span>{fileName || "فایل"}</span>
                         <p>
@@ -199,7 +201,7 @@ function MessageBubble({
                     onClick={() => downloadFile(fileName, content)}
                     type="button"
                 >
-                    <FiDownload />
+                    <NestDownloadIcon />
                 </button>
             </div>
         );
@@ -410,7 +412,7 @@ function MessageBubble({
                 <div className="full-size-image-box">
                     <img src={content} alt="تصویر انتخاب شده" />
                     <button onClick={() => setIsShowImage(false)} type="button">
-                        <MdClose />
+                        <NestCloseIcon />
                     </button>
                 </div>
             }

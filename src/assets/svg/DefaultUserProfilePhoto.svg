@@ -1,24 +1,18 @@
-<svg
-  width="256"
-  height="256"
-  viewBox="0 0 256 256"
-  xmlns="http://www.w3.org/2000/svg"
-  role="img"
-  aria-label="Default user profile"
->
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Default user profile">
   <defs>
-    <linearGradient id="bgUser" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#e8eef7"/>
-      <stop offset="100%" stop-color="#cdd9f0"/>
+    <linearGradient id="avatar_user_bg" x1="18" y1="16" x2="238" y2="242" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E1FBF7"/>
+      <stop offset="0.5" stop-color="#CFEFFE"/>
+      <stop offset="1" stop-color="#C6DEFF"/>
+    </linearGradient>
+    <linearGradient id="avatar_user_person" x1="80" y1="74" x2="177" y2="194" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1BAFB6"/>
+      <stop offset="1" stop-color="#246DDA"/>
     </linearGradient>
   </defs>
-  <!-- Background circle -->
-  <circle cx="128" cy="128" r="128" fill="url(#bgUser)"/>
-  <!-- User silhouette -->
-  <g fill="#4a5b8c">
-    <!-- Head -->
-    <circle cx="128" cy="100" r="36"/>
-    <!-- Shoulders/chest -->
-    <path d="M64 196c0-33.137 28.654-56 64-56s64 22.863 64 56v12H64v-12z"/>
-  </g>
+  <circle cx="128" cy="128" r="124" fill="url(#avatar_user_bg)"/>
+  <circle cx="128" cy="128" r="100" stroke="rgba(255,255,255,0.85)" stroke-width="10"/>
+  <circle cx="128" cy="97" r="34" fill="url(#avatar_user_person)"/>
+  <path d="M66 206C66 171.758 93.7583 144 128 144C162.242 144 190 171.758 190 206V214H66V206Z" fill="url(#avatar_user_person)"/>
+  <path d="M82 206C82 180.594 102.594 160 128 160C153.406 160 174 180.594 174 206V214H82V206Z" fill="rgba(255,255,255,0.18)"/>
 </svg>

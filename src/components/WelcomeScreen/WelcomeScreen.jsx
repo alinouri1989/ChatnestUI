@@ -1,4 +1,4 @@
-import Logo from "../../assets/logos/Logo.webp";
+import Logo from "../../assets/logos/Logo.svg";
 import "./style.scss";
 import PropTypes from 'prop-types';
 

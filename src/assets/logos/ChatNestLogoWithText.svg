@@ -1,0 +1,25 @@
+<svg width="920" height="220" viewBox="0 0 920 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wordmark_bg" x1="18" y1="14" x2="206" y2="206" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#55D6BE"/>
+      <stop offset="0.52" stop-color="#22B9D0"/>
+      <stop offset="1" stop-color="#2B7DE9"/>
+    </linearGradient>
+    <linearGradient id="wordmark_text" x1="248" y1="58" x2="760" y2="176" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#15384D"/>
+      <stop offset="1" stop-color="#266FE0"/>
+    </linearGradient>
+  </defs>
+
+  <g>
+    <rect x="12" y="12" width="196" height="196" rx="62" fill="url(#wordmark_bg)"/>
+    <circle cx="110" cy="109" r="56" stroke="rgba(255,255,255,0.35)" stroke-width="5"/>
+    <circle cx="110" cy="109" r="40" stroke="rgba(255,255,255,0.5)" stroke-width="5"/>
+    <path d="M82 88C82 79.1634 89.1634 72 98 72H141C149.837 72 157 79.1634 157 88V120C157 128.837 149.837 136 141 136H116L96 155V136H98C89.1634 136 82 128.837 82 120V88Z" fill="#F2FBFF"/>
+    <path d="M98 96H141M98 109H141M98 122H128" stroke="#2A7EE8" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <text x="248" y="138" fill="url(#wordmark_text)" font-family="Poppins, Segoe UI, Arial, sans-serif" font-size="102" font-weight="700" letter-spacing="-1.5">ChatNest</text>
+  <path d="M794 52C808 52 820 63 820 78C820 93 808 104 794 104C780 104 768 93 768 78C768 63 780 52 794 52Z" fill="#55D6BE"/>
+  <path d="M792 65L796 76H807L798 83L802 94L792 87L782 94L786 83L777 76H788L792 65Z" fill="#FFFFFF"/>
+</svg>
