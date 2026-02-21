@@ -1,3 +1,6 @@
-export const defaultProfilePhoto = "/src/assets/svg/DefaultUserProfilePhoto.svg"
-export const defaultProfileAdminPhoto = "/src/assets/svg/DefaultGroupProfileImage.svg"
-export const defaultGroupPhoto = "/src/assets/svg/DefaultUserProfilePhoto.svg"
+import defaultUserProfilePhoto from "../assets/svg/DefaultUserProfilePhoto.svg";
+import defaultGroupProfilePhoto from "../assets/svg/DefaultGroupProfileImage.svg";
+
+export const defaultProfilePhoto = defaultUserProfilePhoto;
+export const defaultProfileAdminPhoto = defaultGroupProfilePhoto;
+export const defaultGroupPhoto = defaultGroupProfilePhoto;

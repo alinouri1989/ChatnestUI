@@ -1,6 +1,7 @@
 import { BsLinkedin } from "react-icons/bs";
 import { BsGithub } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
+import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 
 function Help() {
   return (
@@ -25,7 +26,7 @@ function Help() {
       <div className="developers-box">
         <div className="developer-box">
           <div className="developer-image-and-info">
-            <img src="/src/assets/svg/DefaultUserProfilePhoto.svg" alt="ali nouri" />
+            <img src={defaultProfilePhoto} alt="ali nouri" />
             <div className="developer-info">
               <span>علی نوری</span>
               <p>Frontend Developer</p>
@@ -39,7 +40,7 @@ function Help() {
         </div>
         <div className="developer-box">
           <div className="developer-image-and-info">
-            <img src="/src/assets/svg/DefaultUserProfilePhoto.svg" alt="ali nouri" />
+            <img src={defaultProfilePhoto} alt="ali nouri" />
             <div className="developer-info">
               <span>علی نوری</span>
               <p>Backend Developer</p>
