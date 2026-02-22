@@ -176,8 +176,6 @@ export const SignalRProvider = ({ children }) => {
       dispatch(setIsCallStarted(true));
       dispatch(setIsCallStarting(false));
 
-      callConnection.invoke("AcceptCall", callIdRef.current);
-
       const currentDate = new Date().toISOString();
       dispatch(setCallStartedDate(currentDate));
     };
@@ -735,6 +733,7 @@ export const SignalRProvider = ({ children }) => {
       }
 
       await createAndSendOffer(callIdRef.current, callConnection, peerConnection);
+      await callConnection.invoke("AcceptCall", callIdRef.current);
     } catch {
       dispatch(setIsCallAcceptWaiting(false));
       ErrorAlert("پذیرش تماس انجام نشد.");
