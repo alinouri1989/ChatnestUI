@@ -6,6 +6,24 @@ const initialState = {
     isChatListInitialized: false,
 };
 
+const createDefaultChatUser = () => ({
+    displayName: "",
+    email: "",
+    biography: "",
+    profilePhoto: defaultProfilePhoto,
+    lastConnectionDate: null,
+});
+
+const mergeChatUser = (existingUser = {}, incomingUser = {}) => ({
+    ...existingUser,
+    ...incomingUser,
+    displayName: incomingUser.displayName ?? existingUser.displayName ?? "",
+    email: incomingUser.email ?? existingUser.email ?? "",
+    biography: incomingUser.biography ?? existingUser.biography ?? "",
+    profilePhoto: incomingUser.profilePhoto ?? existingUser.profilePhoto ?? defaultProfilePhoto,
+    lastConnectionDate: incomingUser.lastConnectionDate ?? existingUser.lastConnectionDate ?? null,
+});
+
 const chatListSlice = createSlice({
     name: "chatList",
     initialState,
@@ -15,34 +33,15 @@ const chatListSlice = createSlice({
             state.isChatListInitialized = true;
         },
         addNewUserToChatList: (state, action) => {
-            const newUserId = Object.keys(action.payload)[0];
-            const newUserData = action.payload[newUserId];
-            if (!state.chatList[newUserId]) {
-                state.chatList[newUserId] = {
-                    displayName: newUserData.displayName || "ChatNest",
-                    email: newUserData.email || "",
-                    biography: newUserData.biography || "",
-                    profilePhoto: newUserData.profilePhoto || defaultProfilePhoto,
-                    lastConnectionDate: newUserData.lastConnectionDate || null,
-                };
-            }
+            Object.entries(action.payload || {}).forEach(([newUserId, newUserData]) => {
+                const existingUser = state.chatList[newUserId] || createDefaultChatUser();
+                state.chatList[newUserId] = mergeChatUser(existingUser, newUserData || {});
+            });
         },
         updateUserInfoToChatList: (state, action) => {
-            const chatId = Object.keys(action.payload)[0];
-            const updates = action.payload[chatId];
-
-            if (!state.chatList[chatId]) {
-                state.chatList[chatId] = {
-                    displayName: "ChatNest",
-                    email: "",
-                    biography: "",
-                    profilePhoto: defaultProfilePhoto,
-                    lastConnectionDate: null,
-                };
-            }
-
-            Object.entries(updates || {}).forEach(([key, value]) => {
-                state.chatList[chatId][key] = value;
+            Object.entries(action.payload || {}).forEach(([chatId, updates]) => {
+                const existingUser = state.chatList[chatId] || createDefaultChatUser();
+                state.chatList[chatId] = mergeChatUser(existingUser, updates || {});
             });
         },
     },
