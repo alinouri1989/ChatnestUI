@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   server: {
@@ -11,6 +12,7 @@ export default defineConfig({
   plugins: [
     mkcert(), // For HTTPS with local certificates
     react(), // React plugin support
+    tailwindcss(), // Tailwind v4 integration
   ],
   css: {
     preprocessorOptions: {

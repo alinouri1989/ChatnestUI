@@ -1,0 +1,13 @@
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme inline {
+  --color-cn-blue: var(--blue);
+  --color-cn-surface: var(--generalBackgroundColor);
+  --color-cn-panel: var(--smooth-blue);
+  --color-cn-panel-soft: var(--smooth-light-blue);
+  --color-cn-border: var(--smooth-border-color);
+  --color-cn-text: var(--text-black);
+}

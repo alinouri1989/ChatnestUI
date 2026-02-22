@@ -6,6 +6,7 @@ import App from './App.jsx';
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/600.css";
 import "@fontsource/montserrat/700.css";
+import "./shared/styles/tailwind.css";
 import "./shared/styles/main.scss";
 
 createRoot(document.getElementById('root')).render(
