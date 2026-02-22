@@ -4,6 +4,7 @@ import useScreenWidth from "../../../hooks/useScreenWidth";
 
 import SearchInput from "./SearchInput";
 import UserCallCard from "./UserCallCard";
+import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 
 import { opacityEffect } from "../../../shared/animations/animations";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
