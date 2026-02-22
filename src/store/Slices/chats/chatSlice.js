@@ -296,7 +296,7 @@ const transformChats = (chats) => {
           if (
             messageData.type === 0 &&
             decryptedContent &&
-            decryptedContent !== "Bu mesaj silindi."
+            decryptedContent !== "این پیام حذف شده است."
           ) {
             try {
               decryptedContent = decryptMessage(messageData.content, chatId);

@@ -305,7 +305,7 @@ export const SignalRProvider = ({ children }) => {
                 if (
                   messageData.type === 0 &&
                   decryptedContent &&
-                  decryptedContent !== "Bu mesaj silindi."
+                  decryptedContent !== "این پیام حذف شده است."
                 ) {
                   decryptedContent = decryptMessage(
                     messageData.content,
@@ -333,7 +333,7 @@ export const SignalRProvider = ({ children }) => {
                 if (
                   messageData.type === 0 &&
                   decryptedContent &&
-                  decryptedContent !== "Bu mesaj silindi."
+                  decryptedContent !== "این پیام حذف شده است."
                 ) {
                   decryptedContent = decryptMessage(
                     messageData.content,
@@ -406,7 +406,7 @@ export const SignalRProvider = ({ children }) => {
                     if (
                       msg.type === 0 &&
                       decryptedContent &&
-                      decryptedContent !== "Bu mesaj silindi."
+                      decryptedContent !== "این پیام حذف شده است."
                     ) {
                       decryptedContent = decryptMessage(msg.content, groupId);
                     }
