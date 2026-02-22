@@ -129,24 +129,39 @@ function SoundRecordModal({ closeModal, chatId }) {
             setIsLoading(true);
 
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-            const reader = new FileReader();
+            const base64String = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
 
-            reader.onloadend = async () => {
-                const base64String = reader.result.split(',')[1];
+                reader.onloadend = () => {
+                    if (typeof reader.result !== "string") {
+                        reject(new Error("invalid_audio"));
+                        return;
+                    }
 
-                await chatConnection.invoke("SendMessage", chatType, chatId, {
-                    ContentType: 3,
-                    content: base64String,
-                });
+                    const encoded = reader.result.split(',')[1];
+                    if (!encoded) {
+                        reject(new Error("empty_file"));
+                        return;
+                    }
 
-                setIsLoading(false);
-                closeModal();
-            };
+                    resolve(encoded);
+                };
 
-            reader.readAsDataURL(audioBlob);
+                reader.onerror = reject;
+                reader.readAsDataURL(audioBlob);
+            });
+
+            await chatConnection.invoke("SendMessage", chatType, chatId, {
+                ContentType: 3,
+                content: base64String,
+                FileName: "voice-message.wav",
+            });
+
+            closeModal();
         } catch (error) {
             console.error("Audio send error:", error);
             ErrorAlert("خطایی رخ داده است");
+        } finally {
             setIsLoading(false);
         }
     };
@@ -203,8 +218,8 @@ function SoundRecordModal({ closeModal, chatId }) {
 
                 <div className="options-box">
                     {recordStarted && !recordFinished && (
-                        <button 
-                            className="record-button" 
+                        <button
+                            className="record-button"
                             onClick={finishRecording}
                             type="button"
                         >
@@ -212,8 +227,8 @@ function SoundRecordModal({ closeModal, chatId }) {
                         </button>
                     )}
                     {!recordStarted && !recordFinished && (
-                        <button 
-                            className="record-button" 
+                        <button
+                            className="record-button"
                             onClick={startRecording}
                             type="button"
                         >
