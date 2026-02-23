@@ -33,8 +33,8 @@ function MessageInputBar({ chatId }) {
 
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isShowFileMenu, setShowFileMenu] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
@@ -46,6 +46,58 @@ function MessageInputBar({ chatId }) {
   const fileInputRef = useRef(null);
   const fileMenuRef = useRef(null);
   const addFileButtonRef = useRef(null);
+  const uploadProgressTimeoutRef = useRef(null);
+
+  const clearUploadProgressTimeout = useCallback(() => {
+    if (uploadProgressTimeoutRef.current) {
+      clearTimeout(uploadProgressTimeoutRef.current);
+      uploadProgressTimeoutRef.current = null;
+    }
+  }, []);
+
+  const startUploadProgress = useCallback((fileName) => {
+    clearUploadProgressTimeout();
+    setUploadProgress({
+      fileName,
+      percent: 0,
+      status: "Preparing file...",
+    });
+  }, [clearUploadProgressTimeout]);
+
+  const updateUploadProgress = useCallback((percent, status) => {
+    setUploadProgress((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        percent: Math.max(prev.percent ?? 0, Math.min(100, Math.round(percent))),
+        status: status ?? prev.status,
+      };
+    });
+  }, []);
+
+  const finishUploadProgress = useCallback((status = "Upload complete") => {
+    setUploadProgress((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        percent: 100,
+        status,
+      };
+    });
+
+    clearUploadProgressTimeout();
+    uploadProgressTimeoutRef.current = setTimeout(() => {
+      setUploadProgress(null);
+      uploadProgressTimeoutRef.current = null;
+    }, 1200);
+  }, [clearUploadProgressTimeout]);
+
+  const resetUploadProgress = useCallback(() => {
+    clearUploadProgressTimeout();
+    setUploadProgress(null);
+  }, [clearUploadProgressTimeout]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -76,6 +128,12 @@ function MessageInputBar({ chatId }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      clearUploadProgressTimeout();
+    };
+  }, [clearUploadProgressTimeout]);
 
   const getActiveChatType = useCallback(() => {
     if (location.pathname.includes("chats") || location.pathname.includes("archives")) {
@@ -119,18 +177,25 @@ function MessageInputBar({ chatId }) {
     const chatType = getActiveChatType();
 
     if (file) {
+      startUploadProgress(file.name);
       setIsLoading(true);
       try {
-        const base64String = await convertFileToBase64WithAsArrayBuffer(file);
+        const base64String = await convertFileToBase64WithAsArrayBuffer(file, (percent) => {
+          updateUploadProgress(percent, "Preparing file...");
+        });
+        updateUploadProgress(95, "Sending...");
         await chatConnection.invoke("SendMessage", chatType, chatId, {
           ContentType: 2,
           content: base64String,
         });
+        finishUploadProgress();
         SuccessAlert("ویدیو ارسال شد");
       } catch {
+        resetUploadProgress();
         ErrorAlert("ویدیو ارسال نشد");
       }
       setIsLoading(false);
+      e.target.value = "";
     } else {
       ErrorAlert("هیچ فایلی انتخاب نشده");
     }
@@ -143,6 +208,8 @@ function MessageInputBar({ chatId }) {
 
       showModal(<ImageModal closeModal={closeModal} image={file} chatId={chatId} />);
     }
+
+    e.target.value = "";
   };
 
   const handleSendFile = async (e) => {
@@ -155,8 +222,12 @@ function MessageInputBar({ chatId }) {
     }
 
     try {
+      startUploadProgress(file.name);
       setIsLoading(true);
-      const base64String = await convertFileToBase64WithAsArrayBuffer(file);
+      const base64String = await convertFileToBase64WithAsArrayBuffer(file, (percent) => {
+        updateUploadProgress(percent, "Preparing file...");
+      });
+      updateUploadProgress(95, "Sending...");
 
       await chatConnection.invoke("SendMessage", chatType, chatId, {
         ContentType: 4,
@@ -164,8 +235,10 @@ function MessageInputBar({ chatId }) {
         content: base64String,
       });
 
+      finishUploadProgress();
       setIsLoading(false);
     } catch (error) {
+      resetUploadProgress();
       setIsLoading(false);
       if (error?.message === "empty_file") {
         ErrorAlert("فایل با محتوای خالی قابل ارسال نیست");
@@ -344,7 +417,31 @@ function MessageInputBar({ chatId }) {
           </button>
         </div>
       </div>
-      {isLoading && <PreLoader />}
+      {uploadProgress && (
+        <div className="upload-progress-box">
+          <div className="upload-progress-header">
+            <span className="upload-progress-file" title={uploadProgress.fileName}>
+              {uploadProgress.fileName}
+            </span>
+            <span className="upload-progress-percent">{uploadProgress.percent}%</span>
+          </div>
+          <div
+            className="upload-progress-track"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={uploadProgress.percent}
+            aria-label="File upload progress"
+          >
+            <div
+              className="upload-progress-fill"
+              style={{ width: `${uploadProgress.percent}%` }}
+            />
+          </div>
+          <div className="upload-progress-status">{uploadProgress.status}</div>
+        </div>
+      )}
+      {isLoading && !uploadProgress && <PreLoader />}
     </div>
   );
 }
