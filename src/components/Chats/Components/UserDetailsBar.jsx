@@ -11,6 +11,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 import CallModal from "../../Calls/Components/CallModal";
 import { formatDateForLastConnectionDate } from "../../../helpers/dateHelper";
+import { isUserOnline } from "../../../helpers/presenceHelper";
 import { startCall } from "../../../helpers/startCall";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 
@@ -30,10 +31,9 @@ function UserDetailsBar({
     return null;
   }
 
-  const status =
-    recipientProfile.lastConnectionDate == "0001-01-01T00:00:00"
-      ? "online"
-      : "offline";
+  const status = isUserOnline(recipientProfile.lastConnectionDate)
+    ? "online"
+    : "offline";
   const lastConnectionDate = recipientProfile.lastConnectionDate;
 
   const handleVoiceCall = () => {
@@ -74,11 +74,11 @@ function UserDetailsBar({
             {status == "online" ? (
               <div className="status">
                 <p className="circle"></p>
-                <p>آنلاین</p>
+                <p>{"\u0622\u0646\u0644\u0627\u06cc\u0646"}</p>
               </div>
             ) : (
               <div className="status-2">
-                <p>آخرین بازدید</p>
+                <p>{"\u0622\u062e\u0631\u06cc\u0646 \u0628\u0627\u0632\u062f\u06cc\u062f"}</p>
                 <span>
                   {formatDateForLastConnectionDate(lastConnectionDate)}
                 </span>
@@ -86,7 +86,7 @@ function UserDetailsBar({
             )}
 
             <div className="biography">
-              <strong>بیوگرافی</strong>
+              <strong>Ø¨ÛŒÙˆÚ¯Ø±Ø§ÙÛŒ</strong>
               <div className="line"></div>
               <p>{recipientProfile.biography}</p>
             </div>
@@ -99,7 +99,7 @@ function UserDetailsBar({
                 >
                   <PiPhoneFill />{" "}
                 </button>
-                <p>تماس صوتی</p>
+                <p>ØªÙ…Ø§Ø³ ØµÙˆØªÛŒ</p>
               </div>
               <div className="button-box">
                 <button
@@ -109,7 +109,7 @@ function UserDetailsBar({
                 >
                   <HiMiniVideoCamera />
                 </button>
-                <p>تماس تصویری</p>
+                <p>ØªÙ…Ø§Ø³ ØªØµÙˆÛŒØ±ÛŒ</p>
               </div>
             </div>
           </div>

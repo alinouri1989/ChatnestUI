@@ -7,6 +7,7 @@ import SearchInput from "./SearchInput";
 import UserChatCard from "./UserChatCard";
 
 import { lastMessageDateHelper } from "../../../helpers/dateHelper";
+import { isUserOnline } from "../../../helpers/presenceHelper";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
 import { getChatId } from "../../../store/Slices/chats/chatSlice";
 
@@ -85,7 +86,7 @@ function ArchivesList() {
                 return {
                     receiverId,
                     image: user.profilePhoto,
-                    status: user.lastConnectionDate === "0001-01-01T00:00:00",
+                    status: isUserOnline(user.lastConnectionDate),
                     name: user.displayName,
                     lastMessage,
                     lastMessageDate,

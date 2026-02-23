@@ -10,6 +10,7 @@ import UserChatCard from "./UserChatCard";
 import { getChatId } from "../../../store/Slices/chats/chatSlice";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
 import { lastMessageDateHelper } from "../../../helpers/dateHelper";
+import { isUserOnline } from "../../../helpers/presenceHelper";
 
 import NoActiveData from "../../../shared/components/NoActiveData/NoActiveData";
 import PreLoader from "../../../shared/components/PreLoader/PreLoader";
@@ -92,7 +93,7 @@ function ChatsList() {
                 return {
                     receiverId,
                     image: user.profilePhoto,
-                    status: user.lastConnectionDate === "0001-01-01T00:00:00",
+                    status: isUserOnline(user.lastConnectionDate),
                     name: user.displayName,
                     lastMessage,
                     lastMessageType,

@@ -11,6 +11,7 @@ import { IoIosArrowDropleftCircle } from "react-icons/io";
 
 import CallModal from '../../Calls/Components/CallModal';
 import { formatDateForLastConnectionDate } from '../../../helpers/dateHelper';
+import { isUserOnline } from '../../../helpers/presenceHelper';
 import BackToMenuButton from '../../../shared/components/BackToMenuButton/BackToMenuButton';
 import { startCall } from '../../../helpers/startCall';
 import { defaultProfilePhoto } from '../../../constants/DefaultProfilePhoto';
@@ -28,7 +29,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
         return null;
     }
 
-    const status = recipientProfile.lastConnectionDate === "0001-01-01T00:00:00" ? 'online' : 'offline';
+    const status = isUserOnline(recipientProfile.lastConnectionDate) ? 'online' : 'offline';
     const lastConnectionDate = recipientProfile.lastConnectionDate;
 
     const handleVoiceCall = () => {
@@ -63,7 +64,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                     <p className="user-name">{recipientProfile.displayName}</p>
 
                     {status === "online" ?
-                        <span>آنلاین</span>
+                        <span>{"\u0622\u0646\u0644\u0627\u06cc\u0646"}</span>
                         :
                         <span>{formatDateForLastConnectionDate(lastConnectionDate)}</span>
                     }

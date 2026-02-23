@@ -10,6 +10,7 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 import NewAndSettingsGroupModal from './NewAndSettingsGroup/NewAndSettingsGroupModal';
 import { formatDateToTR } from '../../../helpers/dateHelper';
+import { isUserOnline } from '../../../helpers/presenceHelper';
 import { defaultProfilePhoto } from '../../../constants/DefaultProfilePhoto';
 
 function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }) {
@@ -89,7 +90,7 @@ function GroupDetailsBar({ isSidebarOpen, toggleSidebar, groupProfile, groupId }
                                             .map(([id, member]) => {
                                                 if (member.role === 2) return null;
 
-                                                const isOnline = member.lastConnectionDate === "0001-01-01T00:00:00";
+                                                const isOnline = isUserOnline(member.lastConnectionDate);
 
                                                 return (
                                                     <div key={id} className="member-box">

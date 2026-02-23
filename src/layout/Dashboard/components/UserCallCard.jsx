@@ -13,6 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import { formatTimeHoursMinutes } from "../../../helpers/dateHelper";
+import { isUserOnline } from "../../../helpers/presenceHelper";
 import { SuccessAlert, ErrorAlert } from "../../../helpers/customAlert";
 import CallCardCallStatus from "../../../shared/components/CallStatus/CallCardCallStatus";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
@@ -48,7 +49,7 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
     }
   };
 
-  const userStatus = status === "0001-01-01T00:00:00" ? 'online' : 'offline';
+  const userStatus = isUserOnline(status) ? 'online' : 'offline';
 
   const handleGoToCall = () => {
     navigate(`/calls/${callId}`);
