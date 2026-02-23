@@ -11,7 +11,7 @@ import { groupMessagesByDate } from '../../../helpers/groupMessageByDate.js';
 
 import { opacityAndTransformEffect, opacityEffect } from '../../../shared/animations/animations.js';
 import MessageBubble from "../../../shared/components/MessageBubble/MessageBubble.jsx";
-import PendingUploadBubble from "../../../shared/components/PendingUploadBubble/PendingUploadBubble.jsx";
+import PendingUploadsList from "../../../shared/components/PendingUploadBubble/PendingUploadsList.jsx";
 
 import FirstChatBanner from "../../../assets/images/Home/FirstChatBanner.webp";
 
@@ -20,14 +20,19 @@ function GroupMessageBar({ groupId }) {
     const { user, token } = useSelector((state) => state.auth);
 
     const { Group } = useSelector((state) => state.chat);
-    const pendingUploads = useSelector((state) => state.pendingUploads.items);
+    const pendingUploadCount = useSelector((state) =>
+        state.pendingUploads.items.reduce((count, item) => {
+            if (item.chatType === "Group" && String(item.chatId) === String(groupId)) {
+                return count + 1;
+            }
+
+            return count;
+        }, 0)
+    );
     const { groupList } = useSelector((state) => state.groupList);
     const currentUserId = getUserIdFromToken(token);
 
     const GroupChat = Group.find(group => group?.id === groupId);
-    const groupPendingUploads = pendingUploads.filter(
-        (item) => item.chatType === "Group" && String(item.chatId) === String(groupId)
-    );
     const backgroundImage = getChatBackgroundColor(user.userSettings.chatBackground);
 
     const messagesContainerRef = useRef(null);
@@ -48,7 +53,7 @@ function GroupMessageBar({ groupId }) {
         if (messagesContainerRef.current) {
             messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
         }
-    }, [GroupChat?.messages, groupPendingUploads.length, groupPendingUploads.at(-1)?.progress]);
+    }, [GroupChat?.messages, pendingUploadCount]);
 
     const filteredGroupedMessages = groupMessagesByDate(GroupChat?.messages);
 
@@ -115,9 +120,7 @@ function GroupMessageBar({ groupId }) {
                         </div>
                     ))
                 )}
-                {groupPendingUploads.map((pendingItem) => (
-                    <PendingUploadBubble key={pendingItem.id} item={pendingItem} />
-                ))}
+                <PendingUploadsList chatId={groupId} chatType="Group" />
             </div>
         </motion.div>
     );

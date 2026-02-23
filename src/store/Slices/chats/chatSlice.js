@@ -7,6 +7,25 @@ const initialState = {
   isChatsInitialized: false,
 };
 
+const DELETED_MESSAGE_TOMBSTONE =
+  "\u0627\u06cc\u0646 \u067e\u06cc\u0627\u0645 \u062d\u0630\u0641 \u0634\u062f\u0647 \u0627\u0633\u062a.";
+const DELETED_MESSAGE_KEYWORD_DELETE = "\u062d\u0630\u0641";
+const DELETED_MESSAGE_KEYWORD_MESSAGE = "\u067e\u06cc\u0627\u0645";
+
+const isDeletedTombstoneMessage = (messageData) => {
+  if (!messageData || messageData.type !== 0) {
+    return false;
+  }
+
+  const content = typeof messageData.content === "string" ? messageData.content : "";
+
+  return (
+    content === DELETED_MESSAGE_TOMBSTONE ||
+    (content.includes(DELETED_MESSAGE_KEYWORD_DELETE) &&
+      content.includes(DELETED_MESSAGE_KEYWORD_MESSAGE))
+  );
+};
+
 const mapParticipants = (chatData) => {
   if (Array.isArray(chatData?.participants)) {
     return chatData.participants;
@@ -51,11 +70,20 @@ const chatSlice = createSlice({
         participants: mapParticipants(chatData),
         archivedFor: chatData.archivedFor || {},
         createdDate: chatData.createdDate,
-        messages: Object.entries(chatData.messages || {}).map(
-          ([messageId, messageData]) => ({
-            id: messageId,
-            ...messageData,
-          })
+        messages: Object.entries(chatData.messages || {}).reduce(
+          (acc, [messageId, messageData]) => {
+            if (!messageData || isDeletedTombstoneMessage(messageData)) {
+              return acc;
+            }
+
+            acc.push({
+              id: messageId,
+              ...messageData,
+            });
+
+            return acc;
+          },
+          []
         ),
       };
 
@@ -81,11 +109,20 @@ const chatSlice = createSlice({
         participants,
         archivedFor: chatData.archivedFor || {},
         createdDate: chatData.createdDate,
-        messages: Object.entries(chatData.messages || {}).map(
-          ([messageId, messageData]) => ({
-            id: messageId,
-            ...messageData,
-          })
+        messages: Object.entries(chatData.messages || {}).reduce(
+          (acc, [messageId, messageData]) => {
+            if (!messageData || isDeletedTombstoneMessage(messageData)) {
+              return acc;
+            }
+
+            acc.push({
+              id: messageId,
+              ...messageData,
+            });
+
+            return acc;
+          },
+          []
         ),
       };
       state.Group.push(newGroupChat);
@@ -94,8 +131,14 @@ const chatSlice = createSlice({
       const { chatId, messageId, messageData, userId } = action.payload;
 
       const chat = state.Individual.find((chat) => chat.id === chatId);
+      const shouldRemoveMessage = isDeletedTombstoneMessage(messageData);
 
       if (chat) {
+        if (shouldRemoveMessage) {
+          chat.messages = chat.messages.filter((msg) => msg.id !== messageId);
+          return;
+        }
+
         const existingMessageIndex = chat.messages.findIndex(
           (msg) => msg.id === messageId
         );
@@ -117,6 +160,10 @@ const chatSlice = createSlice({
           chat.messages.push({ id: messageId, ...messageData });
         }
       } else {
+        if (shouldRemoveMessage) {
+          return;
+        }
+
         const newChat = {
           id: chatId,
           participants: [],
@@ -132,8 +179,14 @@ const chatSlice = createSlice({
       const { chatId, messageId, messageData, userId } = action.payload;
 
       const chat = state.Group.find((chat) => chat.id === chatId);
+      const shouldRemoveMessage = isDeletedTombstoneMessage(messageData);
 
       if (chat) {
+        if (shouldRemoveMessage) {
+          chat.messages = chat.messages.filter((msg) => msg.id !== messageId);
+          return;
+        }
+
         const existingMessageIndex = chat.messages.findIndex(
           (msg) => msg.id === messageId
         );
@@ -155,6 +208,10 @@ const chatSlice = createSlice({
           chat.messages.push({ id: messageId, ...messageData });
         }
       } else {
+        if (shouldRemoveMessage) {
+          return;
+        }
+
         const newChat = {
           id: chatId,
           participants: [],
@@ -278,26 +335,27 @@ const transformChats = (chats) => {
       participants: mapParticipants(chatData),
       archivedFor: chatData.archivedFor || {},
       createdDate: chatData.createdDate || new Date().toISOString(),
-      messages: Object.entries(chatData.messages || {}).map(
-        ([messageId, messageData]) => {
+      messages: Object.entries(chatData.messages || {}).reduce(
+        (acc, [messageId, messageData]) => {
           if (!messageData) {
-            return {
+            acc.push({
               id: messageId,
               content: "",
               type: 0,
               status: { sent: {}, delivered: {}, read: {} },
               deletedFor: {},
-            };
+            });
+            return acc;
+          }
+
+          if (isDeletedTombstoneMessage(messageData)) {
+            return acc;
           }
 
           let decryptedContent = messageData.content || "";
-          
-          // Only decrypt if it's a text message and not deleted
-          if (
-            messageData.type === 0 &&
-            decryptedContent &&
-            decryptedContent !== "این پیام حذف شده است."
-          ) {
+
+          // Only decrypt text messages that are not delete tombstones
+          if (messageData.type === 0 && decryptedContent) {
             try {
               decryptedContent = decryptMessage(messageData.content, chatId);
             } catch (error) {
@@ -306,12 +364,15 @@ const transformChats = (chats) => {
             }
           }
 
-          return {
+          acc.push({
             id: messageId,
             ...messageData,
             content: decryptedContent,
-          };
-        }
+          });
+
+          return acc;
+        },
+        []
       ),
     };
   });

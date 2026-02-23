@@ -9,7 +9,7 @@ import { convertToLocalTime } from '../../../helpers/convertToLocalTime.js';
 import { groupMessagesByDate } from '../../../helpers/groupMessageByDate.js';
 
 import MessageBubble from '../../../shared/components/MessageBubble/MessageBubble.jsx';
-import PendingUploadBubble from '../../../shared/components/PendingUploadBubble/PendingUploadBubble.jsx';
+import PendingUploadsList from '../../../shared/components/PendingUploadBubble/PendingUploadsList.jsx';
 import { opacityAndTransformEffect, opacityEffect } from '../../../shared/animations/animations.js';
 
 import FirstChatBanner from "../../../assets/images/Home/FirstChatBanner.webp";
@@ -19,7 +19,15 @@ function UserMessageBar({ ChatId }) {
 
   const { token, user } = useSelector((state) => state.auth);
   const { Individual } = useSelector((state) => state.chat);
-  const pendingUploads = useSelector((state) => state.pendingUploads.items);
+  const pendingUploadCount = useSelector((state) =>
+    state.pendingUploads.items.reduce((count, item) => {
+      if (item.chatType === "Individual" && String(item.chatId) === String(ChatId)) {
+        return count + 1;
+      }
+
+      return count;
+    }, 0)
+  );
   const isSmallScreen = useScreenWidth(900);
   const messagesContainerRef = useRef(null);
 
@@ -27,15 +35,12 @@ function UserMessageBar({ ChatId }) {
   const backgroundImage = getChatBackgroundColor(user.userSettings.chatBackground);
 
   const chat = Individual.find(chat => chat?.id === ChatId);
-  const chatPendingUploads = pendingUploads.filter(
-    (item) => item.chatType === "Individual" && String(item.chatId) === String(ChatId)
-  );
 
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [chat?.messages.length, chatPendingUploads.length, chatPendingUploads.at(-1)?.progress]);
+  }, [chat?.messages.length, pendingUploadCount]);
 
   const filteredGroupedMessages = groupMessagesByDate(chat?.messages);
 
@@ -94,9 +99,7 @@ function UserMessageBar({ ChatId }) {
             </div>
           ))
         )}
-        {chatPendingUploads.map((pendingItem) => (
-          <PendingUploadBubble key={pendingItem.id} item={pendingItem} />
-        ))}
+        <PendingUploadsList chatId={ChatId} chatType="Individual" />
       </div>
     </motion.div>
   );
