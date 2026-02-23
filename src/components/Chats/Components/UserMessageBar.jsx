@@ -9,6 +9,7 @@ import { convertToLocalTime } from '../../../helpers/convertToLocalTime.js';
 import { groupMessagesByDate } from '../../../helpers/groupMessageByDate.js';
 
 import MessageBubble from '../../../shared/components/MessageBubble/MessageBubble.jsx';
+import PendingUploadBubble from '../../../shared/components/PendingUploadBubble/PendingUploadBubble.jsx';
 import { opacityAndTransformEffect, opacityEffect } from '../../../shared/animations/animations.js';
 
 import FirstChatBanner from "../../../assets/images/Home/FirstChatBanner.webp";
@@ -18,6 +19,7 @@ function UserMessageBar({ ChatId }) {
 
   const { token, user } = useSelector((state) => state.auth);
   const { Individual } = useSelector((state) => state.chat);
+  const pendingUploads = useSelector((state) => state.pendingUploads.items);
   const isSmallScreen = useScreenWidth(900);
   const messagesContainerRef = useRef(null);
 
@@ -25,12 +27,15 @@ function UserMessageBar({ ChatId }) {
   const backgroundImage = getChatBackgroundColor(user.userSettings.chatBackground);
 
   const chat = Individual.find(chat => chat?.id === ChatId);
+  const chatPendingUploads = pendingUploads.filter(
+    (item) => item.chatType === "Individual" && String(item.chatId) === String(ChatId)
+  );
 
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [chat?.messages.length]);
+  }, [chat?.messages.length, chatPendingUploads.length, chatPendingUploads.at(-1)?.progress]);
 
   const filteredGroupedMessages = groupMessagesByDate(chat?.messages);
 
@@ -89,6 +94,9 @@ function UserMessageBar({ ChatId }) {
             </div>
           ))
         )}
+        {chatPendingUploads.map((pendingItem) => (
+          <PendingUploadBubble key={pendingItem.id} item={pendingItem} />
+        ))}
       </div>
     </motion.div>
   );

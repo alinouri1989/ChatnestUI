@@ -3,6 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from "./Slices/auth/authSlice.js";
 import chatReducer from "./Slices/chats/chatSlice.js";
 import chatListReducer from "./Slices/chats/chatListSlice.js";
+import pendingUploadsReducer from "./Slices/chats/pendingUploadsSlice.js";
 import groupListReducer from "./Slices/Group/groupListSlice.js";
 import callReducer from "./Slices/calls/callSlice.js";
 import activeContentReducer from "./Slices/activeContent/activeContentSlice.js";
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
     auth: authReducer,
     chat: chatReducer,
     chatList: chatListReducer,
+    pendingUploads: pendingUploadsReducer,
     groupList: groupListReducer,
     call: callReducer,
     activeContent: activeContentReducer,

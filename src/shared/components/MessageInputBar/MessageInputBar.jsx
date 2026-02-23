@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSignalR } from "../../../contexts/SignalRContext";
 import { useModal } from "../../../contexts/ModalContext";
 import { useLocation } from "react-router-dom";
@@ -21,12 +21,23 @@ import { AIModal } from "../AIModal/AIModal";
 import { encryptMessage } from "../../../helpers/messageCryptoHelper";
 import { convertFileToBase64WithAsArrayBuffer } from "../../../store/helpers/convertFileToBase64";
 import { ErrorAlert, SuccessAlert } from "../../../helpers/customAlert";
+import {
+  addPendingUpload,
+  markPendingUploadSent,
+  removePendingUpload,
+  updatePendingUpload,
+} from "../../../store/Slices/chats/pendingUploadsSlice";
+import {
+  registerPendingUploadAbortController,
+  unregisterPendingUploadAbortController,
+} from "../../../shared/upload/pendingUploadAbortRegistry";
 
 import PreLoader from "../PreLoader/PreLoader";
 import "./style.scss";
 
 function MessageInputBar({ chatId }) {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { showModal, closeModal } = useModal();
   const { chatConnection } = useSignalR();
   const { user } = useSelector((state) => state.auth);
@@ -98,6 +109,80 @@ function MessageInputBar({ chatId }) {
     clearUploadProgressTimeout();
     setUploadProgress(null);
   }, [clearUploadProgressTimeout]);
+
+  const createPendingAttachment = useCallback(
+    ({ file, chatType, contentType, previewUrl = null }) => {
+      const pendingId = `pending-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+      dispatch(
+        addPendingUpload({
+          id: pendingId,
+          chatId,
+          chatType,
+          contentType,
+          fileName: file?.name || "attachment",
+          fileSize: file?.size || 0,
+          previewUrl,
+          progress: 0,
+          phase: "preparing",
+          statusText: "در حال آماده سازی...",
+          createdAt: new Date().toISOString(),
+        })
+      );
+
+      return pendingId;
+    },
+    [chatId, dispatch]
+  );
+
+  const updatePendingAttachment = useCallback(
+    (pendingId, changes) => {
+      if (!pendingId) return;
+      dispatch(updatePendingUpload({ id: pendingId, changes }));
+    },
+    [dispatch]
+  );
+
+  const completePendingAttachment = useCallback(
+    (pendingId) => {
+      if (!pendingId) return;
+
+      dispatch(markPendingUploadSent(pendingId));
+      setTimeout(() => {
+        dispatch(removePendingUpload(pendingId));
+      }, 900);
+    },
+    [dispatch]
+  );
+
+  const removePendingAttachment = useCallback(
+    (pendingId) => {
+      if (!pendingId) return;
+      dispatch(removePendingUpload(pendingId));
+    },
+    [dispatch]
+  );
+
+  const cancelPendingAttachment = useCallback(
+    (pendingId) => {
+      if (!pendingId) return;
+
+      dispatch(
+        updatePendingUpload({
+          id: pendingId,
+          changes: {
+            phase: "cancelled",
+            statusText: "لغو شد",
+          },
+        })
+      );
+
+      setTimeout(() => {
+        dispatch(removePendingUpload(pendingId));
+      }, 500);
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -177,22 +262,50 @@ function MessageInputBar({ chatId }) {
     const chatType = getActiveChatType();
 
     if (file) {
+      const abortController = new AbortController();
+      const pendingId = createPendingAttachment({
+        file,
+        chatType,
+        contentType: 2,
+        previewUrl: URL.createObjectURL(file),
+      });
+      registerPendingUploadAbortController(pendingId, abortController);
       startUploadProgress(file.name);
       setIsLoading(true);
       try {
         const base64String = await convertFileToBase64WithAsArrayBuffer(file, (percent) => {
           updateUploadProgress(percent, "Preparing file...");
-        });
+          updatePendingAttachment(pendingId, {
+            progress: percent,
+            phase: "preparing",
+            statusText: "در حال آماده سازی...",
+          });
+        }, { signal: abortController.signal });
         updateUploadProgress(95, "Sending...");
+        updatePendingAttachment(pendingId, {
+          progress: 95,
+          phase: "sending",
+          statusText: "در حال ارسال...",
+        });
         await chatConnection.invoke("SendMessage", chatType, chatId, {
           ContentType: 2,
+          ClientMessageId: pendingId,
+          FileName: file.name,
           content: base64String,
         });
         finishUploadProgress();
+        completePendingAttachment(pendingId);
         SuccessAlert("ویدیو ارسال شد");
-      } catch {
+      } catch (error) {
         resetUploadProgress();
-        ErrorAlert("ویدیو ارسال نشد");
+        if (error?.name === "AbortError") {
+          cancelPendingAttachment(pendingId);
+        } else {
+          removePendingAttachment(pendingId);
+          ErrorAlert("ویدیو ارسال نشد");
+        }
+      } finally {
+        unregisterPendingUploadAbortController(pendingId);
       }
       setIsLoading(false);
       e.target.value = "";
@@ -221,30 +334,56 @@ function MessageInputBar({ chatId }) {
       return;
     }
 
+    const abortController = new AbortController();
+    const pendingId = createPendingAttachment({ file, chatType, contentType: 4 });
+    registerPendingUploadAbortController(pendingId, abortController);
+
     try {
       startUploadProgress(file.name);
       setIsLoading(true);
       const base64String = await convertFileToBase64WithAsArrayBuffer(file, (percent) => {
         updateUploadProgress(percent, "Preparing file...");
-      });
+        updatePendingAttachment(pendingId, {
+          progress: percent,
+          phase: "preparing",
+          statusText: "در حال آماده سازی...",
+        });
+      }, { signal: abortController.signal });
       updateUploadProgress(95, "Sending...");
+      updatePendingAttachment(pendingId, {
+        progress: 95,
+        phase: "sending",
+        statusText: "در حال ارسال...",
+      });
 
       await chatConnection.invoke("SendMessage", chatType, chatId, {
         ContentType: 4,
+        ClientMessageId: pendingId,
         FileName: file.name,
         content: base64String,
       });
 
       finishUploadProgress();
+      completePendingAttachment(pendingId);
       setIsLoading(false);
     } catch (error) {
       resetUploadProgress();
       setIsLoading(false);
-      if (error?.message === "empty_file") {
+      if (error?.name === "AbortError") {
+        cancelPendingAttachment(pendingId);
+      } else {
+        removePendingAttachment(pendingId);
+      }
+      if (error?.name === "AbortError") {
+        // Silent user cancel
+      } else if (error?.message === "empty_file") {
         ErrorAlert("فایل با محتوای خالی قابل ارسال نیست");
       } else {
         ErrorAlert("فایل ارسال نشد");
       }
+    } finally {
+      unregisterPendingUploadAbortController(pendingId);
+      e.target.value = "";
     }
   };
 
@@ -417,31 +556,6 @@ function MessageInputBar({ chatId }) {
           </button>
         </div>
       </div>
-      {uploadProgress && (
-        <div className="upload-progress-box">
-          <div className="upload-progress-header">
-            <span className="upload-progress-file" title={uploadProgress.fileName}>
-              {uploadProgress.fileName}
-            </span>
-            <span className="upload-progress-percent">{uploadProgress.percent}%</span>
-          </div>
-          <div
-            className="upload-progress-track"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={uploadProgress.percent}
-            aria-label="File upload progress"
-          >
-            <div
-              className="upload-progress-fill"
-              style={{ width: `${uploadProgress.percent}%` }}
-            />
-          </div>
-          <div className="upload-progress-status">{uploadProgress.status}</div>
-        </div>
-      )}
-      {isLoading && !uploadProgress && <PreLoader />}
     </div>
   );
 }
@@ -451,3 +565,5 @@ MessageInputBar.propTypes = {
 };
 
 export default MessageInputBar;
+
+

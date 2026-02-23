@@ -1,0 +1,162 @@
+@use "../../../shared/styles/main.scss" as *;
+
+.pending-upload-bubble-box {
+  margin: 10px 0 4px;
+  display: flex;
+  justify-content: flex-end;
+  animation: pendingBubbleIn 0.2s ease forwards;
+
+  .pending-upload-bubble {
+    width: min(360px, 70%);
+    min-height: 72px;
+    border-radius: 16px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--blue);
+    color: #fff;
+    box-shadow: rgba(42, 42, 42, 0.205) 0px 2px 8px 0px;
+
+    @include screen(900px) {
+      width: min(360px, 86%);
+    }
+  }
+
+  .pending-upload-progress-circle {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+
+    svg {
+      width: 44px;
+      height: 44px;
+      transform: rotate(-90deg);
+    }
+
+    circle {
+      fill: none;
+      stroke-width: 3;
+    }
+
+    .track {
+      stroke: rgba(255, 255, 255, 0.28);
+    }
+
+    .indicator {
+      stroke: #ffffff;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.18s ease;
+    }
+
+    .center {
+      position: absolute;
+      inset: 0;
+      @include flex-center(row, center, center);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+
+      &::after {
+        content: "%";
+        font-size: 8px;
+        margin-top: 1px;
+      }
+
+      &.sent {
+        font-size: 18px;
+
+        &::after {
+          content: none;
+        }
+      }
+    }
+
+    .cancel-upload-button {
+      position: absolute;
+      right: -4px;
+      top: -4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: rgba(17, 26, 61, 0.88);
+      color: #fff;
+      @include flex-center(row, center, center);
+      font-size: 11px;
+      padding: 0;
+      cursor: pointer;
+
+      svg {
+        width: 11px;
+        height: 11px;
+      }
+    }
+  }
+
+  .pending-upload-preview {
+    width: 54px;
+    height: 54px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    img,
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-badge {
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+      font-size: 9px;
+      line-height: 1;
+      padding: 3px 4px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+    }
+  }
+
+  .pending-upload-meta {
+    min-width: 0;
+    flex: 1;
+
+    .file-name {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-subtitle {
+      margin-top: 4px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      opacity: 0.92;
+    }
+  }
+}
+
+@keyframes pendingBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

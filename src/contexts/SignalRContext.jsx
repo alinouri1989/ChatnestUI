@@ -22,6 +22,7 @@ import {
   removeIndividualChat,
   removeGroupChat,
 } from "../store/Slices/chats/chatSlice.js";
+import { removePendingUpload } from "../store/Slices/chats/pendingUploadsSlice.js";
 import {
   deleteCallHistory,
   handleEndCall,
@@ -313,6 +314,10 @@ export const SignalRProvider = ({ children }) => {
                   );
                 }
 
+                if (messageData.clientMessageId) {
+                  store.dispatch(removePendingUpload(messageData.clientMessageId));
+                }
+
                 store.dispatch(
                   addMessageToIndividual({
                     chatId,
@@ -339,6 +344,10 @@ export const SignalRProvider = ({ children }) => {
                     messageData.content,
                     chatId
                   );
+                }
+
+                if (messageData.clientMessageId) {
+                  store.dispatch(removePendingUpload(messageData.clientMessageId));
                 }
 
                 store.dispatch(

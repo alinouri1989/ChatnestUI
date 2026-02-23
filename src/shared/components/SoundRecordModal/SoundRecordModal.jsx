@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSignalR } from "../../../contexts/SignalRContext";
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CloseModalButton from "../../../contexts/components/CloseModalButton";
@@ -11,6 +12,17 @@ import 'react-h5-audio-player/lib/styles.css';
 import PreLoader from '../PreLoader/PreLoader';
 import { opacityEffect } from '../../animations/animations';
 import { ErrorAlert } from '../../../helpers/customAlert';
+import { convertFileToBase64 } from '../../../store/helpers/convertFileToBase64';
+import {
+    addPendingUpload,
+    markPendingUploadSent,
+    removePendingUpload,
+    updatePendingUpload,
+} from '../../../store/Slices/chats/pendingUploadsSlice';
+import {
+    registerPendingUploadAbortController,
+    unregisterPendingUploadAbortController,
+} from '../../upload/pendingUploadAbortRegistry';
 
 import { motion } from "framer-motion";
 import "./style.scss";
@@ -19,6 +31,7 @@ function SoundRecordModal({ closeModal, chatId }) {
 
     const location = useLocation();
     const { chatConnection } = useSignalR();
+    const dispatch = useDispatch();
 
     const [isRecording, setIsRecording] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -124,44 +137,77 @@ function SoundRecordModal({ closeModal, chatId }) {
         const chatType = location.pathname.includes('chats') || location.pathname.includes('archives')
             ? 'Individual'
             : 'Group';
+        const pendingId = `pending-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const abortController = new AbortController();
 
         try {
             setIsLoading(true);
 
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-            const base64String = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
+            const audioFile = new File([audioBlob], "voice-message.wav", { type: "audio/wav" });
 
-                reader.onloadend = () => {
-                    if (typeof reader.result !== "string") {
-                        reject(new Error("invalid_audio"));
-                        return;
-                    }
+            dispatch(addPendingUpload({
+                id: pendingId,
+                chatId,
+                chatType,
+                contentType: 3,
+                fileName: audioFile.name,
+                fileSize: audioFile.size,
+                progress: 0,
+                phase: "preparing",
+                statusText: "در حال آماده سازی...",
+                createdAt: new Date().toISOString(),
+            }));
+            registerPendingUploadAbortController(pendingId, abortController);
 
-                    const encoded = reader.result.split(',')[1];
-                    if (!encoded) {
-                        reject(new Error("empty_file"));
-                        return;
-                    }
+            const base64String = await convertFileToBase64(audioFile, (percent) => {
+                dispatch(updatePendingUpload({
+                    id: pendingId,
+                    changes: {
+                        progress: percent,
+                        phase: "preparing",
+                        statusText: "در حال آماده سازی...",
+                    },
+                }));
+            }, { signal: abortController.signal });
 
-                    resolve(encoded);
-                };
-
-                reader.onerror = reject;
-                reader.readAsDataURL(audioBlob);
-            });
+            dispatch(updatePendingUpload({
+                id: pendingId,
+                changes: {
+                    progress: 95,
+                    phase: "sending",
+                    statusText: "در حال ارسال...",
+                },
+            }));
 
             await chatConnection.invoke("SendMessage", chatType, chatId, {
                 ContentType: 3,
+                ClientMessageId: pendingId,
                 content: base64String,
                 FileName: "voice-message.wav",
             });
+            dispatch(markPendingUploadSent(pendingId));
+            setTimeout(() => {
+                dispatch(removePendingUpload(pendingId));
+            }, 900);
 
             closeModal();
         } catch (error) {
-            console.error("Audio send error:", error);
-            ErrorAlert("خطایی رخ داده است");
+            if (error?.name === "AbortError") {
+                dispatch(updatePendingUpload({
+                    id: pendingId,
+                    changes: { phase: "cancelled", statusText: "لغو شد" },
+                }));
+                setTimeout(() => {
+                    dispatch(removePendingUpload(pendingId));
+                }, 450);
+            } else {
+                dispatch(removePendingUpload(pendingId));
+                console.error("Audio send error:", error);
+                ErrorAlert("خطایی رخ داده است");
+            }
         } finally {
+            unregisterPendingUploadAbortController(pendingId);
             setIsLoading(false);
         }
     };
@@ -255,3 +301,4 @@ SoundRecordModal.propTypes = {
 };
 
 export default SoundRecordModal;
+
