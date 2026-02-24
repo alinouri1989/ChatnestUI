@@ -85,8 +85,7 @@ function GroupMessageBar({ groupId }) {
 
                             {messages.map((msg) => {
                                 const userId = Object.keys(msg.status.sent || {})[0];
-                                const groupListId = GroupChat?.participants?.[0];
-                                const group = groupList[groupListId];
+                                const group = groupList?.[groupId];
                                 const senderProfile = group?.participants?.[userId];
                                 const isSender = currentUserId === userId;
                                 const isDeleted = msg.deletedFor && Object.prototype.hasOwnProperty.call(msg.deletedFor, currentUserId);

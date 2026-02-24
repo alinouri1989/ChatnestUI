@@ -17,8 +17,7 @@ function MessageInfo({ closeModal, chatId, messageId }) {
     const message = chat.messages.find(msg => msg.id === messageId);
     if (!message) return <div>پیام یافت نشد</div>;
 
-    const participants = chat.participants;
-    const group = groupList[participants[0]];
+    const group = groupList[chatId];
     if (!group) return <div>گروه یافت نشد</div>;
 
     const deliveredUsers = Object.keys(message.status.delivered || {}).filter(userId => !message.status.read[userId]);

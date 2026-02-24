@@ -130,8 +130,7 @@ function MessageBubble({
     } else {
         const chatGroup = Group.find(group => group.id === groupIdFromLocation);
         if (chatGroup) {
-            const participantKeys = chatGroup.participants;
-            const groupInfo = groupList[participantKeys];
+            const groupInfo = groupList[groupIdFromLocation];
             const groupParticipants = groupInfo?.participants || {};
 
             const totalParticipants = Object.keys(groupParticipants).length;
