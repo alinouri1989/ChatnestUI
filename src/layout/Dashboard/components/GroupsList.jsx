@@ -22,7 +22,7 @@ function GroupsList() {
   const { token } = useSelector((state) => state.auth);
   const userId = getUserIdFromToken(token);
 
-  const { Group } = useSelector((state) => state.chat);
+  const { Group, isChatsInitialized } = useSelector((state) => state.chat);
   const { groupList, isGroupListInitialized } = useSelector((state) => state.groupList);
 
   const [searchGroup, setSearchGroup] = useState("");
@@ -35,11 +35,66 @@ function GroupsList() {
     showModal(<NewGroupModal closeModal={closeModal} />);
   };
 
-  const filteredGroupList = groupList
-    ? Object.entries(groupList).filter(([, group]) =>
-        (group?.name ?? "").toLowerCase().includes(searchGroup.toLowerCase())
-      )
-    : [];
+  const normalizedGroupList = groupList ?? {};
+  const safeGroupChats = Array.isArray(Group) ? Group.filter(Boolean) : [];
+  const groupChatsById = Object.fromEntries(
+    safeGroupChats
+      .filter((groupChat) => groupChat?.id)
+      .map((groupChat) => [groupChat.id, groupChat])
+  );
+
+  const resolveChatGroupByGroupListKey = (groupListKey) => {
+    if (groupChatsById[groupListKey]) {
+      return groupChatsById[groupListKey];
+    }
+
+    return safeGroupChats.find(
+      (groupChat) =>
+        Array.isArray(groupChat?.participants) &&
+        groupChat.participants.includes(groupListKey)
+    );
+  };
+
+  const profileBackedGroupCards = Object.entries(normalizedGroupList).map(
+    ([groupListKey, groupProfile]) => {
+      const chatGroup = resolveChatGroupByGroupListKey(groupListKey);
+      const resolvedGroupChatId = chatGroup?.id ?? groupProfile?.groupId ?? groupListKey;
+
+      return {
+        cardKey: resolvedGroupChatId,
+        groupListKey,
+        groupProfile,
+        chatGroup,
+        resolvedGroupChatId,
+        hasGroupProfile: true,
+      };
+    }
+  );
+
+  const profileBackedChatIds = new Set(
+    profileBackedGroupCards.map((item) => item.resolvedGroupChatId)
+  );
+
+  const fallbackGroupCards = safeGroupChats
+    .filter((groupChat) => !profileBackedChatIds.has(groupChat.id))
+    .map((groupChat) => ({
+      cardKey: groupChat.id,
+      groupListKey: null,
+      groupProfile: {
+        id: groupChat.id,
+        name: "",
+        photoUrl: null,
+        participants: {},
+      },
+      chatGroup: groupChat,
+      resolvedGroupChatId: groupChat.id,
+      hasGroupProfile: false,
+    }));
+
+  const filteredGroupList = [...profileBackedGroupCards, ...fallbackGroupCards].filter(
+    ({ groupProfile }) =>
+      (groupProfile?.name ?? "").toLowerCase().includes(searchGroup.toLowerCase())
+  );
 
   return (
     <div className="group-list-box">
@@ -63,15 +118,15 @@ function GroupsList() {
         >
           {filteredGroupList.length > 0 ? (
             filteredGroupList
-              .map(([groupId, group]) => {
-                const chatGroup = Group.find((groupChat) => {
-                  if (!groupChat) return false;
-                  if (groupChat.id === groupId) return true;
-                  return (
-                    Array.isArray(groupChat.participants) &&
-                    groupChat.participants.includes(groupId)
-                  );
-                });
+              .map(
+                ({
+                  cardKey,
+                  groupListKey,
+                  groupProfile: group,
+                  chatGroup,
+                  resolvedGroupChatId,
+                  hasGroupProfile,
+                }) => {
 
                 let lastMessage = "";
                 let lastMessageType = "";
@@ -88,7 +143,6 @@ function GroupsList() {
                   ).getTime();
                 }
 
-                const resolvedGroupChatId = chatGroup?.id ?? groupId;
                 const currentGroupIdInPath =
                   location.pathname.includes(resolvedGroupChatId);
 
@@ -102,7 +156,8 @@ function GroupsList() {
                   }).length;
 
                 return {
-                  groupId,
+                  cardKey,
+                  groupListKey,
                   groupName: group?.name ?? "گروه بدون نام",
                   groupPhotoUrl: group?.photoUrl,
                   resolvedGroupChatId,
@@ -110,14 +165,17 @@ function GroupsList() {
                   lastMessageType,
                   lastMessageDateForSort,
                   unReadMessage,
+                  canLeaveGroup: hasGroupProfile,
                 };
-              })
+              }
+              )
               .sort(
                 (a, b) => b.lastMessageDateForSort - a.lastMessageDateForSort
               )
               .map(
                 ({
-                  groupId,
+                  cardKey,
+                  groupListKey,
                   groupName,
                   groupPhotoUrl,
                   resolvedGroupChatId,
@@ -125,14 +183,15 @@ function GroupsList() {
                   lastMessageType,
                   lastMessageDateForSort,
                   unReadMessage,
+                  canLeaveGroup,
                 }) => (
                   <motion.div
-                    key={groupId}
+                    key={cardKey}
                     variants={opacityEffect(0.8)}
                     style={{ marginBottom: "10px" }}
                   >
                     <GroupChatCard
-                      key={groupId}
+                      key={cardKey}
                       groupId={resolvedGroupChatId}
                       groupName={groupName}
                       groupPhotoUrl={groupPhotoUrl}
@@ -142,12 +201,13 @@ function GroupsList() {
                         lastMessageDateForSort
                       )}
                       unReadMessage={unReadMessage}
-                      groupListId={groupId}
+                      groupListId={groupListKey ?? resolvedGroupChatId}
+                      canLeaveGroup={canLeaveGroup}
                     />
                   </motion.div>
                 )
               )
-          ) : isGroupListInitialized ? (
+          ) : isGroupListInitialized || isChatsInitialized ? (
             <NoActiveData
               text={
                 searchGroup

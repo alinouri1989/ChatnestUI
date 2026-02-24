@@ -19,7 +19,7 @@ import "./style.scss";
 import { defaultGroupPhoto, defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto.js";
 
 
-function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMessage, lastMessageType, lastMessageDate, unReadMessage }) {
+function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMessage, lastMessageType, lastMessageDate, unReadMessage, canLeaveGroup = true }) {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -40,6 +40,12 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
     };
 
     const handleLeaveGroup = async () => {
+        if (!canLeaveGroup) {
+            ErrorAlert("اطلاعات گروه هنوز کامل بارگذاری نشده است. بعدا دوباره تلاش کنید.");
+            handleClose();
+            return;
+        }
+
         try {
             await leaveGroup(groupListId).unwrap();
             SuccessAlert("از گروه خارج شدید");
@@ -128,6 +134,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
                                 event.stopPropagation();
                                 handleLeaveGroup();
                             }}
+                            disabled={!canLeaveGroup}
                             sx={{ color: "#EB6262", boxShadow: "none" }}
                         >
                             <ListItemIcon>
@@ -159,6 +166,7 @@ GroupChatCard.propTypes = {
     lastMessageType: PropTypes.string,
     lastMessageDate: PropTypes.string,
     unReadMessage: PropTypes.number,
+    canLeaveGroup: PropTypes.bool,
 };
 
 export default GroupChatCard;
