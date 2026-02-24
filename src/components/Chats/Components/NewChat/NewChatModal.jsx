@@ -13,7 +13,7 @@ import star from "../../../../assets/svg/star.svg";
 import CloseButton from "../../../../contexts/components/CloseModalButton.jsx";
 import PreLoader from "../../../../shared/components/PreLoader/PreLoader.jsx";
 import { getUserIdFromToken } from "../../../../helpers/getUserIdFromToken.js";
-import { ErrorAlert } from "../../../../helpers/customAlert.js";
+import { ErrorAlert, SuccessAlert } from "../../../../helpers/customAlert.js";
 import { opacityEffect } from "../../../../shared/animations/animations.js";
 
 import { motion } from "framer-motion";
@@ -122,6 +122,18 @@ function NewChatModal() {
     }
   };
 
+  const handleCopyIdentifier = async (event, identifier) => {
+    event.stopPropagation();
+    if (!identifier) return;
+
+    try {
+      await navigator.clipboard.writeText(identifier);
+      SuccessAlert("شناسه کاربر کپی شد");
+    } catch {
+      ErrorAlert("کپی شناسه کاربر انجام نشد");
+    }
+  };
+
   return (
     <div className="new-chat-modal">
       <CloseButton closeModal={closeModal} />
@@ -178,7 +190,20 @@ function NewChatModal() {
                 />
                 <div className="user-info">
                   <p>{user.displayName}</p>
-                  <span>{user.userIdentifier ? `@${user.userIdentifier} • ${user.email}` : user.email}</span>
+                  <div className="identity-row">
+                    {user.userIdentifier && (
+                      <button
+                        type="button"
+                        className="identifier-chip"
+                        onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
+                        title={`کپی @${user.userIdentifier}`}
+                        aria-label={`کپی شناسه ${user.userIdentifier}`}
+                      >
+                        @{user.userIdentifier}
+                      </button>
+                    )}
+                    <span className="meta-text">{user.email}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}

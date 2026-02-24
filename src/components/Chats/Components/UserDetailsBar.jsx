@@ -9,6 +9,7 @@ import { HiMiniVideoCamera } from "react-icons/hi2";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 
 import CallModal from "../../Calls/Components/CallModal";
 import { formatDateForLastConnectionDate } from "../../../helpers/dateHelper";
@@ -17,6 +18,7 @@ import { startCall } from "../../../helpers/startCall";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
 import { getChatDisplayLabel } from "../../../helpers/chatLabelHelper";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
+import { ErrorAlert, SuccessAlert } from "../../../helpers/customAlert";
 
 function UserDetailsBar({
   isSidebarOpen,
@@ -59,6 +61,17 @@ function UserDetailsBar({
     );
   };
 
+  const handleCopyRecipientIdentifier = async () => {
+    if (!recipientProfile.userIdentifier) return;
+
+    try {
+      await navigator.clipboard.writeText(recipientProfile.userIdentifier);
+      SuccessAlert("شناسه کاربر کپی شد");
+    } catch {
+      ErrorAlert("کپی شناسه کاربر انجام نشد");
+    }
+  };
+
   return (
     <div className={`user-details-sidebar ${isSidebarOpen ? "open" : ""}`}>
       {isSidebarOpen && (
@@ -75,10 +88,16 @@ function UserDetailsBar({
           )}
           <div className="sidebar-content-box">
             <div className="user-info-box">
-              <img
-                src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
-                onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
-              />
+              {isSavedMessagesChat ? (
+                <div className="saved-messages-avatar-large" aria-label="Saved Messages">
+                  <BookmarkRoundedIcon />
+                </div>
+              ) : (
+                <img
+                  src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
+                  onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
+                />
+              )}
               <p style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 {isSavedMessagesChat && (
                   <BookmarkRoundedIcon sx={{ fontSize: 18, color: "#585CE1" }} />
@@ -86,7 +105,19 @@ function UserDetailsBar({
                 <span style={{ color: "inherit", font: "inherit" }}>{displayLabel}</span>
               </p>
               {recipientProfile.userIdentifier && (
-                <span>{`@${recipientProfile.userIdentifier}`}</span>
+                <div className="identifier-row">
+                  <span className="user-identifier">{`@${recipientProfile.userIdentifier}`}</span>
+                  <button
+                    type="button"
+                    className="copy-identifier-btn"
+                    onClick={handleCopyRecipientIdentifier}
+                    title="کپی شناسه کاربر"
+                    aria-label="کپی شناسه کاربر"
+                  >
+                    <ContentCopyRoundedIcon />
+                    <span>Copy</span>
+                  </button>
+                </div>
               )}
               <span>{recipientProfile.email}</span>
             </div>

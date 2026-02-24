@@ -114,6 +114,8 @@
 
         .user-info {
           @include flex-center(column, center, flex-start);
+          min-width: 0;
+          width: calc(100% - 62px);
 
           p,
           span {
@@ -130,9 +132,36 @@
             line-height: 24px;
           }
 
-          span {
-            color: var(--text-input-gray);
-            font-size: 13px;
+          .identity-row {
+            @include flex-center(row, flex-start, center);
+            gap: 8px;
+            width: 100%;
+            min-width: 0;
+
+            .identifier-chip {
+              max-width: 135px;
+              padding: 3px 9px;
+              border-radius: 999px;
+              background-color: rgba(88, 92, 225, 0.12);
+              color: var(--blue);
+              font-size: 11px;
+              font-weight: 800;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              @include transition();
+
+              &:hover {
+                background-color: rgba(88, 92, 225, 0.2);
+              }
+            }
+
+            .meta-text {
+              color: var(--text-input-gray);
+              font-size: 13px;
+              min-width: 0;
+              flex: 1;
+            }
           }
         }
       }

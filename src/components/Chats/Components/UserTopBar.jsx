@@ -43,7 +43,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
     );
     const isSavedMessagesChat = recipientId === currentUserId;
     const subtitle = recipientProfile.userIdentifier
-        ? `@${recipientProfile.userIdentifier} • ${status === "online"
+        ? `@${recipientProfile.userIdentifier} - ${status === "online"
             ? "آنلاین"
             : formatDateForLastConnectionDate(lastConnectionDate)}`
         : (status === "online"
@@ -71,12 +71,20 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                     />
                 )}
                 <div onClick={toggleSidebar} className="image-box">
-                    <img 
-                        src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
-                        onError={(e) => e.currentTarget.src = defaultProfilePhoto}
-                        alt="Profile"
-                    />
-                    <p className={`status ${status}`}></p>
+                    {isSavedMessagesChat ? (
+                        <div className="saved-messages-avatar-top" aria-label="Saved Messages">
+                            <BookmarkRoundedIcon />
+                        </div>
+                    ) : (
+                        <>
+                            <img 
+                                src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
+                                onError={(e) => e.currentTarget.src = defaultProfilePhoto}
+                                alt="Profile"
+                            />
+                            <p className={`status ${status}`}></p>
+                        </>
+                    )}
                 </div>
                 <div onClick={toggleSidebar} className="name-and-status-box">
                     <p className="user-name" style={{ display: "flex", alignItems: "center", gap: "6px" }}>

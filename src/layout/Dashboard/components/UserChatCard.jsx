@@ -22,7 +22,19 @@ import { ErrorAlert, SuccessAlert } from "../../../helpers/customAlert";
 import { toggleActiveContent } from "../../../store/Slices/activeContent/activeContentSlice";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 
-function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageDate, lastMessageType, lastMessage, unReadMessage, isArchive }) {
+function UserChatCard({
+  isDeleted,
+  receiverId,
+  image,
+  status,
+  name,
+  userIdentifier,
+  lastMessageDate,
+  lastMessageType,
+  lastMessage,
+  unReadMessage,
+  isArchive,
+}) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -101,6 +113,18 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
     dispatch(toggleActiveContent());
   };
 
+  const handleCopyUserIdentifier = async (event) => {
+    event.stopPropagation();
+    if (!userIdentifier) return;
+
+    try {
+      await navigator.clipboard.writeText(userIdentifier);
+      SuccessAlert("شناسه کاربر کپی شد");
+    } catch {
+      ErrorAlert("کپی شناسه کاربر انجام نشد");
+    }
+  };
+
   const isActiveChat = location.pathname.includes(chatId);
 
   return (
@@ -110,21 +134,37 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
     >
       <div className="card-info-box">
         <div className="image-box">
-          <img src={image ?? defaultProfilePhoto}
-            onError={(e) => e.currentTarget.src = defaultProfilePhoto}
-            alt={`${name} profile`}
-          />
           {isSavedMessagesChat ? (
-            <div className="saved-messages-badge" aria-label="Saved Messages">
+            <div className="saved-messages-avatar" aria-label="Saved Messages">
               <BookmarkRoundedIcon />
             </div>
           ) : (
-            <p className={`status ${status ? "online" : "offline"}`}></p>
+            <>
+              <img
+                src={image ?? defaultProfilePhoto}
+                onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
+                alt={`${name} profile`}
+              />
+              <p className={`status ${status ? "online" : "offline"}`}></p>
+            </>
           )}
         </div>
 
         <div className="user-name-and-sub-title">
-          <p>{name}</p>
+          <div className="name-row">
+            <p className="chat-name">{name}</p>
+            {userIdentifier && (
+              <button
+                type="button"
+                className="identifier-chip"
+                onClick={handleCopyUserIdentifier}
+                title={`کپی @${userIdentifier}`}
+                aria-label={`کپی شناسه ${userIdentifier}`}
+              >
+                @{userIdentifier}
+              </button>
+            )}
+          </div>
           <LastMessage lastMessageType={lastMessageType} content={lastMessage} />
         </div>
       </div>
@@ -252,6 +292,7 @@ UserChatCard.propTypes = {
   image: PropTypes.string,
   status: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  userIdentifier: PropTypes.string,
   lastMessageDate: PropTypes.string,
   lastMessageType: PropTypes.string,
   lastMessage: PropTypes.string,

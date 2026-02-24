@@ -89,6 +89,7 @@ function ArchivesList() {
                     image: user.profilePhoto,
                     status: isUserOnline(user.lastConnectionDate),
                     name: getChatDisplayLabel(user.displayName, receiverId, UserId),
+                    userIdentifier: user.userIdentifier,
                     lastMessage,
                     lastMessageDate,
                     lastMessageType,
@@ -105,8 +106,9 @@ function ArchivesList() {
     }, [chatList, Individual, UserId, chatState, location.pathname]);
 
     const archivedChats = enhancedChatList.filter((chat) => chat.isArchive);
-    const filteredChats = archivedChats.filter(chat =>
-        chat.name.toLowerCase().includes(searchUser.toLowerCase())
+    const filteredChats = archivedChats.filter((chat) =>
+        chat.name.toLowerCase().includes(searchUser.toLowerCase()) ||
+        (chat.userIdentifier ?? "").toLowerCase().includes(searchUser.toLowerCase())
     );
 
     return (
@@ -132,6 +134,7 @@ function ArchivesList() {
                                     image={chat.image}
                                     status={chat.status}
                                     name={chat.name}
+                                    userIdentifier={chat.userIdentifier}
                                     lastMessage={chat.lastMessage}
                                     lastMessageType={chat.lastMessageType}
                                     lastMessageDate={chat.lastMessageDate}

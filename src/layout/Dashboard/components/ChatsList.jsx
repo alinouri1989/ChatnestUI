@@ -96,6 +96,7 @@ function ChatsList() {
                     image: user.profilePhoto,
                     status: isUserOnline(user.lastConnectionDate),
                     name: getChatDisplayLabel(user.displayName, receiverId, UserId),
+                    userIdentifier: user.userIdentifier,
                     lastMessage,
                     lastMessageType,
                     lastMessageDate,
@@ -114,8 +115,9 @@ function ChatsList() {
     };
 
     const nonArchivedChats = enhancedChatList.filter((chat) => !chat.isArchive);
-    const filteredChats = nonArchivedChats.filter(chat =>
-        chat.name.toLowerCase().includes(searchUser.toLowerCase())
+    const filteredChats = nonArchivedChats.filter((chat) =>
+        chat.name.toLowerCase().includes(searchUser.toLowerCase()) ||
+        (chat.userIdentifier ?? "").toLowerCase().includes(searchUser.toLowerCase())
     );
 
     return (
@@ -150,6 +152,7 @@ function ChatsList() {
                                     image={chat.image}
                                     status={chat.status}
                                     name={chat.name}
+                                    userIdentifier={chat.userIdentifier}
                                     lastMessage={chat.lastMessage}
                                     lastMessageType={chat.lastMessageType}
                                     lastMessageDate={chat.lastMessageDate}
