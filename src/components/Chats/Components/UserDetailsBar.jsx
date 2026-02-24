@@ -8,6 +8,7 @@ import { PiPhoneFill } from "react-icons/pi";
 import { HiMiniVideoCamera } from "react-icons/hi2";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 
 import CallModal from "../../Calls/Components/CallModal";
 import { formatDateForLastConnectionDate } from "../../../helpers/dateHelper";
@@ -44,6 +45,7 @@ function UserDetailsBar({
     recipientId,
     currentUserId
   );
+  const isSavedMessagesChat = recipientId === currentUserId;
 
   const handleVoiceCall = () => {
     startCall(callConnection, recipientId, false, dispatch, () =>
@@ -77,7 +79,15 @@ function UserDetailsBar({
                 src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
                 onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
               />
-              <p>{displayLabel}</p>
+              <p style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                {isSavedMessagesChat && (
+                  <BookmarkRoundedIcon sx={{ fontSize: 18, color: "#585CE1" }} />
+                )}
+                <span style={{ color: "inherit", font: "inherit" }}>{displayLabel}</span>
+              </p>
+              {recipientProfile.userIdentifier && (
+                <span>{`@${recipientProfile.userIdentifier}`}</span>
+              )}
               <span>{recipientProfile.email}</span>
             </div>
             {status == "online" ? (
@@ -136,6 +146,7 @@ UserDetailsBar.propTypes = {
     lastConnectionDate: PropTypes.string,
     profilePhoto: PropTypes.string,
     displayName: PropTypes.string,
+    userIdentifier: PropTypes.string,
     email: PropTypes.string,
     biography: PropTypes.string,
   }),

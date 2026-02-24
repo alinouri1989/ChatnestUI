@@ -8,6 +8,7 @@ import useScreenWidth from '../../../hooks/useScreenWidth';
 import { PiPhoneFill } from "react-icons/pi";
 import { HiMiniVideoCamera } from "react-icons/hi2";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 
 import CallModal from '../../Calls/Components/CallModal';
 import { formatDateForLastConnectionDate } from '../../../helpers/dateHelper';
@@ -40,6 +41,14 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
         recipientId,
         currentUserId
     );
+    const isSavedMessagesChat = recipientId === currentUserId;
+    const subtitle = recipientProfile.userIdentifier
+        ? `@${recipientProfile.userIdentifier} • ${status === "online"
+            ? "آنلاین"
+            : formatDateForLastConnectionDate(lastConnectionDate)}`
+        : (status === "online"
+            ? "\u0622\u0646\u0644\u0627\u06cc\u0646"
+            : formatDateForLastConnectionDate(lastConnectionDate));
 
     const handleVoiceCall = () => {
         startCall(callConnection, recipientId, false, dispatch, () =>
@@ -70,13 +79,12 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                     <p className={`status ${status}`}></p>
                 </div>
                 <div onClick={toggleSidebar} className="name-and-status-box">
-                    <p className="user-name">{displayLabel}</p>
+                    <p className="user-name" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        {isSavedMessagesChat && <BookmarkRoundedIcon sx={{ fontSize: 18, color: "#585CE1" }} />}
+                        <span style={{ color: "inherit", font: "inherit" }}>{displayLabel}</span>
+                    </p>
 
-                    {status === "online" ?
-                        <span>{"\u0622\u0646\u0644\u0627\u06cc\u0646"}</span>
-                        :
-                        <span>{formatDateForLastConnectionDate(lastConnectionDate)}</span>
-                    }
+                    <span>{subtitle}</span>
                 </div>
             </div>
 
@@ -113,6 +121,7 @@ UserTopBar.propTypes = {
         lastConnectionDate: PropTypes.string,
         profilePhoto: PropTypes.string,
         displayName: PropTypes.string,
+        userIdentifier: PropTypes.string,
     }),
     recipientId: PropTypes.string.isRequired,
 };

@@ -11,6 +11,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
@@ -36,8 +37,10 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   const isDarkMode = user.userSettings.theme === "Dark";
 
   const { token } = useSelector(state => state.auth);
+  const currentUserId = getUserIdFromToken(token);
   const chatState = useSelector(state => state.chat);
-  const chatId = getChatId(chatState, getUserIdFromToken(token), receiverId);
+  const chatId = getChatId(chatState, currentUserId, receiverId);
+  const isSavedMessagesChat = receiverId === currentUserId;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -101,14 +104,23 @@ function UserChatCard({ isDeleted, receiverId, image, status, name, lastMessageD
   const isActiveChat = location.pathname.includes(chatId);
 
   return (
-    <div className={`user-dashboard-card-box ${isActiveChat ? "active-chat" : ""}`} onClick={() => handleGoChat()}>
+    <div
+      className={`user-dashboard-card-box ${isActiveChat ? "active-chat" : ""} ${isSavedMessagesChat ? "saved-messages-card" : ""}`}
+      onClick={() => handleGoChat()}
+    >
       <div className="card-info-box">
         <div className="image-box">
           <img src={image ?? defaultProfilePhoto}
             onError={(e) => e.currentTarget.src = defaultProfilePhoto}
             alt={`${name} profile`}
           />
-          <p className={`status ${status ? "online" : "offline"}`}></p>
+          {isSavedMessagesChat ? (
+            <div className="saved-messages-badge" aria-label="Saved Messages">
+              <BookmarkRoundedIcon />
+            </div>
+          ) : (
+            <p className={`status ${status ? "online" : "offline"}`}></p>
+          )}
         </div>
 
         <div className="user-name-and-sub-title">

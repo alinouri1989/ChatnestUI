@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import ImageSearchRoundedIcon from '@mui/icons-material/ImageSearchRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -187,6 +188,20 @@ function Account() {
       SuccessAlert("عکس به‌روزرسانی شد");
     } catch {
       ErrorAlert("به‌روزرسانی عکس انجام نشد");
+    }
+  };
+
+  const handleCopyUserIdentifier = async () => {
+    if (!user?.userIdentifier) {
+      ErrorAlert("شناسه کاربر موجود نیست.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(user.userIdentifier);
+      SuccessAlert("شناسه کاربر کپی شد");
+    } catch {
+      ErrorAlert("کپی شناسه انجام نشد");
     }
   };
 
@@ -366,13 +381,23 @@ function Account() {
               )}
 
               {!isEditingUserIdentifier && (
-                <button
-                  className="edit-btn"
-                  type="button"
-                  onClick={() => setIsEditingUserIdentifier(true)}
-                >
-                  <TbEdit />
-                </button>
+                <div className="field-action-buttons">
+                  <button
+                    className="edit-btn copy-btn"
+                    type="button"
+                    onClick={handleCopyUserIdentifier}
+                    title="کپی شناسه"
+                  >
+                    <ContentCopyRoundedIcon fontSize="inherit" />
+                  </button>
+                  <button
+                    className="edit-btn"
+                    type="button"
+                    onClick={() => setIsEditingUserIdentifier(true)}
+                  >
+                    <TbEdit />
+                  </button>
+                </div>
               )}
 
               {isEditingUserIdentifier && (

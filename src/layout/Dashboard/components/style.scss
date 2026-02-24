@@ -122,6 +122,35 @@
     background-color: var(--cardHover);
   }
 
+  &.saved-messages-card {
+    .image-box {
+      img {
+        border: 2px solid rgba(88, 92, 225, 0.22);
+      }
+
+      .saved-messages-badge {
+        @include flex-center(row, center, center);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--smooth-white-color);
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        background: linear-gradient(135deg, #585ce1, #78a4ff);
+        color: #fff;
+
+        svg {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .user-name-and-sub-title > p {
+      color: var(--blue);
+    }
+  }
+
   &.active-call {
     background-color: var(--cardHover);
   }
