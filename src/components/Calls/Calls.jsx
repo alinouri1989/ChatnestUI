@@ -118,7 +118,7 @@ function Calls() {
                 <button
                   disabled={isRingingIncoming}
                   style={{ opacity: isRingingIncoming ? "0.6" : "1" }}
-                  onClick={handleVoiceCall}><PiPhoneFill />{isSmallScreen && <span>Sesli</span>}
+                  onClick={handleVoiceCall}><PiPhoneFill />{isSmallScreen && <span>صوتی</span>}
                 </button>
 
                 <button

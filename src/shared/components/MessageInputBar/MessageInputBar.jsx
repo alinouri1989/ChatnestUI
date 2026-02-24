@@ -35,6 +35,8 @@ import {
 import PreLoader from "../PreLoader/PreLoader";
 import "./style.scss";
 
+const MAX_GENERIC_FILE_BYTES = 300 * 1024 * 1024;
+
 function MessageInputBar({ chatId }) {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -331,6 +333,12 @@ function MessageInputBar({ chatId }) {
 
     if (!file) {
       ErrorAlert("هیچ فایلی انتخاب نشده");
+      return;
+    }
+
+    if (file.size > MAX_GENERIC_FILE_BYTES) {
+      ErrorAlert("حداکثر حجم فایل 300 مگابایت است");
+      e.target.value = "";
       return;
     }
 

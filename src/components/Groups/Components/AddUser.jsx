@@ -159,13 +159,13 @@ function AddUser({ closeUserModal, setFormData, formData }) {
                                                     userRole === 2 ? null : (
                                                         <>
                                                             <HiCheckCircle className='icon' />
-                                                            <p>Eklendi</p>
+                                                            <p>اضافه شد</p>
                                                         </>
                                                     )
                                                 ) : (
                                                     <>
                                                         <HiUserAdd className='icon' />
-                                                        <p>Ekle</p>
+                                                        <p>افزودن</p>
                                                     </>
                                                 )}
                                             </div>

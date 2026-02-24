@@ -86,7 +86,7 @@ function UserDetailsBar({
             )}
 
             <div className="biography">
-              <strong>Ø¨ÛŒÙˆÚ¯Ø±Ø§ÙÛŒ</strong>
+              <strong>بیوگرافی</strong>
               <div className="line"></div>
               <p>{recipientProfile.biography}</p>
             </div>
@@ -99,7 +99,7 @@ function UserDetailsBar({
                 >
                   <PiPhoneFill />{" "}
                 </button>
-                <p>ØªÙ…Ø§Ø³ ØµÙˆØªÛŒ</p>
+                <p>تماس صوتی</p>
               </div>
               <div className="button-box">
                 <button
@@ -109,7 +109,7 @@ function UserDetailsBar({
                 >
                   <HiMiniVideoCamera />
                 </button>
-                <p>ØªÙ…Ø§Ø³ ØªØµÙˆÛŒØ±ÛŒ</p>
+                <p>تماس تصویری</p>
               </div>
             </div>
           </div>
