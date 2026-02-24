@@ -9,7 +9,6 @@ import CallSound from "../../../assets/sound/ChatNestCallSound.mp3";
 import BusySound from "../../../assets/sound/ChatNestCallBusySound.mp3";
 
 import { MdScreenShare } from "react-icons/md";
-import { MdFlipCameraAndroid } from "react-icons/md";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 import { HiMiniSpeakerWave } from "react-icons/hi2";
@@ -339,12 +338,12 @@ function CallModal({ closeModal, isCameraCall }) {
 
       <div className="call-option-buttons">
         <button
-          className={isCameraCall ? "" : "disabled"}
+          className={isCameraCall ? "camera-switch-button" : "disabled"}
           onClick={isCameraCall ? handleSwitchCamera : undefined}
           disabled={!isCameraCall}
           title={isCameraCall ? "Switch camera" : undefined}
         >
-          {isCameraCall ? <MdFlipCameraAndroid /> : <MdScreenShare />}
+          {isCameraCall ? (videoFacingMode === "user" ? "Front" : "Back") : <MdScreenShare />}
         </button>
 
         <button className="disabled">

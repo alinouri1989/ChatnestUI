@@ -18,7 +18,13 @@ import PreLoader from '../../../../shared/components/PreLoader/PreLoader.jsx';
 function IncomingCall({ callType, callerProfile, callId }) {
 
     const dispatch = useDispatch();
-    const { callConnection, handleAcceptCall, localStream } = useSignalR();
+    const {
+        callConnection,
+        handleAcceptCall,
+        localStream,
+        switchCameraFacingMode,
+        videoFacingMode,
+    } = useSignalR();
     const { isCallStarted, isCallAcceptWaiting } = useSelector(state => state.call);
 
     const { showModal, closeModal } = useModal();
@@ -74,6 +80,11 @@ function IncomingCall({ callType, callerProfile, callId }) {
         }
     };
 
+    const handleSwitchCamera = async () => {
+        if (callType !== 1 || isCallAcceptWaiting) return;
+        await switchCameraFacingMode();
+    };
+
     useEffect(() => {
         if (isCallStarted) {
             dispatch(setIsRingingIncoming(false));
@@ -97,17 +108,29 @@ function IncomingCall({ callType, callerProfile, callId }) {
                     <span>در حال تماس با شما...</span>
                 </div>
                 <div className='call-option-buttons'>
-                    <button onClick={() => handleAcceptCall()}>
+                    <button className='accept-btn' onClick={() => handleAcceptCall()}>
                         {callType === 0 ? <PiPhoneFill /> : <HiMiniVideoCamera />}
                     </button>
-                    <button onClick={handleDeclineCall}>
+                    {callType === 1 && (
+                        <button className='camera-side-btn' onClick={handleSwitchCamera} disabled={isCallAcceptWaiting}>
+                            {videoFacingMode === "user" ? "Front" : "Back"}
+                        </button>
+                    )}
+                    <button className='decline-btn' onClick={handleDeclineCall}>
                         <PiPhoneSlashFill />
                     </button>
                 </div>
             </div>
 
             {callType === 1 && (
-                <video className='local-video' playsInline ref={localVideoRef} autoPlay muted style={{ transform: "scaleX(-1)" }}></video>
+                <video
+                    className='local-video'
+                    playsInline
+                    ref={localVideoRef}
+                    autoPlay
+                    muted
+                    style={{ transform: videoFacingMode === "user" ? "scaleX(-1)" : "none" }}
+                ></video>
             )}
             {isCallAcceptWaiting && <PreLoader />}
         </div>

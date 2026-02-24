@@ -136,6 +136,13 @@ export const SignalRProvider = ({ children }) => {
   const peerConnectionInitPromiseRef = useRef(null);
 
   const pendingRequestsRef = useRef(new Set());
+  const logWebRtcDebug = (message, data) => {
+    if (data !== undefined) {
+      console.log(`[WebRTC Debug] ${message}`, data);
+      return;
+    }
+    console.log(`[WebRTC Debug] ${message}`);
+  };
 
   useEffect(() => {
     localStreamRef.current = localStream;
@@ -172,6 +179,7 @@ export const SignalRProvider = ({ children }) => {
   };
 
   const clearCallMedia = () => {
+    logWebRtcDebug("Clearing call media streams");
     pendingIceCandidatesRef.current = [];
     stopStreamTracks(localStreamRef.current);
     stopStreamTracks(remoteStreamRef.current);
@@ -183,9 +191,17 @@ export const SignalRProvider = ({ children }) => {
     if (!peerConnection.current) return;
 
     try {
+      logWebRtcDebug("Closing peer connection", {
+        signalingState: peerConnection.current.signalingState,
+        iceConnectionState: peerConnection.current.iceConnectionState,
+        connectionState: peerConnection.current.connectionState,
+      });
       peerConnection.current.onicecandidate = null;
       peerConnection.current.ontrack = null;
       peerConnection.current.oniceconnectionstatechange = null;
+      peerConnection.current.onsignalingstatechange = null;
+      peerConnection.current.onconnectionstatechange = null;
+      peerConnection.current.onicegatheringstatechange = null;
       peerConnection.current.close();
     } catch {
       /* empty */
@@ -201,6 +217,11 @@ export const SignalRProvider = ({ children }) => {
 
     const queuedCandidates = [...pendingIceCandidatesRef.current];
     pendingIceCandidatesRef.current = [];
+    if (queuedCandidates.length > 0) {
+      logWebRtcDebug("Flushing queued ICE candidates", {
+        count: queuedCandidates.length,
+      });
+    }
 
     for (const candidate of queuedCandidates) {
       try {
@@ -212,6 +233,24 @@ export const SignalRProvider = ({ children }) => {
   };
 
   const attachPeerConnectionHandlers = (pc) => {
+    pc.onsignalingstatechange = () => {
+      logWebRtcDebug("Signaling state changed", {
+        signalingState: pc.signalingState,
+      });
+    };
+
+    pc.onconnectionstatechange = () => {
+      logWebRtcDebug("Connection state changed", {
+        connectionState: pc.connectionState,
+      });
+    };
+
+    pc.onicegatheringstatechange = () => {
+      logWebRtcDebug("ICE gathering state changed", {
+        iceGatheringState: pc.iceGatheringState,
+      });
+    };
+
     pc.onicecandidate = (event) => {
       const currentCallConnection = callConnectionRef.current;
       if (
@@ -230,6 +269,11 @@ export const SignalRProvider = ({ children }) => {
     };
 
     pc.ontrack = (event) => {
+      logWebRtcDebug("Remote track received", {
+        streamCount: event.streams?.length ?? 0,
+        audioTracks: event.streams?.[0]?.getAudioTracks?.().length ?? 0,
+        videoTracks: event.streams?.[0]?.getVideoTracks?.().length ?? 0,
+      });
       setRemoteStream(event.streams[0]);
       dispatch(setIsCallStarted(true));
       dispatch(setIsCallStarting(false));
@@ -240,6 +284,9 @@ export const SignalRProvider = ({ children }) => {
 
     pc.oniceconnectionstatechange = () => {
       const state = pc.iceConnectionState;
+      logWebRtcDebug("ICE connection state changed", {
+        iceConnectionState: state,
+      });
 
       if (state === "failed" || state === "closed") {
         dispatch(resetCallState());
@@ -251,15 +298,21 @@ export const SignalRProvider = ({ children }) => {
 
   const initializePeerConnection = async (callType) => {
     if (peerConnection.current) {
+      logWebRtcDebug("Peer connection already initialized");
       return peerConnection.current;
     }
 
     if (peerConnectionInitPromiseRef.current) {
+      logWebRtcDebug("Peer connection initialization already in progress");
       return peerConnectionInitPromiseRef.current;
     }
 
     peerConnectionInitPromiseRef.current = (async () => {
       try {
+        logWebRtcDebug("Initializing peer connection", {
+          callType,
+          videoFacingMode,
+        });
         const pc = new RTCPeerConnection(servers);
         attachPeerConnectionHandlers(pc);
 
@@ -268,6 +321,10 @@ export const SignalRProvider = ({ children }) => {
         );
         stopStreamTracks(localStreamRef.current);
         setLocalStream(stream);
+        logWebRtcDebug("Local media stream acquired", {
+          audioTracks: stream.getAudioTracks().length,
+          videoTracks: stream.getVideoTracks().length,
+        });
         stream.getTracks().forEach((track) => {
           pc.addTrack(track, stream);
         });
@@ -275,6 +332,7 @@ export const SignalRProvider = ({ children }) => {
         peerConnection.current = pc;
         return pc;
       } catch {
+        logWebRtcDebug("Failed to initialize peer connection");
         closePeerConnection();
         return null;
       } finally {
@@ -289,6 +347,10 @@ export const SignalRProvider = ({ children }) => {
     const targetMode =
       nextMode ?? (videoFacingMode === "user" ? "environment" : "user");
 
+    logWebRtcDebug("Switch camera requested", {
+      from: videoFacingMode,
+      to: targetMode,
+    });
     setVideoFacingMode(targetMode);
 
     const currentPc = peerConnection.current;
@@ -328,8 +390,14 @@ export const SignalRProvider = ({ children }) => {
 
       currentVideoTrack.stop();
       setLocalStream(updatedStream);
+      logWebRtcDebug("Camera switched successfully", {
+        activeFacingMode: targetMode,
+      });
       return targetMode;
     } catch {
+      logWebRtcDebug("Camera switch failed; restoring previous mode", {
+        activeFacingMode: videoFacingMode,
+      });
       setVideoFacingMode(videoFacingMode);
       return videoFacingMode;
     }
@@ -703,17 +771,26 @@ export const SignalRProvider = ({ children }) => {
         callConnection.off("ReceiveIncomingCall");
         callConnection.on("ReceiveIncomingCall", async (data) => {
           const callType = data.callType;
+          logWebRtcDebug("ReceiveIncomingCall", {
+            callId: data.callId,
+            callType,
+          });
           handleIncomingCall(data, dispatch, userId);
           await initializePeerConnection(callType);
         });
 
         callConnection.off("ReceiveOutgoingCall");
         callConnection.on("ReceiveOutgoingCall", async (data) => {
+          logWebRtcDebug("ReceiveOutgoingCall", {
+            callId: data.callId,
+            callType: data.callType,
+          });
           handleOutgoingCall(data, dispatch, userId);
         });
 
         callConnection.off("ReceiveEndCall");
         callConnection.on("ReceiveEndCall", (data) => {
+          logWebRtcDebug("ReceiveEndCall", { call: data.call });
           handleEndCall(data.call, dispatch);
           const otherDataKey = Object.keys(data).find((key) => key !== "call");
           if (otherDataKey) {
@@ -742,6 +819,9 @@ export const SignalRProvider = ({ children }) => {
           const currentPc = peerConnection.current;
 
           if (!currentPc || !currentPc.remoteDescription) {
+            logWebRtcDebug("Queueing ICE candidate (remote description not ready)", {
+              queuedCount: pendingIceCandidatesRef.current.length + 1,
+            });
             pendingIceCandidatesRef.current.push(data);
             return;
           }
@@ -749,6 +829,7 @@ export const SignalRProvider = ({ children }) => {
           try {
             await currentPc.addIceCandidate(new RTCIceCandidate(data));
           } catch {
+            logWebRtcDebug("ICE candidate add failed; re-queueing candidate");
             pendingIceCandidatesRef.current.push(data);
           }
         });
@@ -756,6 +837,10 @@ export const SignalRProvider = ({ children }) => {
         callConnection.off("ReceiveSdp");
         callConnection.on("ReceiveSdp", async (data) => {
           try {
+            logWebRtcDebug("ReceiveSdp", {
+              sdpType: data?.sdp?.type,
+              callType: data?.callType,
+            });
             if (data.sdp.type === "offer") {
               if (!peerConnection.current) {
                 await initializePeerConnection(data.callType);
@@ -769,19 +854,21 @@ export const SignalRProvider = ({ children }) => {
               await flushPendingIceCandidates(peerConnection.current);
               const answer = await peerConnection.current.createAnswer();
               await peerConnection.current.setLocalDescription(answer);
+              logWebRtcDebug("Sending SDP answer");
 
               await sendSdp(callIdRef.current, answer, callConnection);
             } else if (data.sdp.type === "answer") {
               await handleRemoteSDP(data.sdp, peerConnection.current);
               await flushPendingIceCandidates(peerConnection.current);
             }
-          } catch {
-            /* empty */
+          } catch (error) {
+            logWebRtcDebug("ReceiveSdp handler error", error);
           }
         });
 
         callConnection.off("ReceiveAcceptCall");
         callConnection.on("ReceiveAcceptCall", async () => {
+          logWebRtcDebug("ReceiveAcceptCall");
           // Keep the incoming-call UI mounted until media is actually connected.
           // The UI is closed after ontrack -> setIsCallStarted(true).
         });
@@ -864,6 +951,11 @@ export const SignalRProvider = ({ children }) => {
   //! ====== METHODS ======
 
   const handleAcceptCall = async () => {
+    logWebRtcDebug("handleAcceptCall invoked", {
+      callId: callIdRef.current,
+      callType,
+      callConnectionState: callConnection?.state,
+    });
     if (!callConnection || callConnection.state !== "Connected" || !callIdRef.current) {
       ErrorAlert("برقراری تماس امکان‌پذیر نیست. دوباره تلاش کنید.");
       return;
@@ -882,9 +974,14 @@ export const SignalRProvider = ({ children }) => {
         return;
       }
 
+      logWebRtcDebug("Creating and sending SDP offer", {
+        callId: callIdRef.current,
+      });
       await createAndSendOffer(callIdRef.current, callConnection, peerConnection);
       await callConnection.invoke("AcceptCall", callIdRef.current);
-    } catch {
+      logWebRtcDebug("AcceptCall hub invoke sent", { callId: callIdRef.current });
+    } catch (error) {
+      logWebRtcDebug("handleAcceptCall error", error);
       dispatch(setIsCallAcceptWaiting(false));
       ErrorAlert("پذیرش تماس انجام نشد.");
     }
@@ -1100,3 +1197,6 @@ export const SignalRProvider = ({ children }) => {
 SignalRProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+
+

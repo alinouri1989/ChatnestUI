@@ -1,8 +1,12 @@
 export const handleRemoteSDP = async (sdp, peerConnection) => {
   try {
     await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
-  } catch {
-    /* empty */
+  } catch (error) {
+    console.error("[WebRTC Debug] Failed to set remote SDP", {
+      sdpType: sdp?.type,
+      error,
+    });
+    throw error;
   }
 };
 
@@ -13,8 +17,9 @@ export const addIceCandidate = async (candidate, peerConnection) => {
 
   try {
     await peerConnection.current.addIceCandidate(candidate);
-  } catch {
-    /* empty */
+  } catch (error) {
+    console.error("[WebRTC Debug] Failed to add ICE candidate", error);
+    throw error;
   }
 };
 
