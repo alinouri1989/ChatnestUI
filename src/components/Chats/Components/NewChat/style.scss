@@ -138,6 +138,11 @@
             width: 100%;
             min-width: 0;
 
+            .identifier-chip-wrapper {
+              position: relative;
+              @include flex-center(row, center, center);
+            }
+
             .identifier-chip {
               max-width: 135px;
               padding: 3px 9px;
@@ -154,6 +159,21 @@
               &:hover {
                 background-color: rgba(88, 92, 225, 0.2);
               }
+            }
+
+            .copied-inline-tooltip {
+              position: absolute;
+              top: -24px;
+              left: 50%;
+              transform: translateX(-50%);
+              background-color: var(--text-black);
+              color: #fff;
+              font-size: 10px;
+              font-weight: 700;
+              border-radius: 999px;
+              padding: 2px 7px;
+              white-space: nowrap;
+              pointer-events: none;
             }
 
             .meta-text {

@@ -44,6 +44,7 @@ function UserChatCard({
   const { user } = useSelector(state => state.auth);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [copiedIdentifier, setCopiedIdentifier] = useState(null);
   const open = Boolean(anchorEl);
 
   const isDarkMode = user.userSettings.theme === "Dark";
@@ -120,6 +121,10 @@ function UserChatCard({
     try {
       await navigator.clipboard.writeText(userIdentifier);
       SuccessAlert("شناسه کاربر کپی شد");
+      setCopiedIdentifier(userIdentifier);
+      setTimeout(() => {
+        setCopiedIdentifier((prev) => (prev === userIdentifier ? null : prev));
+      }, 1400);
     } catch {
       ErrorAlert("کپی شناسه کاربر انجام نشد");
     }
@@ -154,15 +159,20 @@ function UserChatCard({
           <div className="name-row">
             <p className="chat-name">{name}</p>
             {userIdentifier && (
-              <button
-                type="button"
-                className="identifier-chip"
-                onClick={handleCopyUserIdentifier}
-                title={`کپی @${userIdentifier}`}
-                aria-label={`کپی شناسه ${userIdentifier}`}
-              >
-                @{userIdentifier}
-              </button>
+              <div className="identifier-chip-wrapper">
+                <button
+                  type="button"
+                  className="identifier-chip"
+                  onClick={handleCopyUserIdentifier}
+                  title={`کپی @${userIdentifier}`}
+                  aria-label={`کپی شناسه ${userIdentifier}`}
+                >
+                  @{userIdentifier}
+                </button>
+                {copiedIdentifier === userIdentifier && (
+                  <span className="copied-inline-tooltip">Copied</span>
+                )}
+              </div>
             )}
           </div>
           <LastMessage lastMessageType={lastMessageType} content={lastMessage} />

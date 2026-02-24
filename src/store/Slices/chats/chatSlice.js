@@ -272,9 +272,7 @@ const chatSlice = createSlice({
       }
     },
     removeGroupChat: (state, action) => {
-      state.Group = state.Group.filter(
-        (group) => !group.participants.includes(action.payload)
-      );
+      state.Group = state.Group.filter((group) => group.id !== action.payload);
     },
     // Updated resetChats to also reset the initialization flag
     resetChats: (state) => {

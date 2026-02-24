@@ -62,6 +62,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
 
     const [formData, setFormData] = useState(initialData);
     const [isSubmitReady, setIsSubmitReady] = useState(false);
+    const [copiedIdentifier, setCopiedIdentifier] = useState(null);
 
     // --------------------------------------------------------------
 
@@ -84,6 +85,12 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
             return () => URL.revokeObjectURL(objectURL);
         }
     }, [formData.photo]);
+
+    useEffect(() => {
+        if (!copiedIdentifier) return;
+        const timeoutId = setTimeout(() => setCopiedIdentifier(null), 1400);
+        return () => clearTimeout(timeoutId);
+    }, [copiedIdentifier]);
 
     useEffect(() => {
         const handleReceiveCreateChat = (response) => {
@@ -130,6 +137,18 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
         }
 
         return photo || groupImageDefault;
+    };
+
+    const handleCopyIdentifier = async (event, identifier) => {
+        event.stopPropagation();
+        if (!identifier) return;
+
+        try {
+            await navigator.clipboard.writeText(identifier);
+            setCopiedIdentifier(identifier);
+        } catch {
+            ErrorAlert("کپی شناسه کاربر انجام نشد");
+        }
     };
 
     // ----------------------------MANIPULATE FORM STATES----------------------------------
@@ -472,6 +491,24 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                             <img src={user.profilePhoto ?? defaultProfileAdminPhoto} alt="Admin Profile Image" />
                             <div className="admin-info">
                                 <p className="user-display-name">{user.displayName}</p>
+                                {user.userIdentifier && (
+                                    <div className="identifier-chip-row">
+                                        <div className="identifier-chip-wrapper">
+                                            <button
+                                                type="button"
+                                                className="identifier-chip"
+                                                onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
+                                                title={`کپی @${user.userIdentifier}`}
+                                                aria-label={`کپی شناسه ${user.userIdentifier}`}
+                                            >
+                                                @{user.userIdentifier}
+                                            </button>
+                                            {copiedIdentifier === user.userIdentifier && (
+                                                <span className="copied-inline-tooltip">Copied</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                                 <span>مدیر</span>
                             </div>
                         </div>
@@ -508,6 +545,24 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                                     alt={user.displayName} />
                                                 <div className="username-and-role-box">
                                                     <p className="user-display-name">{user.displayName}</p>
+                                                    {user.userIdentifier && (
+                                                        <div className="identifier-chip-row">
+                                                            <div className="identifier-chip-wrapper">
+                                                                <button
+                                                                    type="button"
+                                                                    className="identifier-chip"
+                                                                    onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
+                                                                    title={`کپی @${user.userIdentifier}`}
+                                                                    aria-label={`کپی شناسه ${user.userIdentifier}`}
+                                                                >
+                                                                    @{user.userIdentifier}
+                                                                </button>
+                                                                {copiedIdentifier === user.userIdentifier && (
+                                                                    <span className="copied-inline-tooltip">Copied</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                     {isCurrentUser ? (
                                                         <p style={{ color: "#585CE1", fontSize: "14px" }}>مدیر</p>
                                                     ) : (

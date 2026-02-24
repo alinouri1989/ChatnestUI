@@ -22,8 +22,8 @@ function GroupsList() {
   const { token } = useSelector((state) => state.auth);
   const userId = getUserIdFromToken(token);
 
-  const { Group, isChatsInitialized } = useSelector((state) => state.chat);
-  const { groupList } = useSelector((state) => state.groupList);
+  const { Group } = useSelector((state) => state.chat);
+  const { groupList, isGroupListInitialized } = useSelector((state) => state.groupList);
 
   const [searchGroup, setSearchGroup] = useState("");
 
@@ -36,8 +36,8 @@ function GroupsList() {
   };
 
   const filteredGroupList = groupList
-    ? Object.entries(groupList).filter((group) =>
-        group.name.toLowerCase().includes(searchGroup.toLowerCase())
+    ? Object.entries(groupList).filter(([, group]) =>
+        (group?.name ?? "").toLowerCase().includes(searchGroup.toLowerCase())
       )
     : [];
 
@@ -64,9 +64,14 @@ function GroupsList() {
           {filteredGroupList.length > 0 ? (
             filteredGroupList
               .map(([groupId, group]) => {
-                const chatGroup = Group.find((groupChat) =>
-                  groupChat.participants.includes(groupId)
-                );
+                const chatGroup = Group.find((groupChat) => {
+                  if (!groupChat) return false;
+                  if (groupChat.id === groupId) return true;
+                  return (
+                    Array.isArray(groupChat.participants) &&
+                    groupChat.participants.includes(groupId)
+                  );
+                });
 
                 let lastMessage = "";
                 let lastMessageType = "";
@@ -83,8 +88,9 @@ function GroupsList() {
                   ).getTime();
                 }
 
+                const resolvedGroupChatId = chatGroup?.id ?? groupId;
                 const currentGroupIdInPath =
-                  location.pathname.includes(groupId);
+                  location.pathname.includes(resolvedGroupChatId);
 
                 const unReadMessage =
                   !currentGroupIdInPath &&
@@ -97,13 +103,13 @@ function GroupsList() {
 
                 return {
                   groupId,
-                  groupName: group.name,
-                  groupPhotoUrl: group.photoUrl,
+                  groupName: group?.name ?? "گروه بدون نام",
+                  groupPhotoUrl: group?.photoUrl,
+                  resolvedGroupChatId,
                   lastMessage,
                   lastMessageType,
                   lastMessageDateForSort,
                   unReadMessage,
-                  chatGroup,
                 };
               })
               .sort(
@@ -114,11 +120,11 @@ function GroupsList() {
                   groupId,
                   groupName,
                   groupPhotoUrl,
+                  resolvedGroupChatId,
                   lastMessage,
                   lastMessageType,
                   lastMessageDateForSort,
                   unReadMessage,
-                  chatGroup,
                 }) => (
                   <motion.div
                     key={groupId}
@@ -127,7 +133,7 @@ function GroupsList() {
                   >
                     <GroupChatCard
                       key={groupId}
-                      groupId={chatGroup?.id}
+                      groupId={resolvedGroupChatId}
                       groupName={groupName}
                       groupPhotoUrl={groupPhotoUrl}
                       lastMessage={lastMessage}
@@ -141,7 +147,7 @@ function GroupsList() {
                   </motion.div>
                 )
               )
-          ) : isChatsInitialized ? (
+          ) : isGroupListInitialized ? (
             <NoActiveData
               text={
                 searchGroup

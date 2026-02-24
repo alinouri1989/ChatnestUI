@@ -1,7 +1,10 @@
 @use "../../../../shared/styles/main.scss" as *;
 
 .new-group-modal {
-  width: 500px;
+  width: 100%;
+  max-width: 100%;
+  max-height: 88vh;
+  box-sizing: border-box;
 
   .modal-close {
     left: 10px;
@@ -11,6 +14,7 @@
   @include screen(768px) {
     width: 100%;
     height: auto;
+    max-height: none;
   }
 
   .title-box {
@@ -33,13 +37,17 @@
   }
 
   .contents {
-    overflow: auto;
-    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: min(70vh, 620px);
     padding: 0px 12px;
+    width: 100%;
+    box-sizing: border-box;
 
     @include screen(768px) {
+      max-height: none;
       height: 100%;
-      overflow: hidden;
+      padding: 0 10px 12px;
     }
 
     .choose-group-image {
@@ -165,13 +173,36 @@
       @include flex-center(column, center, flex-start);
       gap: 15px;
       width: 100%;
-
       margin-top: 20px;
+      background-color: color-mix(in srgb, var(--smooth-light-blue) 48%, transparent);
+      border: 1px solid color-mix(in srgb, var(--smooth-blue-hover) 65%, transparent);
+      border-radius: 14px;
+      padding: 14px;
+
+      @supports not (color: color-mix(in srgb, white 50%, black)) {
+        background-color: var(--smooth-light-blue);
+        border-color: var(--smooth-blue-hover);
+      }
 
       h2 {
         font-size: 15px;
         color: var(--text-black);
         font-weight: 700;
+      }
+
+      .group-members-head {
+        width: 100%;
+        @include flex-center(row, space-between, center);
+        gap: 10px;
+
+        .members-count-chip {
+          padding: 3px 10px;
+          border-radius: 999px;
+          background-color: rgba(88, 92, 225, 0.12);
+          color: var(--blue);
+          font-size: 12px;
+          font-weight: 800;
+        }
       }
 
       .user-display-name {
@@ -211,16 +242,99 @@
           margin-left: -3px;
           background-color: var(--generalBackgroundColor);
         }
+
+        .identifier-chip-row {
+          margin-top: 3px;
+        }
+
+        .identifier-chip-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .identifier-chip {
+          max-width: 130px;
+          padding: 2px 8px;
+          border-radius: 999px;
+          background-color: rgba(88, 92, 225, 0.12);
+          color: var(--blue);
+          font-size: 11px;
+          font-weight: 800;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .copied-inline-tooltip {
+          position: absolute;
+          top: -22px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: var(--text-black);
+          color: #fff;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 999px;
+          padding: 2px 7px;
+          white-space: nowrap;
+          pointer-events: none;
+        }
       }
 
       .other-users {
         width: 100%;
+        max-height: 270px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 6px;
+        margin-top: 2px;
+
+        &.empty {
+          @include flex-center(column, center, center);
+          min-height: 90px;
+        }
+
+        .empty-members-hint {
+          color: var(--text-dark-gray);
+          font-size: 13px;
+          font-weight: 700;
+          text-align: center;
+          margin: 8px 0 4px;
+        }
+
+        &::-webkit-scrollbar {
+          width: 7px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(88, 92, 225, 0.25);
+          border-radius: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
       }
 
       .other-users .user-box {
         @include flex-center(row, space-between, center);
         width: 100%;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background-color: var(--smooth-white-color);
+        border: 1px solid transparent;
+        @include transition();
+
+        &:hover {
+          border-color: rgba(88, 92, 225, 0.18);
+          background-color: color-mix(in srgb, var(--smooth-light-blue) 55%, white);
+        }
+
+        @include screen(768px) {
+          padding: 8px 8px;
+        }
       }
 
       .remove-user-box {
@@ -252,6 +366,7 @@
       @include flex-center(row, center, center);
       width: 100%;
       gap: 24px;
+      padding-bottom: 4px;
 
       button {
         @include flex-center(row, center, center);
@@ -278,6 +393,16 @@
         &.disabled {
           opacity: 0.7;
           pointer-events: none;
+        }
+      }
+
+      @include screen(520px) {
+        gap: 10px;
+
+        button {
+          font-size: 13px;
+          padding: 8px 10px;
+          min-height: 40px;
         }
       }
     }
@@ -465,6 +590,7 @@
             .user-info {
               @include flex-center(column, center, flex-start);
               width: 100%;
+              min-width: 0;
 
               p {
                 color: var(--text-black);
@@ -477,13 +603,54 @@
                 text-overflow: ellipsis;
               }
 
-              span {
-                color: var(--text-input-gray);
+              .identity-row {
+                @include flex-center(row, flex-start, center);
+                gap: 8px;
                 width: 70%;
-                font-size: 13px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                min-width: 0;
+
+                .identifier-chip-wrapper {
+                  position: relative;
+                  @include flex-center(row, center, center);
+                }
+
+                .identifier-chip {
+                  max-width: 120px;
+                  padding: 2px 8px;
+                  border-radius: 999px;
+                  background-color: rgba(88, 92, 225, 0.12);
+                  color: var(--blue);
+                  font-size: 11px;
+                  font-weight: 800;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+
+                .copied-inline-tooltip {
+                  position: absolute;
+                  top: -24px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background-color: var(--text-black);
+                  color: #fff;
+                  font-size: 10px;
+                  font-weight: 700;
+                  border-radius: 999px;
+                  padding: 2px 7px;
+                  white-space: nowrap;
+                  pointer-events: none;
+                }
+
+                .meta-text {
+                  color: var(--text-input-gray);
+                  font-size: 13px;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  min-width: 0;
+                  flex: 1;
+                }
               }
             }
           }

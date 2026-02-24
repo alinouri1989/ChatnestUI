@@ -20,9 +20,7 @@ import { motion } from "framer-motion";
 import "./style.scss";
 import { defaultProfilePhoto } from "../../../../constants/DefaultProfilePhoto.js";
 
-
 function NewChatModal() {
-
   const navigate = useNavigate();
   const { closeModal } = useModal();
   const [isCreater, setIsCreater] = useState(false);
@@ -30,22 +28,24 @@ function NewChatModal() {
 
   const [inputValue, setInputValue] = useState("");
   const debouncedSearchQuery = useDebounce(inputValue, 300);
+  const normalizedSearchQuery = debouncedSearchQuery.trim().replace(/^@+/, "");
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [copiedIdentifier, setCopiedIdentifier] = useState(null);
 
   const { token } = useSelector((state) => state.auth);
   const userId = getUserIdFromToken(token);
 
   useEffect(() => {
-    if (!notificationConnection || !debouncedSearchQuery) return;
+    if (!notificationConnection || !normalizedSearchQuery) return;
 
     setLoading(true);
     setError(null);
 
     const handleReceiveSearchUsers = (response) => {
-      if (!response || response.query !== debouncedSearchQuery) return;
+      if (!response || response.query !== normalizedSearchQuery) return;
 
       const formattedUsers = Object.entries(response.data || {}).map(([id, user]) => ({
         userId: id,
@@ -61,11 +61,10 @@ function NewChatModal() {
     };
 
     notificationConnection.off("ReceiveSearchUsers");
-
     notificationConnection.on("ReceiveSearchUsers", handleReceiveSearchUsers);
 
     notificationConnection
-      .invoke("SearchUsers", debouncedSearchQuery)
+      .invoke("SearchUsers", normalizedSearchQuery)
       .catch((err) => {
         setError(err.message);
         setLoading(false);
@@ -74,28 +73,31 @@ function NewChatModal() {
     return () => {
       notificationConnection.off("ReceiveSearchUsers", handleReceiveSearchUsers);
     };
-  }, [debouncedSearchQuery, notificationConnection]);
+  }, [normalizedSearchQuery, notificationConnection]);
 
   useEffect(() => {
     if (!isCreater) return;
 
     const handleReceiveCreateChat = (response) => {
       const individualData = response?.Individual;
-      if (individualData) {
-        const chatId = Object.keys(individualData)[0];
-        if (chatId) {
-          const chatData = individualData[chatId];
-          const isArchived = chatData.archivedFor && Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
-
-          const destination = isArchived ? `/archives/${chatId}` : `/chats/${chatId}`;
-          navigate(destination);
-          closeModal();
-        } else {
-          ErrorAlert("خطایی رخ داده است.");
-        }
-      } else {
+      if (!individualData) {
         ErrorAlert("خطایی رخ داده است.");
+        return;
       }
+
+      const createdChatId = Object.keys(individualData)[0];
+      if (!createdChatId) {
+        ErrorAlert("خطایی رخ داده است.");
+        return;
+      }
+
+      const chatData = individualData[createdChatId];
+      const isArchived =
+        chatData.archivedFor &&
+        Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
+
+      navigate(isArchived ? `/archives/${createdChatId}` : `/chats/${createdChatId}`);
+      closeModal();
     };
 
     if (chatConnection) {
@@ -108,15 +110,16 @@ function NewChatModal() {
       }
     };
   }, [chatConnection, isCreater, navigate, closeModal, userId]);
-  
-  const handleGoToChat = async (userId) => {
+
+  const handleGoToChat = async (targetUserId) => {
     if (connectionStatus !== "connected") {
       ErrorAlert("خطایی رخ داده است.");
       return;
     }
+
     try {
       setIsCreater(true);
-      await chatConnection.invoke("CreateChat", "Individual", userId);
+      await chatConnection.invoke("CreateChat", "Individual", targetUserId);
     } catch {
       ErrorAlert("خطایی رخ داده است.");
     }
@@ -129,6 +132,10 @@ function NewChatModal() {
     try {
       await navigator.clipboard.writeText(identifier);
       SuccessAlert("شناسه کاربر کپی شد");
+      setCopiedIdentifier(identifier);
+      setTimeout(() => {
+        setCopiedIdentifier((prev) => (prev === identifier ? null : prev));
+      }, 1400);
     } catch {
       ErrorAlert("کپی شناسه کاربر انجام نشد");
     }
@@ -137,16 +144,18 @@ function NewChatModal() {
   return (
     <div className="new-chat-modal">
       <CloseButton closeModal={closeModal} />
+
       <div className="title-and-input-bar">
         <div className="title-box">
           <img src={star} alt="" />
           <p>یک گفت‌وگوی جدید شروع کنید</p>
         </div>
+
         <div className="search-user-input-box">
           <BiSearchAlt className="icon" />
           <input
             type="text"
-            placeholder="با نام کاربری یا ایمیل جستجو کنید..."
+            placeholder="با نام کاربری، شناسه (@id) یا ایمیل جستجو کنید..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -160,7 +169,8 @@ function NewChatModal() {
           variants={opacityEffect(0.8)}
           initial="initial"
           animate="animate"
-          className="no-result-box active">
+          className="no-result-box active"
+        >
           <AiFillInfoCircle className="icon" />
           <p>{error}</p>
         </motion.div>
@@ -184,23 +194,30 @@ function NewChatModal() {
                 initial="initial"
                 animate="animate"
               >
-                <img src={user.profilePhoto ?? defaultProfilePhoto}
-                  onError={(e) => e.currentTarget.src = defaultProfilePhoto}
+                <img
+                  src={user.profilePhoto ?? defaultProfilePhoto}
+                  onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
                   alt={user.displayName}
                 />
+
                 <div className="user-info">
                   <p>{user.displayName}</p>
                   <div className="identity-row">
                     {user.userIdentifier && (
-                      <button
-                        type="button"
-                        className="identifier-chip"
-                        onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
-                        title={`کپی @${user.userIdentifier}`}
-                        aria-label={`کپی شناسه ${user.userIdentifier}`}
-                      >
-                        @{user.userIdentifier}
-                      </button>
+                      <div className="identifier-chip-wrapper">
+                        <button
+                          type="button"
+                          className="identifier-chip"
+                          onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
+                          title={`کپی @${user.userIdentifier}`}
+                          aria-label={`کپی شناسه ${user.userIdentifier}`}
+                        >
+                          @{user.userIdentifier}
+                        </button>
+                        {copiedIdentifier === user.userIdentifier && (
+                          <span className="copied-inline-tooltip">Copied</span>
+                        )}
+                      </div>
                     )}
                     <span className="meta-text">{user.email}</span>
                   </div>

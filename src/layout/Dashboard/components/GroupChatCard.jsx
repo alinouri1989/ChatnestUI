@@ -16,7 +16,7 @@ import LastMessage from "../../../shared/components/LastMessage/LastMessage.jsx"
 import { ErrorAlert, SuccessAlert } from "../../../helpers/customAlert.js";
 import { useLeaveGroupMutation } from "../../../store/Slices/Group/GroupApi.js";
 import "./style.scss";
-import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto.js";
+import { defaultGroupPhoto, defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto.js";
 
 
 function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMessage, lastMessageType, lastMessageDate, unReadMessage }) {
