@@ -9,6 +9,7 @@ import UserChatCard from "./UserChatCard";
 
 import { getChatId } from "../../../store/Slices/chats/chatSlice";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
+import { getChatDisplayLabel } from "../../../helpers/chatLabelHelper";
 import { lastMessageDateHelper } from "../../../helpers/dateHelper";
 import { isUserOnline } from "../../../helpers/presenceHelper";
 
@@ -94,7 +95,7 @@ function ChatsList() {
                     receiverId,
                     image: user.profilePhoto,
                     status: isUserOnline(user.lastConnectionDate),
-                    name: user.displayName,
+                    name: getChatDisplayLabel(user.displayName, receiverId, UserId),
                     lastMessage,
                     lastMessageType,
                     lastMessageDate,

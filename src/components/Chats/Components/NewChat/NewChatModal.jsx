@@ -178,7 +178,7 @@ function NewChatModal() {
                 />
                 <div className="user-info">
                   <p>{user.displayName}</p>
-                  <span>{user.email}</span>
+                  <span>{user.userIdentifier ? `@${user.userIdentifier} • ${user.email}` : user.email}</span>
                 </div>
               </motion.div>
             ))}

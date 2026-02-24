@@ -9,6 +9,7 @@ import UserChatCard from "./UserChatCard";
 import { lastMessageDateHelper } from "../../../helpers/dateHelper";
 import { isUserOnline } from "../../../helpers/presenceHelper";
 import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
+import { getChatDisplayLabel } from "../../../helpers/chatLabelHelper";
 import { getChatId } from "../../../store/Slices/chats/chatSlice";
 
 import { opacityEffect } from "../../../shared/animations/animations";
@@ -87,7 +88,7 @@ function ArchivesList() {
                     receiverId,
                     image: user.profilePhoto,
                     status: isUserOnline(user.lastConnectionDate),
-                    name: user.displayName,
+                    name: getChatDisplayLabel(user.displayName, receiverId, UserId),
                     lastMessage,
                     lastMessageDate,
                     lastMessageType,

@@ -70,6 +70,21 @@ export const userSettingsApi = createApi({
       },
     }),
 
+    updateUserIdentifier: builder.mutation({
+      query: (newUserIdentifier) => ({
+        url: 'User/UserIdentifier',
+        method: 'PATCH',
+        body: { userIdentifier: newUserIdentifier },
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch, getState }) {
+        try {
+          await queryFulfilled;
+          const currentUser = getState().auth;
+          updateUserField(dispatch, currentUser, 'userIdentifier', arg);
+        } catch { /* empty */ }
+      },
+    }),
+
     updatePhoneNumber: builder.mutation({
       query: (newPhoneNumber) => ({
         url: 'User/PhoneNumber',
@@ -185,6 +200,7 @@ export const {
   useRemoveProfilePhotoMutation,
   useUpdateProfilePhotoMutation,
   useUpdateDisplayNameMutation,
+  useUpdateUserIdentifierMutation,
   useUpdatePhoneNumberMutation,
   useUpdateBiographyMutation,
   useChangePasswordMutation,

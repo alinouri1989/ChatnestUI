@@ -25,13 +25,14 @@ import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 import { convertFileToBase64 } from "../../../store/helpers/convertFileToBase64";
 import {
   useUpdateDisplayNameMutation,
+  useUpdateUserIdentifierMutation,
   useUpdatePhoneNumberMutation,
   useUpdateBiographyMutation,
   useRemoveProfilePhotoMutation,
   useUpdateProfilePhotoMutation
 } from "../../../store/Slices/userSettings/userSettingsApi";
 
-import { biographySchema, displayNameSchema, phoneNumberSchema } from "../../../schemas/AccountSchemas";
+import { biographySchema, displayNameSchema, phoneNumberSchema, userIdentifierSchema } from "../../../schemas/AccountSchemas";
 
 function Account() {
 
@@ -40,11 +41,13 @@ function Account() {
 
   const [selectedImage, setSelectedImage] = useState(user?.profilePhoto || "");
   const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [isEditingUserIdentifier, setIsEditingUserIdentifier] = useState(false);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [isEditingBiography, setIsEditingBiography] = useState(false);
   const [isShowProfileImage, setIsShowProfileImage] = useState(false);
 
   const [updateDisplayName, { isLoading: isLoadingDisplayName }] = useUpdateDisplayNameMutation();
+  const [updateUserIdentifier, { isLoading: isLoadingUserIdentifier }] = useUpdateUserIdentifierMutation();
   const [updateBiography, { isLoading: isLoadingBiography }] = useUpdateBiographyMutation();
   const [updatePhoneNumber, { isLoading: isLoadingPhoneNumber }] = useUpdatePhoneNumberMutation();
   const [updateProfilePhoto, { isLoading: isLoadingProfilePhoto }] = useUpdateProfilePhotoMutation();
@@ -52,6 +55,7 @@ function Account() {
 
   const isLoading =
     isLoadingDisplayName ||
+    isLoadingUserIdentifier ||
     isLoadingBiography ||
     isLoadingPhoneNumber ||
     isLoadingProfilePhoto ||
@@ -65,6 +69,11 @@ function Account() {
   const { register: registerPhone, handleSubmit: handlePhoneSubmit, formState: { errors: phoneNumberErrors } } = useForm({
     resolver: zodResolver(phoneNumberSchema),
     defaultValues: { phoneNumber: user?.phoneNumber || "مشخص نشده" },
+  });
+
+  const { register: registerUserIdentifier, handleSubmit: handleUserIdentifierSubmit, formState: { errors: userIdentifierErrors } } = useForm({
+    resolver: zodResolver(userIdentifierSchema),
+    defaultValues: { userIdentifier: user?.userIdentifier || "" },
   });
 
   const { register: registerBio, handleSubmit: handleBioSubmit, formState: { errors: bioErrors } } = useForm({
@@ -105,6 +114,19 @@ function Account() {
         SuccessAlert("شماره تلفن به‌روزرسانی شد")
       } catch {
         ErrorAlert("به‌روزرسانی شماره تلفن انجام نشد");
+      }
+    }
+  };
+
+  const onSubmitForUserIdentifier = async (data) => {
+    setIsEditingUserIdentifier(!isEditingUserIdentifier);
+
+    if (user.userIdentifier !== data.userIdentifier) {
+      try {
+        await updateUserIdentifier(data.userIdentifier).unwrap();
+        SuccessAlert("شناسه کاربر به‌روزرسانی شد");
+      } catch (error) {
+        ErrorAlert(error?.data?.message || "به‌روزرسانی شناسه کاربر انجام نشد");
       }
     }
   };
@@ -327,6 +349,45 @@ function Account() {
           <div className="email-box">
             <p>Email</p>
             <span>{user?.email}</span>
+          </div>
+
+          <div className="phone-box">
+            <p>شناسه کاربر</p>
+            <div className="phone-edit-box">
+              {isEditingUserIdentifier ? (
+                <input
+                  {...registerUserIdentifier("userIdentifier")}
+                  type="text"
+                  placeholder="user_id"
+                  autoFocus
+                />
+              ) : (
+                <p>{user?.userIdentifier || "در حال ساخت..."}</p>
+              )}
+
+              {!isEditingUserIdentifier && (
+                <button
+                  className="edit-btn"
+                  type="button"
+                  onClick={() => setIsEditingUserIdentifier(true)}
+                >
+                  <TbEdit />
+                </button>
+              )}
+
+              {isEditingUserIdentifier && (
+                <button
+                  className="edit-btn"
+                  type="submit"
+                  onClick={handleUserIdentifierSubmit(onSubmitForUserIdentifier)}
+                >
+                  <FaCheck />
+                </button>
+              )}
+            </div>
+            {userIdentifierErrors.userIdentifier && (
+              <span className="error-messages">{userIdentifierErrors.userIdentifier.message}</span>
+            )}
           </div>
 
           <div className="phone-box">

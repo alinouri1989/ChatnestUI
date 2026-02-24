@@ -14,15 +14,19 @@ import { formatDateForLastConnectionDate } from '../../../helpers/dateHelper';
 import { isUserOnline } from '../../../helpers/presenceHelper';
 import BackToMenuButton from '../../../shared/components/BackToMenuButton/BackToMenuButton';
 import { startCall } from '../../../helpers/startCall';
+import { getUserIdFromToken } from '../../../helpers/getUserIdFromToken';
 import { defaultProfilePhoto } from '../../../constants/DefaultProfilePhoto';
+import { getChatDisplayLabel } from '../../../helpers/chatLabelHelper';
 
 function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientId }) {
     const dispatch = useDispatch();
     const location = useLocation();
     const { callConnection } = useSignalR();
     const { isRingingIncoming } = useSelector((state) => state.call);
+    const { token } = useSelector((state) => state.auth);
     const { showModal, closeModal } = useModal();
     const isSmallScreen = useScreenWidth(900);
+    const currentUserId = getUserIdFromToken(token);
 
     // Early return after all hooks are called
     if (!recipientProfile) {
@@ -31,6 +35,11 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
 
     const status = isUserOnline(recipientProfile.lastConnectionDate) ? 'online' : 'offline';
     const lastConnectionDate = recipientProfile.lastConnectionDate;
+    const displayLabel = getChatDisplayLabel(
+        recipientProfile.displayName,
+        recipientId,
+        currentUserId
+    );
 
     const handleVoiceCall = () => {
         startCall(callConnection, recipientId, false, dispatch, () =>
@@ -61,7 +70,7 @@ function UserTopBar({ isSidebarOpen, toggleSidebar, recipientProfile, recipientI
                     <p className={`status ${status}`}></p>
                 </div>
                 <div onClick={toggleSidebar} className="name-and-status-box">
-                    <p className="user-name">{recipientProfile.displayName}</p>
+                    <p className="user-name">{displayLabel}</p>
 
                     {status === "online" ?
                         <span>{"\u0622\u0646\u0644\u0627\u06cc\u0646"}</span>

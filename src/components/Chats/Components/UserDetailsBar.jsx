@@ -13,6 +13,8 @@ import CallModal from "../../Calls/Components/CallModal";
 import { formatDateForLastConnectionDate } from "../../../helpers/dateHelper";
 import { isUserOnline } from "../../../helpers/presenceHelper";
 import { startCall } from "../../../helpers/startCall";
+import { getUserIdFromToken } from "../../../helpers/getUserIdFromToken";
+import { getChatDisplayLabel } from "../../../helpers/chatLabelHelper";
 import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 
 function UserDetailsBar({
@@ -24,8 +26,10 @@ function UserDetailsBar({
   const dispatch = useDispatch();
   const { callConnection } = useSignalR();
   const { isRingingIncoming } = useSelector((state) => state.call);
+  const { token } = useSelector((state) => state.auth);
   const { showModal, closeModal } = useModal();
   const isSmallScreen = useScreenWidth(900);
+  const currentUserId = getUserIdFromToken(token);
 
   if (!recipientProfile) {
     return null;
@@ -35,6 +39,11 @@ function UserDetailsBar({
     ? "online"
     : "offline";
   const lastConnectionDate = recipientProfile.lastConnectionDate;
+  const displayLabel = getChatDisplayLabel(
+    recipientProfile.displayName,
+    recipientId,
+    currentUserId
+  );
 
   const handleVoiceCall = () => {
     startCall(callConnection, recipientId, false, dispatch, () =>
@@ -68,7 +77,7 @@ function UserDetailsBar({
                 src={recipientProfile.profilePhoto ?? defaultProfilePhoto}
                 onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
               />
-              <p>{recipientProfile.displayName}</p>
+              <p>{displayLabel}</p>
               <span>{recipientProfile.email}</span>
             </div>
             {status == "online" ? (
