@@ -39,20 +39,20 @@ function GroupChats() {
       return;
     }
 
-    const matchedGroup = Group.find((group) => String(group.id) === String(id));
-    if (!matchedGroup) {
-      setGroupProfile(null);
-      return;
-    }
-
     const matchedGroupListEntry = groupList?.[id];
+    const matchedGroup = Group.find((group) => String(group.id) === String(id));
     if (matchedGroupListEntry) {
       setGroupProfile({
         ...matchedGroupListEntry,
-        groupId: matchedGroup.id,
+        groupId: matchedGroup?.id ?? id,
         lastMessage:
-          matchedGroup.messages?.[matchedGroup.messages.length - 1]?.content || "",
+          matchedGroup?.messages?.[matchedGroup.messages.length - 1]?.content || "",
       });
+      return;
+    }
+
+    if (!matchedGroup) {
+      setGroupProfile(null);
       return;
     }
 

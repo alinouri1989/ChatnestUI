@@ -99,7 +99,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                 const groupId = Object.keys(groupData)[0];
                 if (groupId) {
                     const chatData = groupData[groupId];
-                    dispatch(addNewGroupChat({ groupId, chatData }));
+                    dispatch(addNewGroupChat({ chatId: groupId, chatData }));
                     closeModal();
                 }
             }
