@@ -23,10 +23,12 @@ function IncomingCall({ callType, callerProfile, callId }) {
 
     const { showModal, closeModal } = useModal();
     const localVideoRef = useRef(null);
+    const incomingAudioRef = useRef(null);
 
     useEffect(() => {
         const audio = new Audio(IncomingCallSound);
         audio.loop = true;
+        incomingAudioRef.current = audio;
 
         const safePlay = () => {
             const playPromise = audio.play();
@@ -46,8 +48,16 @@ function IncomingCall({ callType, callerProfile, callId }) {
             window.removeEventListener("keydown", safePlay);
             audio.pause();
             audio.currentTime = 0;
+            incomingAudioRef.current = null;
         };
     }, []);
+
+    useEffect(() => {
+        if ((isCallAcceptWaiting || isCallStarted) && incomingAudioRef.current) {
+            incomingAudioRef.current.pause();
+            incomingAudioRef.current.currentTime = 0;
+        }
+    }, [isCallAcceptWaiting, isCallStarted]);
 
     useEffect(() => {
         if (localStream && localVideoRef.current) {
@@ -97,7 +107,7 @@ function IncomingCall({ callType, callerProfile, callId }) {
             </div>
 
             {callType === 1 && (
-                <video className='local-video' playsInline ref={localVideoRef} autoPlay muted></video>
+                <video className='local-video' playsInline ref={localVideoRef} autoPlay muted style={{ transform: "scaleX(-1)" }}></video>
             )}
             {isCallAcceptWaiting && <PreLoader />}
         </div>

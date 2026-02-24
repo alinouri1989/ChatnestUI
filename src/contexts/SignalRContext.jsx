@@ -73,6 +73,8 @@ export const useSignalR = () => {
     notificationConnection,
     setLocalStream,
     handleAcceptCall,
+    switchCameraFacingMode,
+    videoFacingMode,
     setRemoteStream,
     peerConnection,
     localStream,
@@ -88,6 +90,8 @@ export const useSignalR = () => {
     notificationConnection,
     setLocalStream,
     handleAcceptCall,
+    switchCameraFacingMode,
+    videoFacingMode,
     setRemoteStream,
     peerConnection,
     localStream,
@@ -121,58 +125,111 @@ export const SignalRProvider = ({ children }) => {
 
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const [videoFacingMode, setVideoFacingMode] = useState("user");
 
   const callIdRef = useRef(callId);
   const peerConnection = useRef(null);
+  const callConnectionRef = useRef(null);
+  const localStreamRef = useRef(null);
+  const remoteStreamRef = useRef(null);
+  const pendingIceCandidatesRef = useRef([]);
+  const peerConnectionInitPromiseRef = useRef(null);
 
   const pendingRequestsRef = useRef(new Set());
 
-  const initializePeerConnection = async (callType) => {
+  useEffect(() => {
+    localStreamRef.current = localStream;
+  }, [localStream]);
+
+  useEffect(() => {
+    remoteStreamRef.current = remoteStream;
+  }, [remoteStream]);
+
+  useEffect(() => {
+    callConnectionRef.current = callConnection;
+  }, [callConnection]);
+
+  const getVideoConstraints = (facingMode = videoFacingMode) => ({
+    facingMode: { ideal: facingMode },
+    width: { ideal: 1920, max: 1920 },
+    height: { ideal: 1080, max: 1080 },
+    frameRate: { ideal: 30, max: 60 },
+  });
+
+  const getMediaConstraints = (selectedCallType) => ({
+    audio: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      sampleRate: 48000,
+    },
+    video: selectedCallType === 1 ? getVideoConstraints() : false,
+  });
+
+  const stopStreamTracks = (stream) => {
+    if (!stream) return;
+    stream.getTracks().forEach((track) => track.stop());
+  };
+
+  const clearCallMedia = () => {
+    pendingIceCandidatesRef.current = [];
+    stopStreamTracks(localStreamRef.current);
+    stopStreamTracks(remoteStreamRef.current);
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+
+  const closePeerConnection = () => {
+    if (!peerConnection.current) return;
+
     try {
-      const pc = new RTCPeerConnection(servers);
-
-      const constraints = {
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-          sampleRate: 48000,
-        },
-        video:
-          callType === 1
-            ? {
-                facingMode: "user",
-                width: { ideal: 1920, max: 1920 },
-                height: { ideal: 1080, max: 1080 },
-                frameRate: { ideal: 45, max: 60 },
-              }
-            : false,
-      };
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      setLocalStream(stream);
-      stream.getTracks().forEach((track) => {
-        pc.addTrack(track, stream);
-      });
-
-      peerConnection.current = pc;
+      peerConnection.current.onicecandidate = null;
+      peerConnection.current.ontrack = null;
+      peerConnection.current.oniceconnectionstatechange = null;
+      peerConnection.current.close();
     } catch {
       /* empty */
+    } finally {
+      peerConnection.current = null;
     }
   };
 
-  if (peerConnection.current) {
-    peerConnection.current.onicecandidate = (event) => {
-      if (event.candidate) {
-        callConnection.invoke(
-          "SendIceCandidate",
-          callIdRef.current,
-          event.candidate
-        );
+  const flushPendingIceCandidates = async (pc = peerConnection.current) => {
+    if (!pc?.remoteDescription) {
+      return;
+    }
+
+    const queuedCandidates = [...pendingIceCandidatesRef.current];
+    pendingIceCandidatesRef.current = [];
+
+    for (const candidate of queuedCandidates) {
+      try {
+        await pc.addIceCandidate(new RTCIceCandidate(candidate));
+      } catch {
+        /* empty */
       }
+    }
+  };
+
+  const attachPeerConnectionHandlers = (pc) => {
+    pc.onicecandidate = (event) => {
+      const currentCallConnection = callConnectionRef.current;
+      if (
+        !event.candidate ||
+        !currentCallConnection ||
+        currentCallConnection.state !== "Connected"
+      ) {
+        return;
+      }
+
+      currentCallConnection.invoke(
+        "SendIceCandidate",
+        callIdRef.current,
+        event.candidate
+      );
     };
 
-    peerConnection.current.ontrack = (event) => {
+    pc.ontrack = (event) => {
       setRemoteStream(event.streams[0]);
       dispatch(setIsCallStarted(true));
       dispatch(setIsCallStarting(false));
@@ -181,25 +238,102 @@ export const SignalRProvider = ({ children }) => {
       dispatch(setCallStartedDate(currentDate));
     };
 
-    peerConnection.current.oniceconnectionstatechange = () => {
-      const state = peerConnection.current.iceConnectionState;
+    pc.oniceconnectionstatechange = () => {
+      const state = pc.iceConnectionState;
 
       if (state === "failed" || state === "closed") {
         dispatch(resetCallState());
-        if (peerConnection.current) {
-          peerConnection.current.getSenders().forEach((sender) => {
-            if (sender.track) {
-              sender.track.stop();
-            }
-          });
-          peerConnection.current.close();
-          peerConnection.current = null;
-          setLocalStream(null);
-          setRemoteStream(null);
-        }
+        closePeerConnection();
+        clearCallMedia();
       }
     };
-  }
+  };
+
+  const initializePeerConnection = async (callType) => {
+    if (peerConnection.current) {
+      return peerConnection.current;
+    }
+
+    if (peerConnectionInitPromiseRef.current) {
+      return peerConnectionInitPromiseRef.current;
+    }
+
+    peerConnectionInitPromiseRef.current = (async () => {
+      try {
+        const pc = new RTCPeerConnection(servers);
+        attachPeerConnectionHandlers(pc);
+
+        const stream = await navigator.mediaDevices.getUserMedia(
+          getMediaConstraints(callType)
+        );
+        stopStreamTracks(localStreamRef.current);
+        setLocalStream(stream);
+        stream.getTracks().forEach((track) => {
+          pc.addTrack(track, stream);
+        });
+
+        peerConnection.current = pc;
+        return pc;
+      } catch {
+        closePeerConnection();
+        return null;
+      } finally {
+        peerConnectionInitPromiseRef.current = null;
+      }
+    })();
+
+    return peerConnectionInitPromiseRef.current;
+  };
+
+  const switchCameraFacingMode = async (nextMode) => {
+    const targetMode =
+      nextMode ?? (videoFacingMode === "user" ? "environment" : "user");
+
+    setVideoFacingMode(targetMode);
+
+    const currentPc = peerConnection.current;
+    const currentStream = localStreamRef.current;
+    const currentVideoTrack = currentStream?.getVideoTracks?.()[0];
+
+    if (!currentPc || !currentStream || !currentVideoTrack) {
+      return targetMode;
+    }
+
+    try {
+      const replacementStream = await navigator.mediaDevices.getUserMedia({
+        video: getVideoConstraints(targetMode),
+        audio: false,
+      });
+      const replacementTrack = replacementStream.getVideoTracks()[0];
+
+      if (!replacementTrack) {
+        stopStreamTracks(replacementStream);
+        return targetMode;
+      }
+
+      const videoSender = currentPc
+        .getSenders()
+        .find((sender) => sender.track?.kind === "video");
+
+      if (videoSender) {
+        await videoSender.replaceTrack(replacementTrack);
+      } else {
+        currentPc.addTrack(replacementTrack, currentStream);
+      }
+
+      const updatedStream = new MediaStream([
+        ...currentStream.getAudioTracks(),
+        replacementTrack,
+      ]);
+
+      currentVideoTrack.stop();
+      setLocalStream(updatedStream);
+      return targetMode;
+    } catch {
+      setVideoFacingMode(videoFacingMode);
+      return videoFacingMode;
+    }
+  };
 
   useEffect(() => {
     callIdRef.current = callId;
@@ -570,7 +704,7 @@ export const SignalRProvider = ({ children }) => {
         callConnection.on("ReceiveIncomingCall", async (data) => {
           const callType = data.callType;
           handleIncomingCall(data, dispatch, userId);
-          initializePeerConnection(callType);
+          await initializePeerConnection(callType);
         });
 
         callConnection.off("ReceiveOutgoingCall");
@@ -594,18 +728,8 @@ export const SignalRProvider = ({ children }) => {
               dispatch(updateCallRecipientList(formattedData));
             }
           }
-          if (peerConnection.current) {
-            peerConnection.current.getSenders().forEach((sender) => {
-              if (sender.track) {
-                sender.track.stop();
-              }
-            });
-            peerConnection.current.close();
-            peerConnection.current = null;
-          }
-
-          setLocalStream(null);
-          setRemoteStream(null);
+          closePeerConnection();
+          clearCallMedia();
         });
 
         callConnection.off("ReceiveDeleteCall");
@@ -615,22 +739,41 @@ export const SignalRProvider = ({ children }) => {
 
         callConnection.off("ReceiveIceCandidate");
         callConnection.on("ReceiveIceCandidate", async (data) => {
-          peerConnection.current.addIceCandidate(new RTCIceCandidate(data));
+          const currentPc = peerConnection.current;
+
+          if (!currentPc || !currentPc.remoteDescription) {
+            pendingIceCandidatesRef.current.push(data);
+            return;
+          }
+
+          try {
+            await currentPc.addIceCandidate(new RTCIceCandidate(data));
+          } catch {
+            pendingIceCandidatesRef.current.push(data);
+          }
         });
 
         callConnection.off("ReceiveSdp");
         callConnection.on("ReceiveSdp", async (data) => {
           try {
             if (data.sdp.type === "offer") {
-              await initializePeerConnection(data.callType);
+              if (!peerConnection.current) {
+                await initializePeerConnection(data.callType);
+              }
+
+              if (!peerConnection.current) {
+                return;
+              }
 
               await handleRemoteSDP(data.sdp, peerConnection.current);
+              await flushPendingIceCandidates(peerConnection.current);
               const answer = await peerConnection.current.createAnswer();
               await peerConnection.current.setLocalDescription(answer);
 
               await sendSdp(callIdRef.current, answer, callConnection);
             } else if (data.sdp.type === "answer") {
               await handleRemoteSDP(data.sdp, peerConnection.current);
+              await flushPendingIceCandidates(peerConnection.current);
             }
           } catch {
             /* empty */
@@ -639,10 +782,8 @@ export const SignalRProvider = ({ children }) => {
 
         callConnection.off("ReceiveAcceptCall");
         callConnection.on("ReceiveAcceptCall", async () => {
-          if (store.getState().call.isCallStarted) {
-            return;
-          }
-          dispatch(setIsRingingIncoming(false));
+          // Keep the incoming-call UI mounted until media is actually connected.
+          // The UI is closed after ontrack -> setIsCallStarted(true).
         });
 
         // Add missing call error handlers
@@ -948,6 +1089,8 @@ export const SignalRProvider = ({ children }) => {
         peerConnection,
         initializePeerConnection,
         handleAcceptCall,
+        switchCameraFacingMode,
+        videoFacingMode,
       }}
     >
       {children}

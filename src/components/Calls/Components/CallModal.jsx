@@ -9,6 +9,7 @@ import CallSound from "../../../assets/sound/ChatNestCallSound.mp3";
 import BusySound from "../../../assets/sound/ChatNestCallBusySound.mp3";
 
 import { MdScreenShare } from "react-icons/md";
+import { MdFlipCameraAndroid } from "react-icons/md";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 import { HiMiniSpeakerWave } from "react-icons/hi2";
@@ -23,7 +24,13 @@ import { defaultProfilePhoto } from "../../../constants/DefaultProfilePhoto";
 import { ErrorAlert } from "../../../helpers/customAlert";
 
 function CallModal({ closeModal, isCameraCall }) {
-  const { callConnection, localStream, remoteStream } = useSignalR();
+  const {
+    callConnection,
+    localStream,
+    remoteStream,
+    switchCameraFacingMode,
+    videoFacingMode,
+  } = useSignalR();
 
   const {
     callerProfile,
@@ -48,15 +55,39 @@ function CallModal({ closeModal, isCameraCall }) {
 
   // Acquire a temporary local video stream while the call is starting
   useEffect(() => {
+    let isCancelled = false;
+    let previewStream = null;
+
     const getTemporaryStream = async () => {
       try {
-        if (isCameraCall && !localStream && !temporaryStream) {
-          const tempStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
+        if (!isCameraCall || localStream) {
+          setTemporaryStream((prev) => {
+            if (prev) {
+              prev.getTracks().forEach((track) => track.stop());
+            }
+            return null;
           });
-          setTemporaryStream(tempStream);
+          return;
         }
+
+        previewStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: videoFacingMode },
+          },
+          audio: false,
+        });
+
+        if (isCancelled) {
+          previewStream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+
+        setTemporaryStream((prev) => {
+          if (prev) {
+            prev.getTracks().forEach((track) => track.stop());
+          }
+          return previewStream;
+        });
       } catch (err) {
         console.error("Failed to acquire temporary camera stream:", err);
       }
@@ -65,12 +96,12 @@ function CallModal({ closeModal, isCameraCall }) {
     getTemporaryStream();
 
     return () => {
-      if (temporaryStream) {
-        temporaryStream.getTracks().forEach((track) => track.stop());
-        setTemporaryStream(null);
+      isCancelled = true;
+      if (previewStream) {
+        previewStream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [temporaryStream, isCameraCall, localStream]);
+  }, [isCameraCall, localStream, videoFacingMode]);
 
   // Attach/detach streams to video elements (use stable local variables for cleanup)
   useEffect(() => {
@@ -245,6 +276,11 @@ function CallModal({ closeModal, isCameraCall }) {
     closeModal();
   };
 
+  const handleSwitchCamera = async () => {
+    if (!isCameraCall) return;
+    await switchCameraFacingMode();
+  };
+
   return (
     <div className={`call-modal ${isCallStarted ? "video-call-Mode" : ""}`}>
       <div className="logo-and-e2e-box">
@@ -275,7 +311,7 @@ function CallModal({ closeModal, isCameraCall }) {
         <div className={`camera-bar ${!isCameraCall ? "only-voice-call" : ""}`}>
           {isCallStarted && (
             <div className="other-camera-box">
-              <video ref={remoteVideoRef} autoPlay></video>
+              <video ref={remoteVideoRef} playsInline autoPlay></video>
               <div className="user-info">
                 <img src={callerProfile?.profilePhoto ?? defaultProfilePhoto} alt="" />
                 <p>{callerProfile?.displayName}</p>
@@ -284,7 +320,17 @@ function CallModal({ closeModal, isCameraCall }) {
           )}
 
           <div className={`device-camera-box ${isCallStarted ? "remote-connected" : ""}`}>
-            {isCameraCall && <video playsInline ref={localVideoRef} autoPlay muted></video>}
+            {isCameraCall && (
+              <video
+                playsInline
+                ref={localVideoRef}
+                autoPlay
+                muted
+                style={{
+                  transform: videoFacingMode === "user" ? "scaleX(-1)" : "none",
+                }}
+              ></video>
+            )}
           </div>
         </div>
 
@@ -292,8 +338,13 @@ function CallModal({ closeModal, isCameraCall }) {
       </>
 
       <div className="call-option-buttons">
-        <button className="disabled">
-          <MdScreenShare />
+        <button
+          className={isCameraCall ? "" : "disabled"}
+          onClick={isCameraCall ? handleSwitchCamera : undefined}
+          disabled={!isCameraCall}
+          title={isCameraCall ? "Switch camera" : undefined}
+        >
+          {isCameraCall ? <MdFlipCameraAndroid /> : <MdScreenShare />}
         </button>
 
         <button className="disabled">
