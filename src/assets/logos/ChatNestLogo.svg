@@ -1,19 +1,33 @@
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="chatnest_bg" x1="24" y1="20" x2="232" y2="236" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#55D6BE"/>
-      <stop offset="0.52" stop-color="#22B9D0"/>
-      <stop offset="1" stop-color="#2B7DE9"/>
-    </linearGradient>
-    <linearGradient id="chatnest_core" x1="96" y1="72" x2="184" y2="180" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#DDF7FF"/>
-    </linearGradient>
-  </defs>
-  <rect x="12" y="12" width="232" height="232" rx="72" fill="url(#chatnest_bg)"/>
-  <circle cx="128" cy="126" r="76" stroke="rgba(255,255,255,0.35)" stroke-width="6"/>
-  <circle cx="128" cy="126" r="56" stroke="rgba(255,255,255,0.5)" stroke-width="6"/>
-  <path d="M88 96C88 84.9543 96.9543 76 108 76H166C177.046 76 186 84.9543 186 96V136C186 147.046 177.046 156 166 156H132L102 184V156H108C96.9543 156 88 147.046 88 136V96Z" fill="url(#chatnest_core)"/>
-  <path d="M108 106H166M108 122H166M108 138H148" stroke="#2A7EE8" stroke-width="8" stroke-linecap="round"/>
-  <path d="M72 186C84 168 105 156 128 156C151 156 172 168 184 186" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="10" stroke-linecap="round"/>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+	<defs>
+		<linearGradient id="g1" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(208,216,-216,208,24,20)">
+			<stop offset="0" stop-color="#55d6be"/>
+			<stop offset=".52" stop-color="#22b9d0"/>
+			<stop offset="1" stop-color="#2b7de9"/>
+		</linearGradient>
+		<linearGradient id="g2" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(88,108,-125.613,102.351,87,81)">
+			<stop offset="0" stop-color="#ffffff"/>
+			<stop offset="1" stop-color="#ddf7ff"/>
+		</linearGradient>
+	</defs>
+	<style>
+		tspan { white-space:pre } 
+		.s0 { fill: url(#g1) } 
+		.s1 { opacity: .35;fill: none;stroke: #ffffff;stroke-width: 6 } 
+		.s2 { opacity: .5;fill: none;stroke: #ffffff;stroke-width: 6 } 
+		.s3 { fill: url(#g2) } 
+		.s4 { fill: none;stroke: #2a7ee8;stroke-linecap: round;stroke-width: 8 } 
+		.t5 { font-size: 13px;fill: #000000;font-weight: 400;font-family: "Danfo-Claw", "Danfo" } 
+	</style>
+	<path fill-rule="evenodd" class="s0" d="m84 12h88c39.76 0 72 32.24 72 72v88c0 39.76-32.24 72-72 72h-88c-39.76 0-72-32.24-72-72v-88c0-39.76 32.24-72 72-72z"/>
+	<path fill-rule="evenodd" class="s1" d="m128 202c-42.03 0-76-33.97-76-76 0-42.03 33.97-76 76-76 42.03 0 76 33.97 76 76 0 42.03-33.97 76-76 76z"/>
+	<path fill-rule="evenodd" class="s2" d="m128 182c-30.97 0-56-25.03-56-56 0-30.97 25.03-56 56-56 30.97 0 56 25.03 56 56 0 30.97-25.03 56-56 56z"/>
+	<path class="s3" d="m79 105c0-11.05 8.95-20 20-20h58c11.05 0 20 8.95 20 20v40c0 11.05-8.95 20-20 20h-34l-30 28v-28h6c-11.05 0-20-8.95-20-20z"/>
+	<path fill-rule="evenodd" class="s4" d="m99 112h58m-58 16h58m-58 16h40"/>
+	<text id="chatNest" transform="translate(99,103)">
+		<tspan x="0" y="0" class="t5">c</tspan><tspan  y="0" class="t5">h</tspan><tspan  y="0" class="t5">a</tspan><tspan  y="0" class="t5">t</tspan><tspan  y="0" class="t5">N</tspan><tspan  y="0" class="t5">e</tspan><tspan  y="0" class="t5">s</tspan><tspan  y="0" class="t5">t
+</tspan>
+	</text>
+	<text id="" transform="translate(524,157)">
+	</text>
 </svg>
