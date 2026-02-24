@@ -534,16 +534,19 @@
             .add-user-box,
             .added-user {
               @include flex-center(row, center, center);
+              flex-direction: row-reverse;
               position: absolute;
               display: none;
               gap: 5px;
-              right: 35px;
+              left: 35px;
+              right: auto;
               font-size: 15px;
               color: var(--blue);
               opacity: 0;
 
               @include screen(500px) {
-                right: 20px;
+                left: 20px;
+                right: auto;
               }
 
               .icon {
