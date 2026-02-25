@@ -50,3 +50,24 @@ export const resetPasswordSchema = z.object({
     .email({ message: "فرمت ایمیل وارد شده صحیح نمی‌باشد." })
     .nonempty({ message: "ایمیل نباید خالی باشد." }),
 });
+
+export const resetPasswordConfirmSchema = z
+  .object({
+    Email: z
+      .string()
+      .email({ message: "Email format is invalid." })
+      .nonempty({ message: "Email is required." }),
+    Token: z.string().nonempty({ message: "Reset token is required." }),
+    NewPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters." })
+      .max(16, { message: "Password must be at most 16 characters." })
+      .regex(/^(?=.*[A-Z])(?=.*\d).*$/, {
+        message: "Password must include at least one uppercase letter and one number.",
+      }),
+    NewPasswordAgain: z.string().nonempty({ message: "Repeat password is required." }),
+  })
+  .refine((data) => data.NewPassword === data.NewPasswordAgain, {
+    message: "Passwords do not match.",
+    path: ["NewPasswordAgain"],
+  });

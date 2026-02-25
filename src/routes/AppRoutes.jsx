@@ -20,6 +20,7 @@ function AppRoutes() {
                     <Route path="/sign-in" element={<Sign />} />
                     <Route path="/sign-up" element={<Sign />} />
                     <Route path="/reset-password" element={<Sign />} />
+                    <Route path="/reset-password/confirm" element={<Sign />} />
                     <Route path="*" element={<Navigate to="/sign-in" replace />} />
                 </>
             )}
@@ -43,6 +44,7 @@ function AppRoutes() {
                     <Route path="/sign-in" element={<Navigate to="/home" replace />} />
                     <Route path="/sign-up" element={<Navigate to="/home" replace />} />
                     <Route path="/reset-password" element={<Navigate to="/home" replace />} />
+                    <Route path="/reset-password/confirm" element={<Navigate to="/home" replace />} />
                 </>
             )}
 

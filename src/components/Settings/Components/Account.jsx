@@ -330,7 +330,7 @@ function Account() {
             <input
               {...registerDisplayName("displayName")}
               type="text"
-              placeholder="Ad soyad giriniz..."
+              placeholder="نام و نام خانوادگی را وارد کنید..."
               autoFocus
             />
           ) : (

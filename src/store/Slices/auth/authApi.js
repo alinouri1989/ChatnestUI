@@ -70,6 +70,14 @@ export const authApi = createApi({
       }),
     }),
 
+    confirmResetPassword: builder.mutation({
+      query: (formData) => ({
+        url: 'Auth/ResetPassword',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+
     getUserProfile: builder.query({
       query: () => {
         const token = getJwtFromCookie();
@@ -132,5 +140,6 @@ export const {
   useSignInFacebookMutation,
   useGetUserProfileQuery,
   useLogoutUserMutation,
-  useResetPasswordMutation
+  useResetPasswordMutation,
+  useConfirmResetPasswordMutation
 } = authApi;

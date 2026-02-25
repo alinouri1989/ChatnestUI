@@ -4,6 +4,7 @@ import SignVector from "../../assets/images/Sign/SignVector.webp";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ResetPassword from './components/ResetPassword';
+import ResetPasswordConfirm from './components/ResetPasswordConfirm';
 
 import { motion } from "framer-motion";
 
@@ -14,7 +15,9 @@ function Sign() {
     const location = useLocation();
 
     const renderComponent = () => {
-        if (location.pathname === "/reset-password") {
+        if (location.pathname.startsWith("/reset-password/confirm")) {
+            return <ResetPasswordConfirm />;
+        } else if (location.pathname === "/reset-password") {
             return <ResetPassword />;
         } else if (location.pathname === "/sign-up") {
             return <SignUp />;
