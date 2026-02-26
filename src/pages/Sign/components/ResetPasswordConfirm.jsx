@@ -42,10 +42,10 @@ function ResetPasswordConfirm() {
   const onSubmit = async (data) => {
     try {
       await confirmResetPassword(data).unwrap();
-      SuccessAlert("Password changed successfully.");
+      SuccessAlert("رمز عبور با موفقیت تغییر کرد.");
       navigate("/sign-in", { replace: true });
     } catch (error) {
-      ErrorAlert(error?.data?.message || "An error occurred.");
+      ErrorAlert(error?.data?.message || "خطایی رخ داده است.");
     }
   };
 
@@ -53,14 +53,14 @@ function ResetPasswordConfirm() {
     <motion.div
       {...opacityEffect()}
       className='reset-password-general-container'>
-      <img src={Logo} alt="ChatNest Logo" />
+      <img src={Logo} alt="لوگوی ChatNest" />
 
       <div className='title-container'>
-        <h1>Set New Password</h1>
+        <h1>تعیین رمز عبور جدید</h1>
         <p style={{ maxWidth: "360px" }}>
           {hasLinkData
-            ? `Create a new password for ${email}`
-            : "Recovery link is invalid or incomplete."}
+            ? `برای ${email} یک رمز عبور جدید تعیین کنید`
+            : "لینک بازیابی نامعتبر یا ناقص است."}
         </p>
       </div>
 
@@ -77,7 +77,7 @@ function ResetPasswordConfirm() {
               <input
                 {...register("NewPassword")}
                 type={showPassword ? "text" : "password"}
-                placeholder="New password"
+                placeholder="رمز عبور جدید"
               />
             </div>
             {!showPassword
@@ -95,7 +95,7 @@ function ResetPasswordConfirm() {
               <input
                 {...register("NewPasswordAgain")}
                 type={showRepeatPassword ? "text" : "password"}
-                placeholder="Repeat new password"
+                placeholder="تکرار رمز عبور جدید"
               />
             </div>
             {!showRepeatPassword
@@ -105,14 +105,18 @@ function ResetPasswordConfirm() {
           </div>
           {errors.NewPasswordAgain && <span className="error-message">{errors.NewPasswordAgain.message}</span>}
 
-          {!hasLinkData && <span className="error-message">Missing email or token in recovery link.</span>}
+          {!hasLinkData && (
+            <span className="error-message">
+              {"در لینک بازیابی، ایمیل یا توکن وجود ندارد."}
+            </span>
+          )}
         </div>
 
         <button className='sign-buttons' type="submit" disabled={isLoading || !hasLinkData}>
-          Save New Password
+          ذخیره رمز جدید
         </button>
         <button className='cancel-btn' type="button" onClick={() => navigate("/sign-in", { replace: true })}>
-          Back to Sign In
+          بازگشت به ورود
         </button>
       </form>
 

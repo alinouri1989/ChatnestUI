@@ -127,6 +127,38 @@ export const userSettingsApi = createApi({
       }),
     }),
 
+    updateSecurityQuestion: builder.mutation({
+      query: (formData) => ({
+        url: 'User/SecurityQuestion',
+        method: 'PATCH',
+        body: formData,
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch, getState }) {
+        try {
+          await queryFulfilled;
+          const currentAuth = getState().auth;
+          if (!currentAuth?.user) return;
+
+          dispatch(
+            setUser({
+              ...currentAuth,
+              user: {
+                ...currentAuth.user,
+                userSettings: {
+                  ...currentAuth.user.userSettings,
+                  securityQuestionKey: arg.questionKey,
+                  securityQuestionText: arg.securityQuestionTextPreview || currentAuth.user.userSettings?.securityQuestionText || "",
+                  securityQuestionAnswerConfigured: true,
+                },
+              },
+            })
+          );
+        } catch {
+          /* empty */
+        }
+      },
+    }),
+
     // ============ Theme Settings  ============
 
     changeTheme: builder.mutation({
@@ -204,6 +236,7 @@ export const {
   useUpdatePhoneNumberMutation,
   useUpdateBiographyMutation,
   useChangePasswordMutation,
+  useUpdateSecurityQuestionMutation,
   useChangeChatBackgroundMutation,
   useChangeThemeMutation
 } = userSettingsApi;

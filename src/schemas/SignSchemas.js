@@ -1,7 +1,7 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 export const signInSchema = z.object({
-  Email: z.string().email("فرمت ایمیل وارد شده صحیح نمی‌باشد."),
+  Email: z.string().email("فرمت ایمیل وارد شده صحیح نیست."),
   Password: z.string().nonempty("رمز عبور نمی‌تواند خالی باشد."),
 });
 
@@ -12,13 +12,12 @@ export const signUpSchema = z
       .min(5, { message: "نام نمایشی باید بین 5 تا 50 کاراکتر باشد." })
       .max(50, { message: "نام نمایشی باید بین 5 تا 50 کاراکتر باشد." })
       .regex(/^[\u0600-\u06FFA-Za-z0-9\s]+$/, {
-        message:
-          "نام نمایشی فقط می‌تواند شامل حروف فارسی/انگلیسی، عدد و فاصله باشد.",
+        message: "نام نمایشی فقط می‌تواند شامل حروف فارسی/انگلیسی، عدد و فاصله باشد.",
       }),
 
     Email: z
       .string()
-      .email({ message: "فرمت ایمیل وارد شده صحیح نمی‌باشد." })
+      .email({ message: "فرمت ایمیل وارد شده صحیح نیست." })
       .max(30, { message: "ایمیل وارد شده نباید بیشتر از 30 کاراکتر باشد." }),
 
     Password: z
@@ -47,7 +46,7 @@ export const signUpSchema = z
 export const resetPasswordSchema = z.object({
   Email: z
     .string()
-    .email({ message: "فرمت ایمیل وارد شده صحیح نمی‌باشد." })
+    .email({ message: "فرمت ایمیل وارد شده صحیح نیست." })
     .nonempty({ message: "ایمیل نباید خالی باشد." }),
 });
 
@@ -55,19 +54,44 @@ export const resetPasswordConfirmSchema = z
   .object({
     Email: z
       .string()
-      .email({ message: "Email format is invalid." })
-      .nonempty({ message: "Email is required." }),
-    Token: z.string().nonempty({ message: "Reset token is required." }),
+      .email({ message: "فرمت ایمیل وارد شده صحیح نیست." })
+      .nonempty({ message: "ایمیل الزامی است." }),
+    Token: z.string().nonempty({ message: "توکن بازیابی الزامی است." }),
     NewPassword: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters." })
-      .max(16, { message: "Password must be at most 16 characters." })
+      .min(8, { message: "رمز عبور باید حداقل 8 کاراکتر باشد." })
+      .max(16, { message: "رمز عبور نباید بیشتر از 16 کاراکتر باشد." })
       .regex(/^(?=.*[A-Z])(?=.*\d).*$/, {
-        message: "Password must include at least one uppercase letter and one number.",
+        message: "رمز عبور باید حداقل شامل یک حرف بزرگ و یک عدد باشد.",
       }),
-    NewPasswordAgain: z.string().nonempty({ message: "Repeat password is required." }),
+    NewPasswordAgain: z.string().nonempty({ message: "تکرار رمز عبور الزامی است." }),
   })
   .refine((data) => data.NewPassword === data.NewPasswordAgain, {
-    message: "Passwords do not match.",
+    message: "رمزهای عبور مطابقت ندارند.",
+    path: ["NewPasswordAgain"],
+  });
+
+export const resetPasswordFallbackSchema = z
+  .object({
+    Email: z
+      .string()
+      .email({ message: "فرمت ایمیل وارد شده صحیح نیست." })
+      .nonempty({ message: "ایمیل الزامی است." }),
+    QuestionKey: z.string().nonempty({ message: "ابتدا پرسش امنیتی حساب را دریافت کنید." }),
+    Answer: z
+      .string()
+      .min(2, { message: "پاسخ پرسش امنیتی الزامی است." })
+      .max(200, { message: "پاسخ پرسش امنیتی بیش از حد مجاز است." }),
+    NewPassword: z
+      .string()
+      .min(8, { message: "رمز عبور باید حداقل 8 کاراکتر باشد." })
+      .max(16, { message: "رمز عبور نباید بیشتر از 16 کاراکتر باشد." })
+      .regex(/^(?=.*[A-Z])(?=.*\d).*$/, {
+        message: "رمز عبور باید حداقل شامل یک حرف بزرگ و یک عدد باشد.",
+      }),
+    NewPasswordAgain: z.string().nonempty({ message: "تکرار رمز عبور الزامی است." }),
+  })
+  .refine((data) => data.NewPassword === data.NewPasswordAgain, {
+    message: "رمزهای عبور مطابقت ندارند.",
     path: ["NewPasswordAgain"],
   });
