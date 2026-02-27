@@ -474,52 +474,81 @@ export const SignalRProvider = ({ children }) => {
 
         chatConnection.off("ReceiveGetMessages");
         chatConnection.on("ReceiveGetMessages", (data) => {
-          if (data.Individual) {
+          console.log("ReceiveGetMessages:", {
+            hasIndividual: !!data?.Individual,
+            hasGroup: !!data?.Group,
+          });
+
+          // -----------------------------
+          // INDIVIDUAL
+          // -----------------------------
+          if (data?.Individual) {
             Object.entries(data.Individual).forEach(([chatId, messages]) => {
-              Object.entries(messages).forEach(([messageId, messageData]) => {
-                if (messageData?.senderId && messageData.senderId !== userId) {
+              Object.entries(messages || {}).forEach(([messageId, messageData]) => {
+                const isIncoming =
+                  !!messageData?.senderId && messageData.senderId !== userId;
+
+                // decrypt (مثل قبل)
+                let decryptedContent = messageData?.content;
+                if (
+                  messageData?.type === 0 &&
+                  decryptedContent &&
+                  decryptedContent !== "این پیام حذف شده است."
+                ) {
+                  decryptedContent = decryptMessage(messageData.content, chatId);
+                }
+
+                // ✅ Send event to Android WebView (Native) - لحظه دریافت پیام
+                // فقط برای پیام‌های ورودی (نه پیام‌هایی که خود userId فرستاده)
+                if (isIncoming) {
+                  postToAndroidWebView("incoming_message", {
+                    scope: "Individual",
+                    chatId,
+                    messageId,
+                    senderId: messageData?.senderId ?? null,
+                    recipientId: userId ?? null,
+                    type: messageData?.type ?? null,
+                    content: decryptedContent ?? null,
+
+                    // متادیتاهای مفید (اختیاری)
+                    clientMessageId: messageData?.clientMessageId ?? null,
+                    status: messageData?.status ?? null,
+                    sentAt: messageData?.status?.sent
+                      ? messageData.status.sent[Object.keys(messageData.status.sent)[0]]
+                      : null,
+                  });
+                }
+
+                // کد خودت: آپدیت لیست کاربرها + آرشیو
+                if (isIncoming) {
                   dispatch(addNewUserToChatList({ [messageData.senderId]: {} }));
 
-                  const currentIndividualChats =
-                    store.getState().chat?.Individual || [];
+                  const currentIndividualChats = store.getState().chat?.Individual || [];
                   const currentChat = currentIndividualChats.find(
                     (chat) => chat.id === chatId
                   );
+
                   const isArchivedForCurrentUser =
                     currentChat?.archivedFor &&
-                    Object.prototype.hasOwnProperty.call(
-                      currentChat.archivedFor,
-                      userId
-                    );
+                    Object.prototype.hasOwnProperty.call(currentChat.archivedFor, userId);
 
                   if (isArchivedForCurrentUser) {
-                    // Make incoming messages immediately visible in the main chat list.
                     dispatch(removeArchive({ Individual: { [chatId]: {} } }));
 
                     if (chatConnection?.state === "Connected") {
                       chatConnection.invoke("UnarchiveChat", chatId).catch(() => {
-                        // Keep UI responsive even if persistence fails; hub event will retry on next state sync.
+                        // ignore
                       });
                     }
                   }
                 }
 
-                let decryptedContent = messageData.content;
-                if (
-                  messageData.type === 0 &&
-                  decryptedContent &&
-                  decryptedContent !== "این پیام حذف شده است."
-                ) {
-                  decryptedContent = decryptMessage(
-                    messageData.content,
-                    chatId
-                  );
-                }
-
-                if (messageData.clientMessageId) {
+                // pending upload cleanup
+                if (messageData?.clientMessageId) {
                   store.dispatch(removePendingUpload(messageData.clientMessageId));
                 }
 
+                // dispatch to store
                 store.dispatch(
                   addMessageToIndividual({
                     chatId,
@@ -532,23 +561,44 @@ export const SignalRProvider = ({ children }) => {
             });
           }
 
-          if (data.Group) {
+          // -----------------------------
+          // GROUP
+          // -----------------------------
+          if (data?.Group) {
             Object.entries(data.Group).forEach(([chatId, messages]) => {
-              Object.entries(messages).forEach(([messageId, messageData]) => {
-                let decryptedContent = messageData.content;
+              Object.entries(messages || {}).forEach(([messageId, messageData]) => {
+                const isIncoming =
+                  !!messageData?.senderId && messageData.senderId !== userId;
 
+                let decryptedContent = messageData?.content;
                 if (
-                  messageData.type === 0 &&
+                  messageData?.type === 0 &&
                   decryptedContent &&
                   decryptedContent !== "این پیام حذف شده است."
                 ) {
-                  decryptedContent = decryptMessage(
-                    messageData.content,
-                    chatId
-                  );
+                  decryptedContent = decryptMessage(messageData.content, chatId);
                 }
 
-                if (messageData.clientMessageId) {
+                // ✅ Send event to Android WebView (Native) - لحظه دریافت پیام گروه
+                if (isIncoming) {
+                  postToAndroidWebView("incoming_message", {
+                    scope: "Group",
+                    chatId,
+                    messageId,
+                    senderId: messageData?.senderId ?? null,
+                    recipientId: userId ?? null,
+                    type: messageData?.type ?? null,
+                    content: decryptedContent ?? null,
+
+                    clientMessageId: messageData?.clientMessageId ?? null,
+                    status: messageData?.status ?? null,
+                    sentAt: messageData?.status?.sent
+                      ? messageData.status.sent[Object.keys(messageData.status.sent)[0]]
+                      : null,
+                  });
+                }
+
+                if (messageData?.clientMessageId) {
                   store.dispatch(removePendingUpload(messageData.clientMessageId));
                 }
 
@@ -564,6 +614,100 @@ export const SignalRProvider = ({ children }) => {
             });
           }
         });
+
+        // chatConnection.off("ReceiveGetMessages");
+        // chatConnection.on("ReceiveGetMessages", (data) => {
+        //   console.log("dataaaaaaa: ", data.Individual)
+        //   if (data.Individual) {
+        //     Object.entries(data.Individual).forEach(([chatId, messages]) => {
+        //       Object.entries(messages).forEach(([messageId, messageData]) => {
+        //         if (messageData?.senderId && messageData.senderId !== userId) {
+        //           dispatch(addNewUserToChatList({ [messageData.senderId]: {} }));
+
+        //           const currentIndividualChats =
+        //             store.getState().chat?.Individual || [];
+        //           const currentChat = currentIndividualChats.find(
+        //             (chat) => chat.id === chatId
+        //           );
+        //           const isArchivedForCurrentUser =
+        //             currentChat?.archivedFor &&
+        //             Object.prototype.hasOwnProperty.call(
+        //               currentChat.archivedFor,
+        //               userId
+        //             );
+
+        //           if (isArchivedForCurrentUser) {
+        //             // Make incoming messages immediately visible in the main chat list.
+        //             dispatch(removeArchive({ Individual: { [chatId]: {} } }));
+
+        //             if (chatConnection?.state === "Connected") {
+        //               chatConnection.invoke("UnarchiveChat", chatId).catch(() => {
+        //                 // Keep UI responsive even if persistence fails; hub event will retry on next state sync.
+        //               });
+        //             }
+        //           }
+        //         }
+
+        //         let decryptedContent = messageData.content;
+        //         if (
+        //           messageData.type === 0 &&
+        //           decryptedContent &&
+        //           decryptedContent !== "این پیام حذف شده است."
+        //         ) {
+        //           decryptedContent = decryptMessage(
+        //             messageData.content,
+        //             chatId
+        //           );
+        //         }
+
+        //         if (messageData.clientMessageId) {
+        //           store.dispatch(removePendingUpload(messageData.clientMessageId));
+        //         }
+
+        //         store.dispatch(
+        //           addMessageToIndividual({
+        //             chatId,
+        //             messageId,
+        //             messageData: { ...messageData, content: decryptedContent },
+        //             userId,
+        //           })
+        //         );
+        //       });
+        //     });
+        //   }
+
+        //   if (data.Group) {
+        //     Object.entries(data.Group).forEach(([chatId, messages]) => {
+        //       Object.entries(messages).forEach(([messageId, messageData]) => {
+        //         let decryptedContent = messageData.content;
+
+        //         if (
+        //           messageData.type === 0 &&
+        //           decryptedContent &&
+        //           decryptedContent !== "این پیام حذف شده است."
+        //         ) {
+        //           decryptedContent = decryptMessage(
+        //             messageData.content,
+        //             chatId
+        //           );
+        //         }
+
+        //         if (messageData.clientMessageId) {
+        //           store.dispatch(removePendingUpload(messageData.clientMessageId));
+        //         }
+
+        //         store.dispatch(
+        //           addMessageToGroup({
+        //             chatId,
+        //             messageId,
+        //             messageData: { ...messageData, content: decryptedContent },
+        //             userId,
+        //           })
+        //         );
+        //       });
+        //     });
+        //   }
+        // });
 
         chatConnection.off("ReceiveRecipientProfiles");
         chatConnection.on("ReceiveRecipientProfiles", (data) => {
@@ -584,12 +728,12 @@ export const SignalRProvider = ({ children }) => {
                 ? chatData.participants
                 : Array.isArray(chatData?.chatParticipants)
                   ? chatData.chatParticipants
-                      .map((participant) =>
-                        typeof participant === "string"
-                          ? participant
-                          : participant?.userId
-                      )
-                      .filter(Boolean)
+                    .map((participant) =>
+                      typeof participant === "string"
+                        ? participant
+                        : participant?.userId
+                    )
+                    .filter(Boolean)
                   : [];
 
               const receiverId = participants.find(
@@ -768,13 +912,35 @@ export const SignalRProvider = ({ children }) => {
           }
         );
 
+        // callConnection.off("ReceiveIncomingCall");
+        // callConnection.on("ReceiveIncomingCall", async (data) => {
+        //   const callType = data.callType;
+        //   logWebRtcDebug("ReceiveIncomingCall", {
+        //     callId: data.callId,
+        //     callType,
+        //   });
+        //   handleIncomingCall(data, dispatch, userId);
+        //   await initializePeerConnection(callType);
+        // });
+
         callConnection.off("ReceiveIncomingCall");
         callConnection.on("ReceiveIncomingCall", async (data) => {
           const callType = data.callType;
+
           logWebRtcDebug("ReceiveIncomingCall", {
             callId: data.callId,
             callType,
           });
+
+          // ✅ Send event to Android WebView (Native)
+          postToAndroidWebView("incoming_call", {
+            callId: data.callId,
+            callType: data.callType,
+            callerId: data.callerId ?? null,
+            recipientId: data.recipientId ?? null,
+            fullData: data, // optional, remove if payload is too large
+          });
+
           handleIncomingCall(data, dispatch, userId);
           await initializePeerConnection(callType);
         });
@@ -999,7 +1165,7 @@ export const SignalRProvider = ({ children }) => {
     try {
       const chatIdFromLocation =
         window.location.pathname.includes("chats") ||
-        window.location.pathname.includes("archives")
+          window.location.pathname.includes("archives")
           ? window.location.pathname.split("/")[2]
           : null;
       const groupIdFromLocation = window.location.pathname.includes("groups")
@@ -1039,42 +1205,42 @@ export const SignalRProvider = ({ children }) => {
 
       const individualReadPromises = chatIdFromLocation
         ? Individual.flatMap((chat) => {
-            if (chat.id === chatIdFromLocation) {
-              return chat.messages
-                .filter((message) => {
-                  const isDelivered =
-                    message.status.delivered &&
-                    Object.keys(message.status.delivered).includes(userId);
-                  const isRead =
-                    message.status.read &&
-                    Object.keys(message.status.read).includes(userId);
-                  const isSentByUser =
-                    message.status.sent &&
-                    Object.keys(message.status.sent).includes(userId);
+          if (chat.id === chatIdFromLocation) {
+            return chat.messages
+              .filter((message) => {
+                const isDelivered =
+                  message.status.delivered &&
+                  Object.keys(message.status.delivered).includes(userId);
+                const isRead =
+                  message.status.read &&
+                  Object.keys(message.status.read).includes(userId);
+                const isSentByUser =
+                  message.status.sent &&
+                  Object.keys(message.status.sent).includes(userId);
 
-                  return (
-                    isDelivered &&
-                    !isRead &&
-                    !isSentByUser &&
-                    !pendingRequestsRef.current.has(message.id)
+                return (
+                  isDelivered &&
+                  !isRead &&
+                  !isSentByUser &&
+                  !pendingRequestsRef.current.has(message.id)
+                );
+              })
+              .map(async (message) => {
+                addPendingRequest(message.id);
+                try {
+                  await chatConnection.invoke(
+                    "ReadMessage",
+                    "Individual",
+                    chat.id,
+                    message.id
                   );
-                })
-                .map(async (message) => {
-                  addPendingRequest(message.id);
-                  try {
-                    await chatConnection.invoke(
-                      "ReadMessage",
-                      "Individual",
-                      chat.id,
-                      message.id
-                    );
-                  } finally {
-                    removePendingRequest(message.id);
-                  }
-                });
-            }
-            return [];
-          })
+                } finally {
+                  removePendingRequest(message.id);
+                }
+              });
+          }
+          return [];
+        })
         : [];
 
       const groupPromises = Group.flatMap((chat) =>
@@ -1108,37 +1274,37 @@ export const SignalRProvider = ({ children }) => {
 
       const groupReadPromises = groupIdFromLocation
         ? Group.flatMap((chat) => {
-            if (chat.id === groupIdFromLocation) {
-              return chat.messages
-                .filter((message) => {
-                  const isRead =
-                    message.status.read &&
-                    Object.keys(message.status.read).includes(userId);
-                  const isSentByUser =
-                    message.status.sent &&
-                    Object.keys(message.status.sent).includes(userId);
-                  return (
-                    !isRead &&
-                    !isSentByUser &&
-                    !pendingRequestsRef.current.has(message.id)
+          if (chat.id === groupIdFromLocation) {
+            return chat.messages
+              .filter((message) => {
+                const isRead =
+                  message.status.read &&
+                  Object.keys(message.status.read).includes(userId);
+                const isSentByUser =
+                  message.status.sent &&
+                  Object.keys(message.status.sent).includes(userId);
+                return (
+                  !isRead &&
+                  !isSentByUser &&
+                  !pendingRequestsRef.current.has(message.id)
+                );
+              })
+              .map(async (message) => {
+                addPendingRequest(message.id);
+                try {
+                  await chatConnection.invoke(
+                    "ReadMessage",
+                    "Group",
+                    chat.id,
+                    message.id
                   );
-                })
-                .map(async (message) => {
-                  addPendingRequest(message.id);
-                  try {
-                    await chatConnection.invoke(
-                      "ReadMessage",
-                      "Group",
-                      chat.id,
-                      message.id
-                    );
-                  } finally {
-                    removePendingRequest(message.id);
-                  }
-                });
-            }
-            return [];
-          })
+                } finally {
+                  removePendingRequest(message.id);
+                }
+              });
+          }
+          return [];
+        })
         : [];
 
       await Promise.all([
@@ -1199,4 +1365,27 @@ SignalRProvider.propTypes = {
 };
 
 
+const postToAndroidWebView = (eventName, payload = {}) => {
+  try {
+    if (typeof window === "undefined") return;
+    if (!window.AndroidBridge) return;
 
+    if (
+      eventName === "incoming_call" &&
+      typeof window.AndroidBridge.onIncomingCall === "function"
+    ) {
+      window.AndroidBridge.onIncomingCall(JSON.stringify(payload));
+      return;
+    }
+
+    if (
+      eventName === "incoming_message" &&
+      typeof window.AndroidBridge.onIncomingMessage === "function"
+    ) {
+      window.AndroidBridge.onIncomingMessage(JSON.stringify(payload));
+      return;
+    }
+  } catch (err) {
+    console.error("AndroidBridge postMessage failed:", err);
+  }
+};
