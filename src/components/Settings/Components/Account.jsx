@@ -32,6 +32,7 @@ import {
   useRemoveProfilePhotoMutation,
   useUpdateProfilePhotoMutation
 } from "../../../store/Slices/userSettings/userSettingsApi";
+import SecurityQuestionSettings from "./SecurityQuestionSettings";
 
 import { biographySchema, displayNameSchema, phoneNumberSchema, userIdentifierSchema } from "../../../schemas/AccountSchemas";
 
@@ -495,6 +496,8 @@ function Account() {
           )}
         </div>
       </form>
+
+      <SecurityQuestionSettings />
 
       {isLoading && <PreLoader />}
     </div >

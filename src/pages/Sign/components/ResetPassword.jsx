@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import { useResetPasswordMutation } from "../../../store/Slices/auth/authApi";
 import Logo from "../../../assets/logos/ChatNestLogoWithText.svg";
 
@@ -13,13 +13,16 @@ import { opacityEffect } from '../../../shared/animations/animations.js';
 import { motion } from "framer-motion";
 
 function ResetPassword() {
-
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(resetPasswordSchema),
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const handleCancel = () => {
@@ -40,11 +43,13 @@ function ResetPassword() {
     <motion.div
       {...opacityEffect()}
       className='reset-password-general-container'>
-      <img src={Logo} alt="ChatNest لوگو" />
+      <img src={Logo} alt="لوگوی ChatNest" />
 
       <div className='title-container'>
-        <h1>بازنشانی رمز عبور</h1>
-        <p style={{ maxWidth: "360px" }}>برای ارسال لینک بازنشانی رمز عبور، به آدرس ایمیل شما نیاز داریم.</p>
+        <h1>{"بازنشانی رمز عبور"}</h1>
+        <p style={{ maxWidth: "360px" }}>
+          {"برای ارسال لینک بازنشانی رمز عبور، به آدرس ایمیل شما نیاز داریم."}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,9 +69,17 @@ function ResetPassword() {
         </div>
 
         <button className='sign-buttons' type="submit" disabled={isLoading}>
-          ارسال
+          {"ارسال"}
         </button>
-        <button className='cancel-btn' type="button" onClick={handleCancel}>انصراف</button>
+        <button className='cancel-btn' type="button" onClick={handleCancel}>
+          {"انصراف"}
+        </button>
+        <button
+          className='cancel-btn'
+          type="button"
+          onClick={() => navigate('/reset-password-manual', { replace: true })}>
+          {"بازیابی با پرسش امنیتی"}
+        </button>
       </form>
 
       {isLoading && <PreLoader />}

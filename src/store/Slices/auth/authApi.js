@@ -70,6 +70,22 @@ export const authApi = createApi({
       }),
     }),
 
+    resetPasswordFallback: builder.mutation({
+      query: (formData) => ({
+        url: 'Auth/PasswordFallback',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+
+    getPasswordFallbackQuestion: builder.mutation({
+      query: (email) => ({
+        url: 'Auth/PasswordFallbackQuestion',
+        method: 'POST',
+        body: { email },
+      }),
+    }),
+
     confirmResetPassword: builder.mutation({
       query: (formData) => ({
         url: 'Auth/ResetPassword',
@@ -141,5 +157,7 @@ export const {
   useGetUserProfileQuery,
   useLogoutUserMutation,
   useResetPasswordMutation,
+  useResetPasswordFallbackMutation,
+  useGetPasswordFallbackQuestionMutation,
   useConfirmResetPasswordMutation
 } = authApi;
