@@ -143,7 +143,7 @@ function GroupChatCard({ groupId, groupListId, groupName, groupPhotoUrl, lastMes
                             <ListItemText
                                 primary="خروج از گروه"
                                 primaryTypographyProps={{
-                                    fontFamily: "Montserrat",
+                                    fontFamily: "IRANSansX",
                                     fontWeight: "700",
                                     fontSize: "14px",
                                 }}
@@ -170,3 +170,4 @@ GroupChatCard.propTypes = {
 };
 
 export default GroupChatCard;
+

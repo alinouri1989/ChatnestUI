@@ -241,7 +241,7 @@ function UserChatCard({
               <ListItemText
                 primary="حذف"
                 primaryTypographyProps={{
-                  fontFamily: "Montserrat",
+                  fontFamily: "IRANSansX",
                   fontWeight: "700",
                   fontSize: "15px"
                 }}
@@ -261,7 +261,7 @@ function UserChatCard({
                 <ListItemText
                   primary="خارج کن"
                   primaryTypographyProps={{
-                    fontFamily: "Montserrat",
+                    fontFamily: "IRANSansX",
                     fontWeight: "700",
                     fontSize: "15px"
                   }}
@@ -281,7 +281,7 @@ function UserChatCard({
                 <ListItemText
                   primary="بایگانی کن"
                   primaryTypographyProps={{
-                    fontFamily: "Montserrat",
+                    fontFamily: "IRANSansX",
                     fontWeight: "700",
                     fontSize: "15px"
                   }}
@@ -311,3 +311,4 @@ UserChatCard.propTypes = {
 };
 
 export default UserChatCard;
+

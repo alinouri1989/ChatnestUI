@@ -333,7 +333,7 @@ function MessageBubble({
                                     <ListItemText
                                         primary="از من حذف کن"
                                         primaryTypographyProps={{
-                                            fontFamily: "Montserrat",
+                                            fontFamily: "IRANSansX",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                         }}
@@ -350,7 +350,7 @@ function MessageBubble({
                                     <ListItemText
                                         primary="از همه حذف کن"
                                         primaryTypographyProps={{
-                                            fontFamily: "Montserrat",
+                                            fontFamily: "IRANSansX",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                         }}
@@ -368,7 +368,7 @@ function MessageBubble({
                                         <ListItemText
                                             primary="کپی"
                                             primaryTypographyProps={{
-                                                fontFamily: "Montserrat",
+                                                fontFamily: "IRANSansX",
                                                 fontWeight: "700",
                                                 fontSize: "14px",
                                             }}
@@ -387,7 +387,7 @@ function MessageBubble({
                                         <ListItemText
                                             primary="اطلاعات"
                                             primaryTypographyProps={{
-                                                fontFamily: "Montserrat",
+                                                fontFamily: "IRANSansX",
                                                 fontWeight: "700",
                                                 fontSize: "14px",
                                             }}
@@ -457,3 +457,4 @@ MessageBubble.defaultProps = {
 };
 
 export default MessageBubble;
+

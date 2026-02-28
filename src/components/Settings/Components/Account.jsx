@@ -263,7 +263,7 @@ function Account() {
             <ListItemText
               primary="مشاهده"
               primaryTypographyProps={{
-                fontFamily: "Montserrat",
+                fontFamily: "IRANSansX",
                 fontWeight: "700",
                 fontSize: "14px",
               }}
@@ -280,7 +280,7 @@ function Account() {
             <ListItemText
               primary="تغییر"
               primaryTypographyProps={{
-                fontFamily: "Montserrat",
+                fontFamily: "IRANSansX",
                 fontWeight: "700",
                 fontSize: "14px",
               }}
@@ -298,7 +298,7 @@ function Account() {
               <ListItemText
                 primary="حذف"
                 primaryTypographyProps={{
-                  fontFamily: "Montserrat",
+                  fontFamily: "IRANSansX",
                   fontWeight: "700",
                   fontSize: "14px",
                 }}
@@ -505,3 +505,4 @@ function Account() {
 }
 
 export default Account;
+

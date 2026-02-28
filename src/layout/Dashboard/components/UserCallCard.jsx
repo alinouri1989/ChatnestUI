@@ -135,7 +135,7 @@ function UserCallCard({ callId, image, status, name, callType, callStatus, creat
               <ListItemText
                 primary="حذف"
                 primaryTypographyProps={{
-                  fontFamily: "Montserrat",
+                  fontFamily: "IRANSansX",
                   fontWeight: "700",
                   fontSize: "15px"
                 }}
@@ -161,3 +161,4 @@ UserCallCard.propTypes = {
 };
 
 export default UserCallCard;
+

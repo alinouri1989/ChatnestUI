@@ -401,7 +401,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                     <ListItemText
                                         primary="مشاهده"
                                         primaryTypographyProps={{
-                                            fontFamily: "Montserrat",
+                                            fontFamily: "IRANSansX",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                         }}
@@ -418,7 +418,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                     <ListItemText
                                         primary="تغییر"
                                         primaryTypographyProps={{
-                                            fontFamily: "Montserrat",
+                                            fontFamily: "IRANSansX",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                         }}
@@ -435,7 +435,7 @@ function NewAndSettingsGroupModal({ closeModal, isGroupSettings, groupProfile, g
                                     <ListItemText
                                         primary="حذف"
                                         primaryTypographyProps={{
-                                            fontFamily: "Montserrat",
+                                            fontFamily: "IRANSansX",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                         }}
@@ -648,3 +648,4 @@ NewAndSettingsGroupModal.propTypes = {
 };
 
 export default NewAndSettingsGroupModal;
+
