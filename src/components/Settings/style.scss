@@ -1,0 +1,753 @@
+@use "../../shared/styles/base/mixins.scss" as *;
+
+.setting-general-box {
+  @include flex-center(column, center, center);
+  width: 550px;
+  height: 520px;
+  color: var(--text-black);
+
+  @include screen(768px) {
+    width: 100%;
+    flex: 1;
+    height: auto;
+    height: 100%;
+  }
+
+  @include screen(359px) {
+    height: auto;
+    overflow: auto;
+  }
+
+  .title-box {
+    width: 100%;
+    @include flex-center(row, flex-start, center);
+    color: var(--blue);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--smooth-border-color);
+    gap: 7px;
+
+    svg {
+      font-size: 30px;
+    }
+
+    p {
+      font-weight: 700;
+      font-size: 17px;
+    }
+  }
+
+  .contents-box {
+    @include flex-center(row, flex-start, center);
+    flex: 1;
+    width: 100%;
+
+    @include screen(768px) {
+      @include flex-center(row, center, flex-start);
+      height: 100%;
+    }
+
+    @include screen(359px) {
+      @include flex-center(column, center, center);
+    }
+
+    .sidebar {
+      @include flex-center(column, space-between, center);
+      width: 200px;
+      height: 100%;
+      padding: 15px 15px 0px 0px;
+      gap: 13px;
+      border-right: 1px solid var(--smooth-light-blue);
+      border-color: var(--smooth-border-color);
+
+      @include screen(575px) {
+        width: 70px;
+      }
+
+      @include screen(359px) {
+        padding: 0px;
+        width: 100%;
+        gap: 5px;
+        @include flex-center(row, center, center);
+        height: 50px;
+        border: 0;
+        margin-top: 10px;
+      }
+
+      .menu-list {
+        width: 100%;
+        @include flex-center(column, flex-start, center);
+        gap: 13px;
+
+        @include screen(359px) {
+          width: 100%;
+          @include flex-center(row, center, center);
+          gap: 15px;
+        }
+      }
+
+      .menu-item {
+        @include flex-center(row, flex-start, center);
+        position: relative;
+        width: 100%;
+        padding: 7px 15px;
+        gap: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: var(--text-dark-gray);
+        @include transition();
+
+        @include screen(575px) {
+          @include flex-center(row, center, center);
+          width: 55px;
+          height: 50px;
+        }
+
+        @include screen(359px) {
+          width: 45px;
+          height: 40px;
+          padding: 0;
+        }
+
+        &:hover {
+          background-color: var(--smooth-light-blue);
+          box-shadow: var(--app-shadow-sm);
+
+          p {
+            color: var(--blue);
+          }
+        }
+
+        &.active {
+          background-color: var(--smooth-light-blue);
+          color: var(--blue);
+          box-shadow: inset 0 0 0 1px var(--app-ring);
+
+          .active-item-line {
+            display: block;
+          }
+        }
+
+        .active-item-line {
+          position: absolute;
+          display: none;
+          width: 5px;
+          height: 20px;
+          border-radius: 30px;
+          background-color: var(--blue);
+          left: -3px;
+
+          @include screen(359px) {
+            left: auto;
+            bottom: -2px;
+            width: 23px;
+            height: 5px;
+          }
+        }
+
+        svg {
+          color: var(--blue);
+          font-size: 27px;
+        }
+
+        p {
+          font-size: 15px;
+          font-weight: 700;
+
+          @include screen(575px) {
+            display: none;
+          }
+        }
+      }
+
+      .logout {
+        color: var(--smooth-red);
+
+        .icon {
+          color: var(--smooth-red);
+        }
+
+        &:hover {
+          background-color: var(--smooth-light-blue);
+
+          p {
+            color: var(--smooth-red);
+          }
+        }
+      }
+    }
+
+    .dynamic-content {
+      flex: 1;
+      height: 100%;
+      padding: 15px 0px 0px 15px;
+      width: 20px;
+
+      @include screen(359px) {
+        width: 100%;
+        @include flex-center(column, flex-start, center);
+      }
+
+      h3 {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text-black);
+        margin-bottom: 18px;
+      }
+
+      .help-box {
+        overflow: auto;
+        height: 440px;
+        width: 100%;
+        overflow-x: hidden;
+
+        @include screen(600px) {
+          height: 0px;
+          min-height: 100%;
+          padding-right: 10px;
+        }
+
+        @include screen(360px) {
+          height: 100%;
+        }
+
+        .version-info {
+          @include flex-center(column, center, flex-start);
+          gap: 10px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid var(--smooth-light-blue);
+          margin-bottom: 15px;
+
+          span {
+            color: var(--text-input-gray);
+          }
+        }
+
+        .contact-us {
+          @include flex-center(column, center, flex-start);
+          gap: 12px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid var(--smooth-light-blue);
+
+          p {
+            color: var(--text-black);
+            font-weight: 700;
+          }
+
+          span {
+            color: var(--text-input-gray);
+            font-size: 14px;
+          }
+
+          .rate-box {
+            @include flex-center(column, center, flex-start);
+            gap: 12px;
+            width: 100%;
+            border-bottom: 1px solid var(--smooth-light-blue);
+            padding-bottom: 10px;
+          }
+
+          a {
+            display: block;
+            font-size: 14px;
+            color: var(--blue);
+          }
+        }
+
+        .developer-team-title {
+          margin-top: 10px;
+          color: var(--text-black);
+        }
+
+        .developers-box {
+          margin-top: 15px;
+          @include flex-center(column, center, flex-start);
+          gap: 15px;
+
+          .developer-box {
+            @include flex-center(row, center, center);
+            gap: 10px;
+
+            @include screen(450px) {
+              @include flex-center(column, center, flex-start);
+              gap: 10px;
+            }
+
+            .developer-image-and-info {
+              @include flex-center(row, center, center);
+              gap: 10px;
+            }
+
+            img {
+              width: 45px;
+              height: 45px;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+
+            .developer-info {
+              width: 150px;
+
+              span {
+                font-size: 15px;
+                color: var(--text-black);
+                font-weight: bold;
+              }
+
+              p {
+                font-size: 14px;
+                color: var(--text-dark-gray);
+              }
+            }
+
+            .contact-informations-box {
+              margin-left: 10px;
+              @include flex-center(row, center, center);
+              gap: 8px;
+              border-radius: 7px;
+
+              @include screen(450px) {
+                margin-top: 5px;
+                margin-left: 3px;
+              }
+
+              a {
+                @include flex-center(row, center, center);
+                padding: 6px;
+                border-radius: 6px;
+                background-color: var(--smooth-light-blue);
+                color: var(--blue);
+
+                &:hover {
+                  scale: 1.12;
+                }
+              }
+            }
+          }
+        }
+
+        .copyright-box,
+        .version-info {
+          p {
+            color: var(--text-dark-gray);
+          }
+        }
+
+        .copyright-box {
+          p {
+            font-size: 15px;
+            margin: 10px 0px;
+          }
+        }
+      }
+
+      .theme-box {
+        width: 100%;
+
+        @include screen(600px) {
+          padding-right: 10px;
+        }
+
+        .theme-select {
+          margin-bottom: 20px;
+
+          label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+          }
+
+          select {
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 240px;
+            background-color: var(--smooth-light-blue);
+            color: var(--blue);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23585CE1' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 5.646a.5.5 0 0 1 .708 0L8 11.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 13px) center;
+            cursor: pointer;
+            background-size: 16px;
+            text-align: end;
+
+            @include screen(500px) {
+              max-width: 100%;
+              width: 100%;
+            }
+          }
+        }
+
+        .wallpaper {
+          label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 15px 0px 20px 0px;
+            color: var(--text-black);
+          }
+
+          .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            width: max-content;
+            gap: 22px;
+
+            .gradient-box {
+              width: 47px;
+              height: 47px;
+              border-radius: 10px;
+              cursor: pointer;
+              border: 4px solid var(--smooth-light-blue);
+              @include transition();
+
+              &.selected {
+                border: 4px solid var(--blue);
+              }
+            }
+          }
+        }
+
+        // اطلاعات انتخاب‌شده
+        .selected-info {
+          margin-top: 20px;
+          font-size: 14px;
+
+          p {
+            margin: 5px 0;
+
+            strong {
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      .account-box {
+        overflow: auto;
+        height: 440px;
+        width: 100%;
+        overflow-x: hidden;
+        padding-right: 15px;
+        @include flex-center(column, flex-start, flex-start);
+        gap: 18px;
+        color: var(--text-black);
+
+        @include screen(768px) {
+          height: 0px;
+          min-height: 100%;
+        }
+
+        @include screen(360px) {
+          height: 100%;
+          min-height: 100%;
+        }
+
+        h3 {
+          margin-bottom: 0;
+        }
+
+        .edit-btn {
+          background-color: var(--app-surface);
+          color: var(--blue);
+          padding: 6px;
+          border-radius: 50%;
+          font-size: 16px;
+          @include flex-center(row, center, center);
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+
+        .image-box {
+          width: 100%;
+          position: relative;
+          width: max-content;
+
+          .profile-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          .edit-btn {
+            position: absolute;
+            top: 6px;
+            right: -3px;
+          }
+
+          .full-size-profil-image-box {
+            @include flex-center(column, center, center);
+            gap: 12px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(28, 28, 28, 0.768);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+
+            img {
+              max-height: 80%;
+              border-radius: 13px;
+              max-width: 90%;
+              transform: translateY(50px);
+              opacity: 0;
+              animation: slideUp 0.7s ease-out forwards;
+            }
+
+            button {
+              @include flex-center(row, center, center);
+              width: 42px;
+              height: 42px;
+              font-size: 28px;
+              border-radius: 50%;
+              background-color: var(--smooth-light-blue);
+              color: var(--blue);
+              position: absolute;
+              top: 25px;
+              right: 25px;
+            }
+          }
+        }
+
+        .name-box {
+          width: 100%;
+          @include flex-center(row, space-between, center);
+          padding-bottom: 10px;
+          border-bottom: 1px solid var(--smooth-light-blue);
+
+          p {
+            font-size: 16px;
+            width: 270px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .email-and-phone-box {
+          width: 100%;
+
+          .email-box {
+            p {
+              margin: 3px 0px;
+              font-size: 16px;
+            }
+
+            span,
+            input {
+              color: var(--text-input-gray);
+              font-size: 14px;
+            }
+          }
+        }
+
+        .phone-box {
+          margin: 15px 0px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid var(--smooth-light-blue);
+
+          p {
+            margin: 3px 0px;
+            font-size: 16px;
+          }
+
+          .phone-edit-box {
+            @include flex-center(row, space-between, center);
+
+            p,
+            input {
+              color: var(--text-input-gray);
+              font-size: 14px;
+            }
+
+            .field-action-buttons {
+              @include flex-center(row, center, center);
+              gap: 6px;
+            }
+
+            .copy-btn {
+              font-size: 16px;
+            }
+          }
+        }
+
+        .biography-box {
+          margin: 3px 0px;
+
+          p {
+            font-size: 16px;
+          }
+
+          .biograpy-edit-box {
+            @include flex-center(row, space-between, center);
+            margin-bottom: 3px;
+          }
+
+          .biography-span,
+          textarea {
+            color: var(--text-input-gray);
+            font-size: 14px;
+            width: 100%;
+            word-break: break-word;
+            line-height: 1.5;
+          }
+
+          textarea {
+            resize: none;
+            min-height: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 2px;
+            box-sizing: border-box;
+          }
+        }
+      }
+
+      .change-password {
+        .change-password-box {
+          width: 100%;
+
+          @include screen(768px) {
+            width: 80%;
+          }
+
+          @include screen(600px) {
+            width: 100%;
+            padding-right: 10px;
+          }
+
+          .inputs-box {
+            margin-top: 20px;
+            @include flex-center(column, flex-start, center);
+            gap: 15px;
+
+            .input-box {
+              width: 100%;
+              direction: rtl;
+
+              p {
+                color: var(--text-dark-gray);
+                margin-bottom: 7px;
+                font-size: 15px;
+              }
+
+              input {
+                background-color: var(--smooth-light-blue);
+                border-radius: 7px;
+                width: 100%;
+                padding: 6px 12px;
+                font-size: 15px;
+                color: var(--blue);
+              }
+            }
+          }
+
+          .option-buttons {
+            margin-top: 35px;
+            @include flex-center(row, center, center);
+            gap: 17px;
+
+            button {
+              width: 120px;
+            }
+          }
+        }
+
+        .different-auth-box {
+          @include flex-center(column, center, center);
+          gap: 5px;
+          border: 3px solid var(--smooth-blue);
+          border-radius: 16px;
+          padding: 10px 12px;
+          background-color: var(--smooth-light-blue);
+
+          svg {
+            font-size: 45px;
+
+            &.fb {
+              color: var(--blue);
+            }
+          }
+
+          p {
+            margin-top: 5px;
+            color: var(--blue);
+          }
+
+          span {
+            width: 100%;
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-dark-gray);
+          }
+        }
+      }
+
+      .option-buttons {
+        width: 100%;
+        @include flex-center(row, flex-start, center);
+        gap: 10px;
+
+        button {
+          padding: 7px 15px;
+          font-size: 14px;
+          border-radius: 7px;
+          @include transition();
+
+          &:first-child {
+            background-color: var(--smooth-light-blue);
+            color: var(--blue);
+          }
+
+          &:last-child {
+            background: linear-gradient(135deg, var(--blue), var(--info-color));
+            color: white;
+
+            &:hover {
+              background-color: var(--hoverBlue);
+            }
+          }
+        }
+
+        .savePassword {
+          &.disabled {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
+}
+
+.error-messages {
+  color: var(--ChatNest-red);
+  font-size: 13.5px;
+  margin: -10px 0px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,172 @@
+@use "../shared/styles/base/mixins.scss" as *;
+@use "sass:meta";
+@use "sass:map";
+
+@mixin media-max($breakpoint) {
+  $value: if(
+    sass(meta.type-of($breakpoint) == "string"): map.get($breakpoints, $breakpoint);
+    else: $breakpoint
+  );
+
+  @media (max-width: $value) {
+    @content;
+  }
+}
+
+@mixin media-min($breakpoint) {
+  $value: if(
+    sass(meta.type-of($breakpoint) == "string"): map.get($breakpoints, $breakpoint);
+    else: $breakpoint
+  );
+
+  @media (min-width: $value) {
+    @content;
+  }
+}
+
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 100;
+	src: url('../assets/fonts/woff/IRANSansX-Thin.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Thin.woff2') format('woff2');		
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 200;
+	src: url('../assets/fonts/woff/IRANSansX-UltraLight.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-UltraLight.woff2') format('woff2');	
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 300;
+	src: url('../assets/fonts/woff/IRANSansX-Light.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Light.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 500;
+	src: url('../assets/fonts/woff/IRANSansX-Medium.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Medium.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 600;
+	src: url('../assets/fonts/woff/IRANSansX-DemiBold.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-DemiBold.woff2') format('woff2');	 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 800;
+	src: url('../assets/fonts/woff/IRANSansX-ExtraBold.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-ExtraBold.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 900;
+	src: url('../assets/fonts/woff/IRANSansX-Black.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Black.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 950;
+	src: url('../assets/fonts/woff/IRANSansX-ExtraBlack.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-ExtraBlack.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: 1000;
+	src: url('../assets/fonts/woff/IRANSansX-Heavy.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Heavy.woff2') format('woff2');		 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: bold;
+	src: url('../assets/fonts/woff/IRANSansX-Bold.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Bold.woff2') format('woff2');	 
+}
+
+@font-face {
+	font-family: IRANSansX;
+	font-style: normal;
+	font-weight: normal;
+	src: url('../assets/fonts/woff/IRANSansX-Regular.woff') format('woff'),   
+	url('../assets/fonts/woff2/IRANSansX-Regular.woff2') format('woff2');	
+}
+
+.layout-container {
+  background:
+    linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.1)),
+    var(--smooth-blue);
+  height: var(--app-height);
+  @include flex-center(column, center);
+  color: var(--text-black);
+
+  .main-content {
+    @include flex-center(row, flex-start);
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    @include screen(900px) {
+      @include flex-center(column, center, center);
+      width: 100%;
+      height: 100vh;
+      background-color: var(--generalBackgroundColor);
+    }
+
+    .outlet-content {
+      margin: 0 72px 0 76px;
+      @include flex-center(row, flex-start, flex-start);
+      height: 100%;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      border-bottom: 0;
+      border-radius: 34px 0px 0px 0px;
+      background-color: var(--app-surface);
+      box-shadow: var(--app-shadow-lg);
+      overflow: hidden;
+
+      @include screen(900px) {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .outlet-mobile {
+        z-index: 99999;
+      }
+    }
+  }
+}
+
+.e2e-info-box {
+  margin-bottom: 50px;
+  @include flex-center(row, center, center);
+  gap: 5px;
+  color: #818181;
+  position: absolute;
+  bottom: 0;
+  font-size: 14px;
+}

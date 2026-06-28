@@ -1,0 +1,137 @@
+@use "../../../shared/styles/base/mixins.scss" as *;
+
+.forward-message-modal {
+  width: min(460px, calc(100vw - 32px));
+  max-height: min(560px, calc(var(--app-height) - 32px));
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--smooth-white-color);
+  @include flex-center(column, flex-start, stretch);
+  gap: 16px;
+
+  .forward-title-box {
+    @include flex-center(row, flex-start, center);
+    gap: 12px;
+    color: var(--blue);
+
+    svg {
+      font-size: 28px;
+      flex: 0 0 auto;
+    }
+
+    div {
+      @include flex-center(column, center, flex-start);
+      gap: 4px;
+    }
+
+    p {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    span {
+      color: var(--text-dark-gray);
+      font-size: 12px;
+    }
+  }
+
+  > input {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 14px;
+    border: 2px solid var(--smooth-border-color);
+    padding: 0 14px;
+    color: var(--text-dark-gray);
+    background-color: transparent;
+  }
+
+  .forward-target-list {
+    min-height: 120px;
+    max-height: 360px;
+    overflow-y: auto;
+    @include flex-center(column, flex-start, stretch);
+    gap: 10px;
+  }
+
+  .empty-state {
+    width: 100%;
+    min-height: 110px;
+    color: var(--text-dark-gray);
+    @include flex-center(row, center, center);
+
+    &.small {
+      min-height: 46px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+  }
+
+  .forward-section-label {
+    margin: 4px 4px 0;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .forward-target {
+    width: 100%;
+    min-height: 64px;
+    border-radius: 18px;
+    border: 2px solid var(--smooth-border-color);
+    padding: 10px 12px;
+    background-color: transparent;
+    color: var(--text-dark-gray);
+    @include flex-center(row, flex-start, center);
+    gap: 12px;
+    @include transition();
+
+    &:hover:not(:disabled) {
+      border-color: var(--blue);
+      background-color: var(--smooth-blue-hover);
+    }
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.8;
+    }
+
+    img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+    }
+
+    span {
+      min-width: 0;
+      flex: 1;
+      @include flex-center(column, center, flex-start);
+      gap: 2px;
+    }
+
+    strong,
+    small {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    strong {
+      font-size: 14px;
+    }
+
+    small {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    em {
+      color: var(--blue);
+      font-size: 12px;
+      font-style: normal;
+      flex: 0 0 auto;
+    }
+  }
+}

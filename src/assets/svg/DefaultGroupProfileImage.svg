@@ -1,0 +1,21 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Default group profile">
+  <defs>
+    <linearGradient id="avatar_group_bg" x1="20" y1="18" x2="238" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E0FCF6"/>
+      <stop offset="0.52" stop-color="#CFEEF7"/>
+      <stop offset="1" stop-color="#D3E2FF"/>
+    </linearGradient>
+    <linearGradient id="avatar_group_people" x1="70" y1="78" x2="191" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#14A79E"/>
+      <stop offset="1" stop-color="#2A72DD"/>
+    </linearGradient>
+  </defs>
+  <circle cx="128" cy="128" r="124" fill="url(#avatar_group_bg)"/>
+  <circle cx="128" cy="128" r="100" stroke="rgba(255,255,255,0.85)" stroke-width="10"/>
+  <circle cx="128" cy="95" r="27" fill="url(#avatar_group_people)"/>
+  <circle cx="88" cy="112" r="21" fill="url(#avatar_group_people)" fill-opacity="0.92"/>
+  <circle cx="168" cy="112" r="21" fill="url(#avatar_group_people)" fill-opacity="0.92"/>
+  <path d="M82 206C82 180.594 102.594 160 128 160C153.406 160 174 180.594 174 206V214H82V206Z" fill="url(#avatar_group_people)"/>
+  <path d="M42 206C42 186.118 58.1177 170 78 170C83.7306 170 89.1483 171.339 93.9548 173.721C85.8178 182.097 80.6667 193.524 80.6667 206V214H42V206Z" fill="url(#avatar_group_people)" fill-opacity="0.9"/>
+  <path d="M214 206C214 186.118 197.882 170 178 170C172.269 170 166.852 171.339 162.045 173.721C170.182 182.097 175.333 193.524 175.333 206V214H214V206Z" fill="url(#avatar_group_people)" fill-opacity="0.9"/>
+</svg>

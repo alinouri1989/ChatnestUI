@@ -1,0 +1,106 @@
+@use "sass:meta";
+@use "sass:map";
+
+// ------------------ Media Mixin ------------------
+
+$breakpoints: (
+    'xs': 320px,
+    'sm': 576px,
+    'md': 768px,
+    'lg': 1024px,
+    'xl': 1200px,
+    'xxl': 1400px
+);
+
+@mixin screen($breakpoint) {
+    $value: if(
+    sass(meta.type-of($breakpoint) == "string"): map.get($breakpoints, $breakpoint);
+    else: $breakpoint
+    );
+    @media (max-width: $value) {
+        @content;
+    }
+}
+
+
+//!   @include screen(500px) {
+//!     font-size: 14px;
+//!   }
+
+@mixin screenHeight($breakpoint) {
+    $value: if(
+    sass(meta.type-of($breakpoint) == "string"): map.get($breakpoints, $breakpoint);
+    else: $breakpoint
+    );
+    @media (max-height: $value) {
+        @content;
+    }
+}
+
+//!   @include screenHeight(500px) {
+//!     font-size: 14px;
+//!   }
+
+// ------------------ Flex Mixin ------------------
+
+@mixin flex-center($direction: row, $justify: center, $align: flex-start) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+
+//!  @include flex-center(column, space-between, flex-start);
+
+// ------------------ Transition Mixin ------------------
+
+@mixin transition($properties: all, $duration: 0.3s, $ease: ease, $delay: 0s) {
+    transition: #{$properties} #{$duration} #{$ease} #{$delay};
+}
+
+//!  @include transition(all,1s, ease-out, 0.3s);
+
+// ------------------ Animation Mixins ------------------
+
+@mixin opacity-effect($duration: 1s,
+    $ease: ease-in-out,
+    $delay: 0s,
+    $start-opacity: 0,
+    $end-opacity: 1) {
+    @keyframes simpleFade {
+        0% {
+            opacity: #{$start-opacity};
+        }
+
+        100% {
+            opacity: #{$end-opacity};
+        }
+    }
+
+    animation: simpleFade #{$duration} #{$ease} #{$delay};
+}
+
+//!  @include opacity-effect(1s, ease-out, 0.3s, 0.2, 0.8);
+
+
+@mixin CustomScroll {
+    overflow: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #585CE1, #585CE1);
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 6px;
+    }
+}

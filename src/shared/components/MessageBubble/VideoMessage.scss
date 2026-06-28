@@ -1,0 +1,65 @@
+.video-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.video-modal-content {
+  position: relative;
+}
+
+.modal-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 95vw;
+  max-height: 95vh;
+  overflow: hidden;
+}
+
+.video-modal-inner {
+  position: relative;
+  justify-items: center;
+}
+
+.close-modal-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  font-size: 28px;
+  border-radius: 50%;
+  background-color: var(--smooth-light-blue);
+  color: var(--blue);
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}
+
+.video-thumbnail {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  pointer-events: auto !important;
+  z-index: 1;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.message-content {
+  position: relative;
+}

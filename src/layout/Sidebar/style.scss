@@ -1,0 +1,125 @@
+@use "../../shared/styles/base/mixins.scss" as *;
+
+.sidebar-container {
+  @include flex-center(column, space-between, flex-start);
+  width: 72px;
+  height: calc(100% - 16px);
+  position: absolute;
+  margin: 8px;
+  padding: 12px 10px;
+  background-color: var(--app-surface);
+  border: 1px solid var(--smooth-border-color);
+  border-radius: 26px;
+  box-shadow: var(--app-shadow-md);
+  backdrop-filter: blur(18px);
+  transition: width 0.3s ease;
+  z-index: 10;
+
+  @include screen(900px) {
+    @include flex-center(row, center, center);
+    position: absolute;
+    width: calc(100% - 20px);
+    height: 72px;
+    margin: 0 10px 10px;
+    padding: 0;
+    border-radius: 26px;
+    bottom: 0;
+    background-color: var(--app-surface);
+  }
+
+  &.open {
+    width: 182px;
+    padding-right: 15px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+    font-size: 30px;
+    padding: 9px;
+    border-radius: 16px;
+    background-color: transparent;
+    color: var(--blue);
+    @include transition();
+    width: max-content;
+    min-width: 100%;
+
+    @include screen(900px) {
+      margin: 0;
+      padding: 10px;
+      width: auto;
+      @include flex-center(row, center);
+    }
+
+    &:hover {
+      background: var(--app-surface);
+      box-shadow: var(--app-shadow-sm);
+    }
+
+    &.open {
+      justify-content: flex-start;
+    }
+
+    &.active {
+      background: var(--app-surface);
+      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.16);
+    }
+
+    span {
+      margin-left: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+      color: var(--blue);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  #menu-btn {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .top-box {
+    @include flex-center(column, center, flex-start);
+    gap: 25px;
+
+    @include screen(900px) {
+      @include flex-center(row, center, center);
+      width: 100%;
+      height: 100%;
+    }
+
+    .navigation-buttons {
+      @include flex-center(column, center, flex-start);
+      gap: 18px;
+
+      @include screen(900px) {
+        @include flex-center(row, center, center);
+        gap: 28px;
+        margin: 0;
+        padding: 0;
+        width: 50px;
+      }
+    }
+  }
+
+  .bottom-box,
+  #menu-btn {
+    @include screen(900px) {
+      display: none;
+    }
+  }
+}

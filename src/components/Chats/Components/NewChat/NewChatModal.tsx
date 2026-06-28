@@ -1,0 +1,235 @@
+// @ts-nocheck
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../../../../hooks/useDebounce";
+import { useSignalR } from "../../../../contexts/SignalRContext";
+import { useModal } from "../../../../contexts/ModalContext";
+
+import { BiSearchAlt } from "react-icons/bi";
+import { TiThList } from "react-icons/ti";
+import { AiFillInfoCircle } from "react-icons/ai";
+import star from "../../../../assets/svg/star.svg";
+
+import CloseButton from "../../../../contexts/components/CloseModalButton";
+import PreLoader from "../../../../shared/components/PreLoader/PreLoader";
+import { getUserIdFromToken } from "../../../../helpers/getUserIdFromToken";
+import { ErrorAlert, SuccessAlert } from "../../../../helpers/customAlert";
+import { opacityEffect } from "../../../../shared/animations/animations";
+
+import { motion } from "framer-motion";
+import "./style.scss";
+import { defaultProfilePhoto } from "../../../../constants/DefaultProfilePhoto";
+
+function NewChatModal() {
+  const navigate = useNavigate();
+  const { closeModal } = useModal();
+  const [isCreater, setIsCreater] = useState(false);
+  const { notificationConnection, chatConnection, connectionStatus } = useSignalR();
+
+  const [inputValue, setInputValue] = useState("");
+  const debouncedSearchQuery = useDebounce(inputValue, 300);
+  const normalizedSearchQuery = debouncedSearchQuery.trim().replace(/^@+/, "");
+
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [copiedIdentifier, setCopiedIdentifier] = useState(null);
+
+  const { token } = useSelector((state) => state.auth);
+  const userId = getUserIdFromToken(token);
+
+  useEffect(() => {
+    if (!notificationConnection || !normalizedSearchQuery) return;
+
+    setLoading(true);
+    setError(null);
+
+    const handleReceiveSearchUsers = (response) => {
+      if (!response || response.query !== normalizedSearchQuery) return;
+
+      const formattedUsers = Object.entries(response.data || {}).map(([id, user]) => ({
+        userId: id,
+        ...user,
+      }));
+
+      if (formattedUsers.length === 0) {
+        setError("چنین کاربری پیدا نشد.");
+      }
+
+      setUsers(formattedUsers);
+      setLoading(false);
+    };
+
+    notificationConnection.off("ReceiveSearchUsers");
+    notificationConnection.on("ReceiveSearchUsers", handleReceiveSearchUsers);
+
+    notificationConnection
+      .invoke("SearchUsers", normalizedSearchQuery)
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+
+    return () => {
+      notificationConnection.off("ReceiveSearchUsers", handleReceiveSearchUsers);
+    };
+  }, [normalizedSearchQuery, notificationConnection]);
+
+  useEffect(() => {
+    if (!isCreater) return;
+
+    const handleReceiveCreateChat = (response) => {
+      const individualData = response?.Individual;
+      if (!individualData) {
+        ErrorAlert("خطایی رخ داده است.");
+        return;
+      }
+
+      const createdChatId = Object.keys(individualData)[0];
+      if (!createdChatId) {
+        ErrorAlert("خطایی رخ داده است.");
+        return;
+      }
+
+      const chatData = individualData[createdChatId];
+      const isArchived =
+        chatData.archivedFor &&
+        Object.prototype.hasOwnProperty.call(chatData.archivedFor, userId);
+
+      navigate(isArchived ? `/archives/${createdChatId}` : `/chats/${createdChatId}`);
+      closeModal();
+    };
+
+    if (chatConnection) {
+      chatConnection.on("ReceiveCreateChat", handleReceiveCreateChat);
+    }
+
+    return () => {
+      if (chatConnection) {
+        chatConnection.off("ReceiveCreateChat", handleReceiveCreateChat);
+      }
+    };
+  }, [chatConnection, isCreater, navigate, closeModal, userId]);
+
+  const handleGoToChat = async (targetUserId) => {
+    if (connectionStatus !== "connected") {
+      ErrorAlert("خطایی رخ داده است.");
+      return;
+    }
+
+    try {
+      setIsCreater(true);
+      await chatConnection.invoke("CreateChat", "Individual", targetUserId);
+    } catch {
+      ErrorAlert("خطایی رخ داده است.");
+    }
+  };
+
+  const handleCopyIdentifier = async (event, identifier) => {
+    event.stopPropagation();
+    if (!identifier) return;
+
+    try {
+      await navigator.clipboard.writeText(identifier);
+      SuccessAlert("شناسه کاربر کپی شد");
+      setCopiedIdentifier(identifier);
+      setTimeout(() => {
+        setCopiedIdentifier((prev) => (prev === identifier ? null : prev));
+      }, 1400);
+    } catch {
+      ErrorAlert("کپی شناسه کاربر انجام نشد");
+    }
+  };
+
+  return (
+    <div className="new-chat-modal">
+      <CloseButton closeModal={closeModal} />
+
+      <div className="title-and-input-bar">
+        <div className="title-box">
+          <img src={star} alt="" />
+          <p>یک گفت‌وگوی جدید شروع کنید</p>
+        </div>
+
+        <div className="search-user-input-box">
+          <BiSearchAlt className="icon" />
+          <input
+            type="text"
+            placeholder="با نام کاربری، شناسه (@id) یا ایمیل جستجو کنید..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {loading && <PreLoader />}
+
+      {error && !loading && (
+        <motion.div
+          variants={opacityEffect(0.8)}
+          initial="initial"
+          animate="animate"
+          className="no-result-box active"
+        >
+          <AiFillInfoCircle className="icon" />
+          <p>{error}</p>
+        </motion.div>
+      )}
+
+      {!loading && users.length > 0 && (
+        <div className="user-list-box active">
+          <div className="result-number-box">
+            <TiThList className="icon" />
+            <p>{users.length} کاربر نمایش داده می‌شود</p>
+          </div>
+
+          <div className="users-box">
+            {users.map((user) => (
+              <motion.div
+                key={user.userId}
+                className="user-box"
+                onClick={() => handleGoToChat(user.userId)}
+                style={{ cursor: "pointer" }}
+                variants={opacityEffect(0.8)}
+                initial="initial"
+                animate="animate"
+              >
+                <img
+                  src={user.profilePhoto ?? defaultProfilePhoto}
+                  onError={(e) => (e.currentTarget.src = defaultProfilePhoto)}
+                  alt={user.displayName}
+                />
+
+                <div className="user-info">
+                  <p>{user.displayName}</p>
+                  <div className="identity-row">
+                    {user.userIdentifier && (
+                      <div className="identifier-chip-wrapper">
+                        <button
+                          type="button"
+                          className="identifier-chip"
+                          onClick={(event) => handleCopyIdentifier(event, user.userIdentifier)}
+                          title={`کپی @${user.userIdentifier}`}
+                          aria-label={`کپی شناسه ${user.userIdentifier}`}
+                        >
+                          @{user.userIdentifier}
+                        </button>
+                        {copiedIdentifier === user.userIdentifier && (
+                          <span className="copied-inline-tooltip">کپی شد</span>
+                        )}
+                      </div>
+                    )}
+                    <span className="meta-text">{user.email}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default NewChatModal;

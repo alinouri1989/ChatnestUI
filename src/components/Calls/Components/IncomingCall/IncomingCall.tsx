@@ -1,0 +1,120 @@
+// @ts-nocheck
+import { useModal } from '../../../../contexts/ModalContext';
+import { useSignalR } from '../../../../contexts/SignalRContext';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import { ErrorAlert } from "../../../../helpers/customAlert";
+
+import { PiPhoneFill } from "react-icons/pi";
+import { PiPhoneSlashFill } from "react-icons/pi";
+import { HiMiniVideoCamera } from "react-icons/hi2";
+import IncomingCallSound from "../../../../assets/sound/ChatNestCallSound.mp3";
+import CallModal from '../CallModal';
+import { setIsRingingIncoming } from '../../../../store/Slices/calls/callSlice';
+import "./style.scss";
+import { defaultProfilePhoto } from '../../../../constants/DefaultProfilePhoto';
+import PreLoader from '../../../../shared/components/PreLoader/PreLoader';
+
+function IncomingCall({ callType, callerProfile, callId }) {
+
+    const dispatch = useDispatch();
+    const {
+        callConnection,
+        handleAcceptCall,
+    } = useSignalR();
+    const { isCallStarted, isCallAcceptWaiting } = useSelector(state => state.call);
+
+    const { showModal, closeModal } = useModal();
+    const incomingAudioRef = useRef(null);
+
+    useEffect(() => {
+        const audio = new Audio(IncomingCallSound);
+        audio.loop = true;
+        incomingAudioRef.current = audio;
+
+        const safePlay = () => {
+            const playPromise = audio.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(() => {
+                    // Autoplay can be blocked by the browser until user interaction.
+                });
+            }
+        };
+
+        safePlay();
+        window.addEventListener("pointerdown", safePlay, { once: true });
+        window.addEventListener("keydown", safePlay, { once: true });
+
+        return () => {
+            window.removeEventListener("pointerdown", safePlay);
+            window.removeEventListener("keydown", safePlay);
+            audio.pause();
+            audio.currentTime = 0;
+            incomingAudioRef.current = null;
+        };
+    }, []);
+
+    useEffect(() => {
+        if ((isCallAcceptWaiting || isCallStarted) && incomingAudioRef.current) {
+            incomingAudioRef.current.pause();
+            incomingAudioRef.current.currentTime = 0;
+        }
+    }, [isCallAcceptWaiting, isCallStarted]);
+
+    const handleDeclineCall = async () => {
+        try {
+            await callConnection.invoke("EndCall", callId, 2, null);
+            dispatch(setIsRingingIncoming(false));
+        } catch {
+            ErrorAlert("خطایی رخ داده است.");
+        }
+    };
+
+    useEffect(() => {
+        if (isCallStarted) {
+            dispatch(setIsRingingIncoming(false));
+            showModal(<CallModal
+                callId={callId}
+                closeModal={closeModal}
+                isCameraCall={callType === 1 ? true : false}
+            />);
+        }
+    }, [isCallStarted, dispatch, showModal, closeModal, callId, callType]);
+
+    return (
+        <div className='incoming-call-box'>
+            <div className='user-and-options'>
+                <img src={callerProfile.profilePhoto ? callerProfile.profilePhoto : defaultProfilePhoto}
+                    onError={(e) => e.currentTarget.src = defaultProfilePhoto}
+                    alt="Profile Image"
+                />
+                <div className='user-info-and-call-status'>
+                    <p>{callerProfile.displayName}</p>
+                    <span>در حال تماس با شما...</span>
+                </div>
+                <div className='call-option-buttons'>
+                    <button className='accept-btn' onClick={() => handleAcceptCall()}>
+                        {callType === 0 ? <PiPhoneFill /> : <HiMiniVideoCamera />}
+                    </button>
+                    <button className='decline-btn' onClick={handleDeclineCall}>
+                        <PiPhoneSlashFill />
+                    </button>
+                </div>
+            </div>
+            {isCallAcceptWaiting && <PreLoader />}
+        </div>
+    );
+}
+
+// PropTypes validation
+IncomingCall.propTypes = {
+    callType: PropTypes.number.isRequired,
+    callerProfile: PropTypes.shape({
+        profilePhoto: PropTypes.string,
+        displayName: PropTypes.string,
+    }).isRequired,
+    callId: PropTypes.string.isRequired,
+};
+
+export default IncomingCall;

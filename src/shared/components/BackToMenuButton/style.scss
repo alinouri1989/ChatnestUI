@@ -1,0 +1,19 @@
+@use "../../styles/base/mixins.scss" as *;
+
+.back-to-menu-btn {
+    display: none;
+    background-color: transparent;
+    color: var(--blue);
+    font-size: 30px;
+    padding: 5px;
+    border-radius: 50%;
+    @include transition();
+
+    @include screen(900px) {
+        display: flex;
+    }
+
+    &:active {
+        background-color: var(--smooth-blue-hover);
+    }
+}

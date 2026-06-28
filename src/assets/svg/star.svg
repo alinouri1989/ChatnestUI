@@ -1,0 +1,13 @@
+<svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="star_badge_fill" x1="5" y1="5" x2="31" y2="31" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5EDBC1"/>
+      <stop offset="0.52" stop-color="#27BBD2"/>
+      <stop offset="1" stop-color="#377CE8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="18" cy="18" r="16.5" fill="url(#star_badge_fill)" stroke="rgba(255,255,255,0.68)" stroke-width="1.4"/>
+  <path d="M18 8.3L20.9 14.15L27.35 15.1L22.68 19.65L23.79 26.08L18 23.04L12.21 26.08L13.32 19.65L8.65 15.1L15.1 14.15L18 8.3Z" fill="#FFFFFF"/>
+  <circle cx="27.2" cy="9.2" r="3.1" fill="#FFFFFF"/>
+  <path d="M27.2 7.5V10.9M25.5 9.2H28.9" stroke="#2A7EE8" stroke-width="1.3" stroke-linecap="round"/>
+</svg>

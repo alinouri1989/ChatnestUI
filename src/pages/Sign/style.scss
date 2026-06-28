@@ -1,0 +1,625 @@
+@use "../../shared/styles/base/mixins.scss" as *;
+
+.sign-general-box {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  background:
+    radial-gradient(circle at 16% 14%, rgba(14, 165, 233, 0.12), transparent 28%),
+    var(--generalBackgroundColor);
+
+  @include screen(920px) {
+    height: auto;
+  }
+}
+
+.sign-bar,
+.banner-bar {
+  padding: 0px 30px 0px 38px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+
+  @include screen(920px) {
+    padding: 20px 10px 20px 10px;
+  }
+
+  p {
+    user-select: none;
+  }
+}
+
+.sign-bar {
+  position: relative;
+  width: 54%;
+  background-color: var(--app-surface);
+  @include flex-center(column, center, center);
+
+  @include screen(920px) {
+    width: 100%;
+  }
+
+  @include screen(164px) {
+    width: 100%;
+    scale: 0.4;
+  }
+}
+
+.banner-bar {
+  width: 46%;
+
+  background:
+    linear-gradient(150deg, rgba(79, 70, 229, 0.94), rgba(14, 165, 233, 0.88)),
+    var(--blue);
+  gap: 18px;
+  @include flex-center(column, center, center);
+
+  @include screen(1280px) {
+    padding: 0;
+  }
+
+  @include screen(920px) {
+    display: none;
+  }
+
+  .banner-bar-container {
+    @include flex-center(column, center, center);
+    width: 80%;
+    user-select: none;
+    height: 100%;
+
+    @include screen(1200px) {
+      gap: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      width: 400px;
+      font-size: 35px;
+      color: #ffffff;
+
+      @include screenHeight(700px) {
+        font-size: 30px;
+      }
+    }
+
+    img {
+      width: 90%;
+
+      @include screen(1280px) {
+        width: 70%;
+      }
+
+      @include screenHeight(600px) {
+        width: 70%;
+      }
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.76);
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    @include screen(920px) {
+      scale: 0.8;
+    }
+  }
+}
+
+form {
+  width: 100%;
+
+  .inputs-container {
+    @include flex-center(column, center);
+    gap: 18px;
+
+    .input-box {
+      padding: 0px 14px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--smooth-border-color);
+      background: var(--app-surface-muted);
+      @include transition();
+
+      &:focus-within {
+        border: 1px solid transparent;
+        box-shadow: 0 0 0 4px var(--app-ring);
+        background: var(--app-surface);
+      }
+
+      svg {
+        flex-shrink: 0; /* Prevents the icon from shrinking */
+      }
+
+      input,
+      .datepicker-input {
+        width: 100%;
+        height: 100%;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dark-gray);
+        border: none;
+        outline: none;
+        background: none;
+      }
+
+      .datepicker-input {
+        height: 42px;
+        width: 280px;
+      }
+
+      .react-datepicker__header,
+      .react-datepicker__header .react-datepicker__current-month,
+      .react-datepicker__header .react-datepicker__day-names {
+        color: white !important;
+      }
+
+      .react-datepicker__header {
+        background-color: var(--blue);
+        border-bottom: 2px solid var(--blue);
+        padding: 15px;
+        color: white !important;
+      }
+
+      .react-datepicker__navigation {
+        color: white !important;
+      }
+
+      .datepicker__background-color {
+        background-color: #007bff;
+      }
+
+      .datepicker__border-color {
+        border-color: #aeaeae;
+      }
+
+      .datepicker__highlighted-color {
+        color: #3dcc4a;
+      }
+
+      .datepicker__holidays-color {
+        background-color: red;
+      }
+
+      .react-datepicker__day {
+        margin: 7px;
+        border-radius: 50%;
+        @include transition();
+      }
+
+      .react-datepicker__day--selected {
+        background-color: var(--blue);
+        color: white;
+        border-radius: 50%;
+      }
+
+      .react-datepicker__month {
+        font-size: 14px;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      .react-datepicker__day-name {
+        color: white !important;
+        margin: 7px;
+      }
+
+      .react-datepicker__day--today {
+        background-color: var(--smooth-light-blue) !important;
+        color: var(--blue) !important;
+        border-radius: 50% !important;
+      }
+
+      .react-datepicker__day--keyboard-selected {
+        background-color: var(--blue);
+        color: white;
+        border-radius: 50%;
+      }
+
+      .react-datepicker {
+        border: 2px solid var(--smooth-light-blue) !important;
+        border-radius: 4px !important;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+      }
+
+      .react-datepicker__triangle {
+        border-top-color: var(--smooth-light-blue) !important;
+      }
+    }
+
+    .password {
+      div {
+        @include flex-center(row, center, center);
+        gap: 10px;
+        width: 100%;
+      }
+
+      .icon {
+        cursor: pointer;
+        width: 22px;
+        color: var(--text-input-gray);
+      }
+    }
+  }
+}
+
+.membership-agreement-box {
+  overflow: hidden;
+
+  h1 {
+    text-align: center;
+    font-size: 25px;
+    border-bottom: 2px solid var(--smooth-light-blue);
+    padding-bottom: 10px;
+  }
+
+  .membership-terms-box {
+    padding: 10px 20px 20px 15px;
+    height: 500px;
+    margin-top: 15px;
+    overflow: scroll;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+      overflow: hidden;
+      height: auto;
+    }
+
+    h4 {
+      margin: 20px 0px;
+      font-size: 18px;
+
+      &:nth-child(1) {
+        margin-top: 0px;
+      }
+    }
+
+    p {
+      font-size: 13px;
+      margin: 10px 0px;
+      color: var(--text-dark-gray);
+      text-align: justify;
+
+      strong {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// ------------------------------- Sign -------------------------------
+
+.sign-in-general-container,
+.sign-up-general-container,
+.reset-password-general-container {
+  @include flex-center(column, center, flex-start);
+  gap: 22px;
+  z-index: 2;
+  padding: 20px 40px;
+  height: 100%;
+
+  @include screen(768px) {
+    @include flex-center(column, center, center);
+    padding: 15px;
+  }
+
+  @include screen(450px) {
+    padding: 0px 20px;
+  }
+
+  img {
+    width: 200px;
+    user-select: none;
+
+    @include screen(768px) {
+      width: 170px;
+    }
+  }
+
+  .title-container {
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+
+      @include screen(768px) {
+        text-align: center;
+        font-size: 25px;
+      }
+    }
+
+    p {
+      color: var(--text-dark-gray);
+      font-family: IRANSansX;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 600;
+
+      @include screen(768px) {
+        text-align: center;
+      }
+    }
+  }
+
+  .sign-buttons {
+    width: 100%;
+    margin-top: 22px;
+    background: linear-gradient(135deg, var(--blue), var(--info-color));
+    color: #ffffff;
+    padding: 10px 0px;
+    border-radius: 14px;
+    font-size: 15px;
+    @include transition();
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.24);
+    }
+
+    @include screen(768px) {
+      padding: 10px 0px;
+    }
+  }
+
+  .change-sign-method-text {
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 22px;
+    color: var(--text-input-gray);
+
+    a {
+      padding-left: 7px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+  }
+
+  .error-message {
+    color: var(--ChatNest-red);
+    font-size: 13px;
+    margin: -10px 0px;
+  }
+}
+
+.sign-in-general-container {
+  .method-buttons {
+    @include flex-center(row, center);
+    gap: 20px;
+    width: 100%;
+
+    button {
+      @include flex-center(row, center);
+      gap: 10px;
+      width: 170px;
+      padding: 7px 0px;
+      border-radius: 8px;
+      border: 1px solid var(--smooth-border-color);
+      background: var(--app-surface-muted);
+      @include transition();
+
+      &:hover {
+        background: var(--app-surface);
+        box-shadow: var(--app-shadow-sm);
+      }
+
+      .icon {
+        width: 22px;
+        height: 22px;
+        color: #1877f2;
+      }
+
+      span {
+        color: #2e2e2e;
+        font-family: IRANSansX;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dark-gray);
+      }
+    }
+  }
+
+  .divider-container {
+    @include flex-center(row, center, center);
+    width: 100%;
+
+    p {
+      color: var(--text-input-gray);
+      font-size: 13px;
+      font-weight: 600;
+      width: 190px;
+      text-align: center;
+    }
+
+    span {
+      height: 2px;
+      width: 25%;
+      background-color: var(--smooth-border-color);
+    }
+  }
+
+  form {
+    .remember-and-forgot-box {
+      margin-top: 22px;
+      @include flex-center(row, space-between, center);
+
+      a {
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.sign-up-general-container {
+  .membership-agreement-input {
+    margin-top: 22px;
+    display: flex;
+    @include flex-center(row, center, center);
+
+    p {
+      font-size: 13px;
+      color: var(--text-dark-gray);
+      padding-top: 4px;
+
+      @include screen(500px) {
+        padding-top: 0;
+      }
+
+      strong {
+        color: var(--blue);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.reset-password-general-container {
+  .cancel-btn {
+    width: 100%;
+    margin-top: 12px;
+    background-color: var(--smooth-light-blue);
+    color: var(--blue);
+    padding: 8px 0px;
+    border-radius: 8px;
+    font-size: 15px;
+    @include transition();
+
+    &:hover {
+      background-color: var(--smooth-blue-hover);
+    }
+  }
+}
+
+//--------------------------- Check Button Style ---------------------------
+
+.checkbox-wrapper-46 input[type="checkbox"] {
+  display: none;
+  visibility: hidden;
+}
+
+.checkbox-wrapper-46 .cbx {
+  margin: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.checkbox-wrapper-46 .cbx span {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkbox-wrapper-46 .cbx span:first-child {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  transform: scale(1);
+  vertical-align: middle;
+  border: 1px solid #9098a9;
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper-46 .cbx span:first-child svg {
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16px;
+  stroke-dashoffset: 16px;
+  transition: all 0.3s ease;
+  transition-delay: 0.1s;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkbox-wrapper-46 .cbx span:first-child:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #506eec;
+  display: block;
+  transform: scale(0);
+  opacity: 1;
+  border-radius: 50%;
+}
+
+.checkbox-wrapper-46 .cbx span:last-child {
+  padding-left: 8px;
+  color: var(--text-input-gray);
+  font-family: IRANSansX;
+  font-size: 14px;
+}
+
+.checkbox-wrapper-46 .cbx:hover span:first-child {
+  border-color: #506eec;
+}
+
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child {
+  background: #506eec;
+  border-color: #506eec;
+  animation: wave-46 0.4s ease;
+}
+
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child svg {
+  stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child:before {
+  transform: scale(3.5);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+@keyframes wave-46 {
+  50% {
+    transform: scale(0.8);
+  }
+}
+/* Custom styles for better Jalali date picker integration */
+.rmdp-input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  color: #333 !important;
+  font-family: inherit !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left;
+}
+
+.rmdp-input::placeholder {
+  color: #828a96 !important;
+}
+
+.rmdp-container {
+  direction: rtl;
+  width: 100%;
+}
+
+.rmdp-calendar {
+  direction: rtl !important;
+  font-family: inherit !important;
+}
+
+/* Hide the default arrow icon if you prefer your calendar icon */
+.rmdp-arrow-container {
+  display: none;
+}

@@ -1,0 +1,352 @@
+@use "../../../shared/styles/base/mixins.scss" as *;
+
+.sound-record-box {
+    width: 100%;
+    @include flex-center(column, center, center);
+    height: 100%;
+
+    .sound-record-content {
+        width: 400px;
+        @include flex-center(column, center, center);
+        height: 100%;
+
+        .content-box {
+            @include flex-center(row, center, center);
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        @include screen(768px) {
+            width: 100%;
+        }
+
+        .record-finished-box {
+            height: 100%;
+            @include flex-center(column, center, center);
+
+        }
+
+        .title-box {
+            width: 100%;
+            @include flex-center(row, flex-start, center);
+            color: var(--blue);
+            gap: 5px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--smooth-blue);
+
+            svg {
+                font-size: 25px;
+            }
+
+            p {
+                font-size: 16px;
+                font-weight: bold;
+            }
+        }
+
+        .sound-waves-box {
+            height: 90px;
+            margin-top: 15px;
+            width: 100%;
+            @include flex-center(row, center, center);
+            gap: 7px;
+
+            .wave {
+                border-radius: 16px;
+                width: 13px;
+                background-color: var(--smooth-blue-hover);
+                height: 50px;
+                transition: all 0.3s ease-in-out;
+
+                @include screen(768px) {
+                    width: 17px;
+                    height: 60px;
+                }
+
+                &.animate {
+                    animation: waveAnimation 1s ease-in-out infinite;
+                    background-color: var(--blue);
+                }
+
+                &.first {
+                    animation: waveFirst 1.2s ease-in-out infinite;
+                }
+
+                &.second {
+                    animation: waveSecond 1.8s ease-in-out infinite;
+                }
+
+                &.last {
+                    animation: waveLast 1.2s ease-in-out infinite;
+                }
+            }
+        }
+
+        .record-time {
+            margin: 10px;
+            color: var(--text-dark-gray);
+        }
+
+        .options-box {
+            width: 100%;
+            @include flex-center(row, center, center);
+
+            @include screen(768px) {
+                @include flex-center(column, center, center);
+            }
+
+            .record-button {
+                padding: 5px 10px;
+                border-radius: 7px;
+                background-color: var(--blue);
+                color: white;
+                font-size: 15px;
+
+
+                @include screen(768px) {
+                    padding: 10px;
+                    height: auto;
+                    width: 60%;
+                    border-radius: 10px;
+                }
+
+            }
+        }
+
+        .audio-player-wrapper {
+            padding: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: none;
+        }
+
+        .send-and-cancel-buttons-box {
+            @include flex-center(row, center, center);
+            gap: 22px;
+
+            @include screen(768px) {
+                width: 100%;
+                @include flex-center(column, center, center);
+            }
+
+            button {
+                color: var(--blue);
+                width: 90px;
+                border-radius: 8px;
+                height: 35px;
+                font-size: 15px;
+                transition: all 0.3s ease-in-out;
+
+                @include screen(768px) {
+                    @include flex-center(row, center, center);
+                    padding: 10px;
+                    height: auto;
+                    width: 60%;
+                    border-radius: 10px;
+                }
+
+                &:first-child {
+                    background-color: var(--smooth-red);
+                    color: white;
+                }
+
+                &:last-child {
+                    background-color: var(--blue);
+                    color: white;
+                }
+
+                &:hover {
+                    filter: brightness(90%);
+                }
+            }
+        }
+    }
+}
+
+$rhap_theme-color: var(--blue) !default;
+$rhap_bar-color: var(--smooth-blue) !default;
+$rhap_progress-color: var(--blue);
+
+.audio-player-wrapper {
+    box-shadow: none;
+}
+
+.audio-player-wrapper .rhap_container {
+    box-shadow: none;
+    background-color: var(--smooth-light-blue);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.rhap_progress-bar {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 5px;
+    background-color: $rhap_bar-color;
+    border-radius: 2px;
+}
+
+.rhap_progress-filled {
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    background-color: $rhap_progress-color;
+    border-radius: 2px;
+}
+
+.rhap_play-pause-button {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: $rhap_theme-color;
+    transition: background-color 0.3s ease;
+    background-color: transparent;
+}
+
+.rhap_main-controls-button {
+    margin: 0 3px;
+    color: $rhap_theme-color;
+    font-size: 35px;
+    width: 35px;
+    height: 35px;
+}
+
+.rhap_rewind-button,
+.rhap_forward-button {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: $rhap_theme-color;
+    margin-right: 6px;
+}
+
+.rhap_controls-section {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rhap_volume-button {
+    flex: 0 0 26px;
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: $rhap_theme-color;
+    margin-right: 6px;
+}
+
+.rhap_volume-bar {
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: $rhap_bar-color;
+    border-radius: 2px;
+}
+
+.rhap_volume-indicator {
+    box-sizing: border-box;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    left: 0;
+    top: -4px;
+    background: $rhap_theme-color;
+    opacity: 0.9;
+    border-radius: 50px;
+    box-shadow: rgba($rhap_theme-color, .5) 0 0 3px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.rhap_button-clear {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .9;
+        transition-duration: .2s;
+    }
+
+    &:active {
+        opacity: .95;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: 0;
+    }
+}
+
+.rhap_progress-indicator {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 3;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    top: -8px;
+    background: $rhap_theme-color;
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.rhap_current-time,
+.rhap_total-time {
+    color: $rhap_theme-color;
+}
+
+.rhap_repeat-button {
+    svg {
+        color: $rhap_theme-color;
+    }
+}
+
+@keyframes waveFirst {
+
+    0%,
+    100% {
+        height: 25px;
+
+    }
+
+    50% {
+        height: 50px;
+    }
+}
+
+@keyframes waveSecond {
+
+    0%,
+    100% {
+        height: 25px;
+    }
+
+    50% {
+        height: 50px;
+    }
+}
+
+@keyframes waveLast {
+
+    0%,
+    100% {
+        height: 20px;
+    }
+
+    50% {
+        height: 50px;
+    }
+}

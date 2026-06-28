@@ -1,0 +1,67 @@
+:root {
+  --generalBackgroundColor: #f7f8fb;
+  --blue: #4f46e5;
+  --hoverBlue: #4338ca;
+  --smooth-blue: #eef2ff;
+  --smooth-blue-hover: #e0e7ff;
+  --smooth-light-blue: #f4f7ff;
+
+  --ChatNest-red: #f94c4c;
+  --smooth-red: #ef4444;
+  --smooth-light-red: #fff1f2;
+
+  --text-black: #111827;
+  --text-dark-gray: #4b5563;
+  --text-input-gray: #8a94a6;
+  --text-white: rgb(252, 252, 252);
+  --ai-text-color: #1f2937;
+
+  --smooth-white-color: rgba(255, 255, 255, 0.86);
+  --smooth-border-color: #e5e7eb;
+  --user-message-box-color: rgba(255, 255, 255, 0.9);
+
+  --cardHover: #f1f5f9;
+  --user-message-text-color: #334155;
+  --overlay-background: #4545453f;
+  --modal-overlay-background: rgba(15, 23, 42, 0.28);
+  --app-surface: #ffffff;
+  --app-surface-muted: #f8fafc;
+  --app-ring: rgba(79, 70, 229, 0.18);
+  --app-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --app-shadow-md: 0 12px 30px rgba(15, 23, 42, 0.09);
+  --app-shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.14);
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --info-color: #0ea5e9;
+}
+
+[data-theme='dark'] {
+  --generalBackgroundColor: #0f1117;
+  --overlay-background: #020617a6;
+  --modal-background: #0b0d12;
+  --modal-overlay-background: rgba(2, 6, 23, 0.78);
+
+  --smooth-blue: #171b2a;
+  --smooth-blue-hover: #222842;
+  --smooth-light-blue: #151927;
+
+
+  --text-black: #f8fafc;
+  --text-dark-gray: #cbd5e1;
+  --text-input-gray: #94a3b8;
+  --text-white: #f8fafc;
+  --ai-text-color: #e5e7eb;
+
+  --smooth-white-color: rgba(20, 24, 34, 0.86);
+  --smooth-border-color: #252b3a;
+  --user-message-box-color: rgba(23, 27, 39, 0.92);
+  --cardHover: #1b2130;
+  --user-message-text-color: #e2e8f0;
+  --smooth-light-red: #2a171b;
+  --app-surface: #141824;
+  --app-surface-muted: #10141f;
+  --app-ring: rgba(129, 140, 248, 0.22);
+  --app-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --app-shadow-md: 0 12px 34px rgba(0, 0, 0, 0.32);
+  --app-shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.42);
+}

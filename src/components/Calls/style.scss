@@ -1,0 +1,148 @@
+@use "../../shared/styles/base/mixins.scss" as *;
+
+.calls-general-box {
+  flex: 1;
+  height: 100%;
+
+  .call-info-bar-box {
+    padding: 25px;
+
+    @include screen(540px) {
+      padding: 15px 5px;
+    }
+
+    .title-and-back-box {
+      @include flex-center(row, flex-start, center);
+
+      @include screen(540px) {
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--smooth-border-color);
+      }
+
+      h2 {
+        color: var(--text-black);
+        font-size: 20px;
+        font-weight: 700;
+        line-height: normal;
+        padding: 10px;
+      }
+    }
+
+    .details-box {
+      margin-top: 15px;
+      background-color: var(--smooth-white-color);
+      border-radius: 30px;
+
+      @include screen(540px) {
+        background-color: var(--generalBackgroundColor);
+      }
+
+      .user-and-call-box {
+        @include flex-center(row, space-between, center);
+        width: 100%;
+        padding: 15px 27px;
+        border-bottom: 2px solid var(--smooth-border-color);
+
+        @include screen(540px) {
+          @include flex-center(column, center, center);
+          gap: 15px;
+          padding: 15px 0px;
+        }
+
+        .user-info {
+          @include flex-center(row, center, center);
+          gap: 10px;
+
+          @include screen(540px) {
+            @include flex-center(column, center, center);
+          }
+
+          img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+
+            @include screen(540px) {
+              width: 95px;
+              height: 95px;
+            }
+          }
+
+          p {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-black);
+
+            @include screen(540px) {
+              font-size: 20px;
+            }
+          }
+        }
+
+        .call-options {
+          @include flex-center(row, center, center);
+          gap: 10px;
+
+          button {
+            background-color: transparent;
+            @include flex-center(row, center, center);
+            width: 50px;
+            height: 50px;
+            color: var(--blue);
+            font-size: 28px;
+            @include transition();
+            border-radius: 15px;
+
+            &:hover {
+              background-color: var(--smooth-blue-hover);
+            }
+
+            span {
+              font-size: 15px;
+            }
+
+            @include screen(540px) {
+              @include flex-center(column, center, center);
+              gap: 5px;
+              width: 100px;
+              height: 70px;
+            }
+          }
+        }
+      }
+
+      .call-details {
+        padding: 15px 27px;
+
+        span {
+          width: 100%;
+          font-size: 14px;
+          font-weight: 700;
+          margin-bottom: 10px;
+          color: var(--text-dark-gray);
+        }
+
+        .status-box {
+          @include flex-center(row, space-between, center);
+          margin-top: 12px;
+          color: var(--text-input-gray);
+
+          p {
+            font-size: 13px;
+            font-weight: 700;
+          }
+
+          .call-status-box {
+            @include flex-center(row, center, center);
+            gap: 7px;
+
+            .icon {
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

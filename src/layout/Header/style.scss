@@ -1,0 +1,45 @@
+@use "../../shared/styles/base/mixins.scss" as *;
+
+Header {
+  @include flex-center(row, flex-start, center);
+  width: 100%;
+  height: 64px;
+  padding: 10px 16px;
+  background:
+    linear-gradient(90deg, rgba(79, 70, 229, 0.12), rgba(14, 165, 233, 0.08)),
+    var(--smooth-blue);
+  gap: 10px;
+
+  @include screen(900px) {
+    @include flex-center(row, space-between, center);
+    height: 68px;
+    padding: 14px;
+    background-color: var(--app-surface);
+    border-bottom: 1px solid var(--smooth-border-color);
+  }
+
+  img {
+    width: 128px;
+  }
+
+  button {
+    @include flex-center(row, center, center);
+    font-size: 30px;
+    padding: 6px;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--blue);
+    transition: all 0.3s ease;
+
+    display: none;
+
+    @include screen(900px) {
+      @include flex-center(row, center, center);
+      border-radius: 0px;
+    }
+
+    &:active {
+      background: var(--smooth-light-blue);
+    }
+  }
+}

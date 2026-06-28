@@ -1,0 +1,408 @@
+@use "../../../shared/styles/base/mixins.scss" as *;
+
+.message-input-bar {
+    width: 100%;
+    min-height: 96px;
+    padding: 10px 0 14px;
+    @include flex-center(column, center, center);
+    gap: 8px;
+    background-color: var(--app-surface);
+    border-top: 1px solid var(--smooth-border-color);
+
+    .file-drop-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1400;
+        background: rgba(20, 20, 20, 0.36);
+        backdrop-filter: blur(4px);
+        @include flex-center(row, center, center);
+
+        .file-drop-card {
+            width: min(360px, calc(100vw - 32px));
+            min-height: 180px;
+            border: 2px dashed var(--blue);
+            border-radius: 24px;
+            background-color: var(--app-surface);
+            color: var(--text-dark-gray);
+            @include flex-center(column, center, center);
+            gap: 10px;
+            text-align: center;
+            padding: 24px;
+
+            svg {
+                font-size: 34px;
+                color: var(--blue);
+            }
+
+            strong {
+                font-size: 18px;
+            }
+
+            span {
+                font-size: 13px;
+                opacity: 0.8;
+            }
+        }
+    }
+
+    @include screen(900px) {
+        min-height: 100px;
+    }
+
+    .reply-composer-box {
+        width: 95%;
+        min-height: 58px;
+        border-radius: 18px;
+        border: 1px solid var(--smooth-border-color);
+        background-color: var(--app-surface-muted);
+        padding: 10px 12px;
+        @include flex-center(row, space-between, center);
+        gap: 12px;
+
+        .reply-composer-content {
+            min-width: 0;
+            @include flex-center(column, center, flex-start);
+            gap: 4px;
+
+            .reply-composer-title {
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--blue);
+            }
+
+            .reply-composer-text {
+                width: 100%;
+                font-size: 13px;
+                color: var(--text-dark-gray);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .reply-composer-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            color: var(--text-dark-gray);
+            background-color: transparent;
+            font-size: 22px;
+            @include flex-center(row, center, center);
+            @include transition();
+
+            &:hover {
+                background-color: var(--smooth-border-color);
+            }
+        }
+    }
+
+    .input-box {
+        @include flex-center(row, space-between, center);
+        height: 56px;
+        border-radius: 22px;
+        border: 1px solid var(--smooth-border-color);
+        padding: 0px 6px;
+        width: 95%;
+        gap: 10px;
+        background-color: var(--app-surface-muted);
+        box-shadow: var(--app-shadow-sm);
+        @include transition();
+
+        &:hover {
+            background-color: var(--app-surface);
+        }
+
+        &:focus-within {
+            background-color: var(--app-surface);
+            border-color: var(--smooth-border-color);
+            box-shadow: var(--app-shadow-sm);
+        }
+
+        @include screen(900px) {
+            height: 55px;
+        }
+
+        .add-file-box {
+            height: 100%;
+            width: 50px;
+            @include flex-center(row, center, center);
+
+            @include screen(900px) {
+                width: 81px;
+            }
+
+            .add-file-button {
+                @include flex-center(row, center, center);
+                width: 34px;
+                height: 34px;
+                font-size: 20px;
+                background-color: var(--smooth-light-blue);
+                border-radius: 50%;
+                color: var(--blue);
+                transition: all 0.3s;
+
+                &:active {
+                    transform: scale(0.6);
+                }
+            }
+
+            .file-menu {
+                @include flex-center(column, center, center);
+                background-color: var(--user-message-box-color);
+                backdrop-filter: blur(10px);
+                padding: 8px 7px;
+                gap: 15px;
+                z-index: 999;
+                position: absolute;
+                margin-bottom: 276px;
+                border: 1px solid var(--smooth-border-color);
+                border-radius: 18px;
+                animation: slide-up 0.3s ease-out forwards;
+                box-shadow: var(--app-shadow-md);
+
+                button {
+                    @include flex-center(row, center, center);
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    font-size: 20px;
+                    background: none;
+                    transition: background-color 0.3s, transform 3s;
+                    transition: all 0.3s;
+
+                    &:hover {
+                        scale: 1.5;
+                    }
+
+                    &:first-child {
+                        color: rgb(8, 162, 131);
+                        border: 2px solid rgb(8, 162, 131);
+
+                        &:hover {
+                            background-color: rgb(8, 162, 131);
+                            color: white;
+
+                            svg {
+                                animation: shake-scale 2s infinite;
+                            }
+                        }
+                    }
+
+                    &:nth-child(2) {
+                        color: var(--blue);
+                        border: 2px solid var(--blue);
+
+                        &:hover {
+                            background-color: var(--blue);
+                            color: white;
+
+                            svg {
+                                animation: shake-scale 2s infinite;
+                            }
+                        }
+                    }
+
+                    &:nth-child(3) {
+                        color: var(--smooth-red);
+                        border: 2px solid var(--smooth-red);
+
+                        &:hover {
+                            background-color: var(--smooth-red);
+                            color: white;
+
+                            svg {
+                                animation: shake-scale 2s infinite;
+                            }
+                        }
+                    }
+
+                    &:last-child {
+                        color: rgb(245, 164, 44);
+                        border: 2px solid rgb(245, 164, 44);
+
+                        &:hover {
+                            background-color: rgb(245, 164, 44);
+                            color: white;
+
+                            svg {
+                                animation: shake-scale 2s infinite;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        input {
+            height: 100%;
+            width: 90%;
+            font-size: 14px;
+            color: var(--text-dark-gray);
+        }
+
+
+        .ai-emoji-send-buttons {
+            @include flex-center(row, center, center);
+            gap: 10px;
+            width: 150px;
+            height: 100%;
+            position: relative;
+
+            .ai-button {
+                padding-left: 12px;
+                width: 40px;
+                height: 40px;
+                font-size: 28px;
+                color: var(--blue);
+                background-color: transparent;
+                @include transition();
+
+                &:hover {
+                    color: var(--hoverBlue);
+                    transform: translateY(-1px);
+                }
+            }
+
+            .emoji-picker {
+                position: absolute;
+                direction: ltr;
+                bottom: 75px;
+                left:0px;
+                z-index: 1000;
+                border: 4px solid var(--smooth-blue-hover);
+                box-shadow: var(--app-shadow-lg);
+                border-radius: 28px;
+
+                @include screen(500px) {
+                    @include flex-center(row, center, center);
+                    right: 0px;
+                    left: 0;
+                    position: fixed;
+                    scale: 0.9;
+                    border: 0;
+                    border-radius: 0;
+                    box-shadow: "none";
+                }
+            }
+
+            .add-emoji-button {
+                width: 30px;
+                height: 30px;
+                font-size: 28px;
+                background-color: transparent;
+                color: var(--text-dark-gray);
+            }
+
+            .send-message-button {
+                @include flex-center(row, center, center);
+                width: 38px;
+                height: 38px;
+                background: linear-gradient(135deg, var(--blue), var(--info-color));
+                border-radius: 50%;
+                @include transition();
+                padding-left: 2px;
+
+                @include screen(900px) {
+                    margin-right: 5px;
+                }
+
+                &:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 10px 22px rgba(79, 70, 229, 0.22);
+                }
+            }
+        }
+    }
+
+    .upload-progress-box {
+        width: 95%;
+        border: 1px solid var(--smooth-border-color);
+        background-color: var(--app-surface-muted);
+        border-radius: 16px;
+        padding: 8px 10px;
+
+        .upload-progress-header {
+            @include flex-center(row, space-between, center);
+            gap: 10px;
+            margin-bottom: 6px;
+
+            .upload-progress-file {
+                flex: 1;
+                min-width: 0;
+                font-size: 12px;
+                color: var(--text-dark-gray);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .upload-progress-percent {
+                font-size: 12px;
+                color: var(--blue);
+                font-weight: 700;
+            }
+        }
+
+        .upload-progress-track {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background-color: rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+
+            .upload-progress-fill {
+                height: 100%;
+                border-radius: inherit;
+                background: linear-gradient(90deg, var(--blue), var(--hoverBlue));
+                transition: width 0.2s ease;
+            }
+        }
+
+        .upload-progress-status {
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-dark-gray);
+            opacity: 0.85;
+        }
+    }
+}
+
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake-scale {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.1) rotate(-15deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(15deg);
+    }
+
+    75% {
+        transform: scale(1.1) rotate(-15deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.text-content {
+    direction: rtl;
+    text-align: justify;
+}

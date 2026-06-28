@@ -1,0 +1,83 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay-background);
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+
+    @media (max-width:768px) {
+        display: flex;
+        align-items: start;
+        min-height: var(--app-height);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.modal-card {
+    padding: 20px;
+    position: relative;
+    max-width: 600px;
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+    overflow-x: hidden;
+    border-radius: 24px;
+    border: 1px solid var(--smooth-border-color);
+    background-color: var(--app-surface);
+    box-shadow: var(--app-shadow-lg);
+
+
+
+    @media (max-width:768px) {
+        height: var(--app-height);
+        max-height: 100%;
+        max-width: 100%;
+        width: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+        border: 0;
+        border-radius: 0px;
+        padding: 15px 8px;
+        padding-bottom: 30px;
+        background-color: var(--generalBackgroundColor);
+    }
+
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: auto;
+    cursor: pointer;
+    font-size: 25px;
+    color: #ffffff;
+    border: none;
+    background: none;
+    width: 33px;
+    height: 33px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 18.5px;
+    background: linear-gradient(135deg, var(--blue), var(--hoverBlue));
+    box-shadow: var(--app-shadow-sm);
+
+}

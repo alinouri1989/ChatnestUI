@@ -1,0 +1,26 @@
+.no-active-datas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.8s ease-in-out;
+
+    img {
+        width: 250px;
+    }
+
+    p {
+        font-size: 13.7px;
+        color: var(--text-input-gray);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
